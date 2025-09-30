@@ -1,0 +1,1439 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCTNS IIF-1 Form Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: #1a2a6c;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 5px solid #fdbb2d;
+        }
+
+            header h1 {
+                margin-bottom: 10px;
+                font-size: 28px;
+            }
+
+            header p {
+                font-size: 16px;
+                opacity: 0.9;
+            }
+
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+
+        .form-container {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-right: 20px;
+            margin-bottom: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .preview-container {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        h2 {
+            color: #1a2a6c;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #fdbb2d;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+            button:hover {
+                background: #2a3a8c;
+            }
+
+        .btn-export {
+            background: #b21f1f;
+        }
+
+            .btn-export:hover {
+                background: #c22f2f;
+            }
+
+        .btn-word {
+            background: #1a6c5c;
+        }
+
+            .btn-word:hover {
+                background: #2a7c6c;
+            }
+
+        .btn-ghost {
+            background: #5f6368;
+        }
+
+            .btn-ghost:hover {
+                background: #6f7378;
+            }
+
+        .btn-danger {
+            background: #c62828;
+        }
+
+            .btn-danger:hover {
+                background: #d63838;
+            }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+            .action-buttons button {
+                flex: 1;
+                min-width: 120px;
+            }
+
+        .form-preview {
+            background: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            line-height: 1.5;
+            font-family: "Times New Roman", serif;
+        }
+
+        .preview-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1a2a6c;
+        }
+
+            .preview-header h3 {
+                color: #1a2a6c;
+                font-size: 22px;
+            }
+
+        .preview-section {
+            margin-bottom: 20px;
+        }
+
+            .preview-section h4 {
+                background: #f0f0f0;
+                padding: 8px;
+                margin-bottom: 10px;
+                color: #1a2a6c;
+                border-left: 4px solid #fdbb2d;
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #f0f0f0;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #1a2a6c;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .section-title {
+            background: #1a2a6c;
+            color: white;
+            padding: 10px;
+            margin: 20px 0 10px 0;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .section-content {
+            display: none;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .checkbox-group {
+            margin: 10px 0;
+        }
+
+            .checkbox-group label {
+                display: inline;
+                font-weight: normal;
+            }
+
+        .field-label {
+            font-weight: 700;
+            width: 220px;
+            display: inline-block;
+            color: #222;
+        }
+
+        .signature-area {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .signature-box {
+            border-top: 1px solid #000;
+            width: 250px;
+            padding-top: 5px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .col {
+            flex: 1;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+
+            .form-container {
+                margin-right: 0;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+                .action-buttons button {
+                    width: 100%;
+                }
+
+            .signature-area {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .signature-box {
+                width: 100%;
+                max-width: 250px;
+            }
+
+            .row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CCTNS IIF-1 Form Generator</h1>
+            <p>First Information Report (FIR) Form - Complete with All Required Sections</p>
+        </header>
+
+        <div class="content">
+            <div class="form-container">
+                <h2>IIF-1 Form Details</h2>
+
+                <div class="section-title" onclick="toggleSection('basicInfo')">1. Basic Information</div>
+                <div id="basicInfo" class="section-content active">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="district">District</label>
+                                <input type="text" id="district" placeholder="Enter district">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="policeStation">Police Station</label>
+                                <input type="text" id="policeStation" placeholder="Enter police station">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="year">Year</label>
+                                <input type="text" id="year" placeholder="Enter year">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="firNo">FIR No.</label>
+                                <input type="text" id="firNo" placeholder="Enter FIR number">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="firDate">Date</label>
+                                <input type="date" id="firDate">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('actsSections')">2. Acts & Sections</div>
+                <div id="actsSections" class="section-content">
+                    <table id="actsTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Acts</th>
+                                <th>Sections</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Enter Act"></td>
+                                <td><input type="text" placeholder="Enter Section"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('actsTable')">Add New Row</button>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('occurrenceInfo')">3. Occurrence Information</div>
+                <div id="occurrenceInfo" class="section-content">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="day">Day</label>
+                                <input type="text" id="day" placeholder="Enter day">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="occurrenceTime">Time</label>
+                                <input type="text" id="occurrenceTime" placeholder="e.g. 10:30 AM">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('infoReceived')">4. Information Received at P.S.</div>
+                <div id="infoReceived" class="section-content">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="infoDate">Date</label>
+                                <input type="date" id="infoDate">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="infoTime">Time</label>
+                                <input type="time" id="infoTime">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="entryNo">Entry No(s)</label>
+                                <input type="text" id="entryNo" placeholder="Enter entry number">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="diaryTime">Diary Time</label>
+                                <input type="time" id="diaryTime">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('placeOfOccurrence')">5. Place of Occurrence</div>
+                <div id="placeOfOccurrence" class="section-content">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="direction">Direction & Distance from P.S.</label>
+                                <input type="text" id="direction" placeholder="Enter direction and distance">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="beatNo">Beat No.</label>
+                                <input type="text" id="beatNo" placeholder="Enter beat number">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <textarea id="address" placeholder="Enter address"></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="outsidePS">If outside limit — Police Station</label>
+                                <input type="text" id="outsidePS" placeholder="Enter police station">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="outsideDistrict">District</label>
+                                <input type="text" id="outsideDistrict" placeholder="Enter district">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('complainantInfo')">6. Complainant / Informant Details</div>
+                <div id="complainantInfo" class="section-content">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="complainantName">Name</label>
+                                <input type="text" id="complainantName" placeholder="Enter name">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="complainantFather">Father's / Husband's Name</label>
+                                <input type="text" id="complainantFather" placeholder="Enter father's/husband's name">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="complainantDob">DOB / Year</label>
+                                <input type="text" id="complainantDob" placeholder="Enter DOB or year">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="nationality">Nationality</label>
+                                <input type="text" id="nationality" placeholder="Enter nationality">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="passportNo">Passport No.</label>
+                                <input type="text" id="passportNo" placeholder="Enter passport number">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="passportDate">Passport Date</label>
+                                <input type="date" id="passportDate">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="passportPlace">Place of Issue</label>
+                                <input type="text" id="passportPlace" placeholder="Enter place of issue">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="complainantOccupation">Occupation</label>
+                        <input type="text" id="complainantOccupation" placeholder="Enter occupation">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="complainantAddress">Address</label>
+                        <textarea id="complainantAddress" placeholder="Enter address"></textarea>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('accusedDetails')">7. Accused & Other Details</div>
+                <div id="accusedDetails" class="section-content">
+                    <div class="form-group">
+                        <label for="accusedDetails">Details of accused</label>
+                        <textarea id="accusedDetails" placeholder="Enter accused details"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="delayDetails">Reasons for delay (if any)</label>
+                        <textarea id="delayDetails" placeholder="Enter reasons for delay"></textarea>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('propertyDetails')">8. Property Details</div>
+                <div id="propertyDetails" class="section-content">
+                    <div class="form-group">
+                        <label for="propertyInfo">Particulars</label>
+                        <textarea id="propertyInfo" placeholder="Enter property particulars"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="propertyValue">Estimated Value</label>
+                        <input type="text" id="propertyValue" placeholder="Enter estimated value">
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('otherInfo')">9. Other Information</div>
+                <div id="otherInfo" class="section-content">
+                    <div class="form-group">
+                        <label for="inquestNo">Inquest Report / U.D. Case No.</label>
+                        <input type="text" id="inquestNo" placeholder="Enter inquest report or U.D. case number">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="firText">FIR Contents</label>
+                        <textarea id="firText" placeholder="Enter FIR contents"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="actionDetails">Action Taken</label>
+                        <textarea id="actionDetails" placeholder="Enter action taken details"></textarea>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="firReadOver">
+                        <label for="firReadOver">FIR read over to complainant and copy given free of cost.</label>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('signature')">10. Signature Details</div>
+                <div id="signature" class="section-content">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="officerName">Officer Name</label>
+                                <input type="text" id="officerName" placeholder="Enter officer name">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="officerRank">Rank</label>
+                                <input type="text" id="officerRank" placeholder="Enter officer rank">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="officerNo">No.</label>
+                                <input type="text" id="officerNo" placeholder="Enter officer number">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="complainantSignature">Complainant Signature / Thumb Impression (text)</label>
+                        <input type="text" id="complainantSignature" placeholder="Enter signature/thumb impression details">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dispatchDate">Dispatch Date & Time</label>
+                        <input type="datetime-local" id="dispatchDate">
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="btnGenerate">Generate Preview</button>
+                    <button id="btnExport" class="btn-export">Export as PDF</button>
+                    <button id="btnExportWord" class="btn-word">Export as Word</button>
+                    <button id="btnSave" class="btn-ghost">Save to Records</button>
+                    <button id="btnLoad" class="btn-ghost">Load Saved</button>
+                    <button id="btnDelete" class="btn-danger">Delete Saved</button>
+                </div>
+            </div>
+
+            <div class="preview-container">
+                <h2>IIF-1 Form Preview</h2>
+                <div id="formPreview" class="form-preview">
+                    <div class="preview-header">
+                        <h3>CCTNS IIF-1 Form</h3>
+                        <p>First Information Report (Under Section 154 Cr.P.C)</p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>1. Basic Information</h4>
+                        <p><strong>District:</strong> <span id="previewDistrict">Not specified</span></p>
+                        <p><strong>Police Station:</strong> <span id="previewPoliceStation">Not specified</span></p>
+                        <p><strong>Year:</strong> <span id="previewYear">Not specified</span></p>
+                        <p><strong>FIR No.:</strong> <span id="previewFirNo">Not specified</span></p>
+                        <p><strong>Date:</strong> <span id="previewFirDate">Not specified</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>2. Acts & Sections</h4>
+                        <table id="previewActsTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Acts</th>
+                                    <th>Sections</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>3. Occurrence Information</h4>
+                        <p><strong>Day:</strong> <span id="previewDay">Not specified</span></p>
+                        <p><strong>Time:</strong> <span id="previewOccurrenceTime">Not specified</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>4. Information Received at P.S.</h4>
+                        <p><strong>Date:</strong> <span id="previewInfoDate">Not specified</span></p>
+                        <p><strong>Time:</strong> <span id="previewInfoTime">Not specified</span></p>
+                        <p><strong>Entry No(s):</strong> <span id="previewEntryNo">Not specified</span></p>
+                        <p><strong>Diary Time:</strong> <span id="previewDiaryTime">Not specified</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>5. Place of Occurrence</h4>
+                        <p><strong>Direction & Distance from P.S.:</strong> <span id="previewDirection">Not specified</span></p>
+                        <p><strong>Beat No.:</strong> <span id="previewBeatNo">Not specified</span></p>
+                        <p><strong>Address:</strong> <span id="previewAddress">Not specified</span></p>
+                        <p><strong>Outside PS:</strong> <span id="previewOutsidePS">Not specified</span></p>
+                        <p><strong>District:</strong> <span id="previewOutsideDistrict">Not specified</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>6. Complainant / Informant Details</h4>
+                        <p><strong>Name:</strong> <span id="previewComplainantName">Not specified</span></p>
+                        <p><strong>Father's/Husband's Name:</strong> <span id="previewComplainantFather">Not specified</span></p>
+                        <p><strong>DOB/Year:</strong> <span id="previewComplainantDob">Not specified</span></p>
+                        <p><strong>Nationality:</strong> <span id="previewNationality">Not specified</span></p>
+                        <p><strong>Passport No.:</strong> <span id="previewPassportNo">Not specified</span></p>
+                        <p><strong>Passport Date:</strong> <span id="previewPassportDate">Not specified</span></p>
+                        <p><strong>Place of Issue:</strong> <span id="previewPassportPlace">Not specified</span></p>
+                        <p><strong>Occupation:</strong> <span id="previewComplainantOccupation">Not specified</span></p>
+                        <p><strong>Address:</strong> <span id="previewComplainantAddress">Not specified</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>7. Accused & Other Details</h4>
+                        <p><strong>Details of accused:</strong> <span id="previewAccusedDetails">Not specified</span></p>
+                        <p><strong>Reasons for delay:</strong> <span id="previewDelayDetails">Not specified</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>8. Property Details</h4>
+                        <p><strong>Particulars:</strong> <span id="previewPropertyInfo">Not specified</span></p>
+                        <p><strong>Estimated Value:</strong> <span id="previewPropertyValue">Not specified</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>9. Other Information</h4>
+                        <p><strong>Inquest Report / U.D. Case No.:</strong> <span id="previewInquestNo">Not specified</span></p>
+                        <p><strong>FIR Contents:</strong> <span id="previewFirText">Not specified</span></p>
+                        <p><strong>Action Taken:</strong> <span id="previewActionDetails">Not specified</span></p>
+                        <p><strong>FIR read over to complainant:</strong> <span id="previewFirReadOver">No</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>10. Signature Details</h4>
+                        <p><strong>Officer Name:</strong> <span id="previewOfficerName">Not specified</span></p>
+                        <p><strong>Rank:</strong> <span id="previewOfficerRank">Not specified</span></p>
+                        <p><strong>No.:</strong> <span id="previewOfficerNo">Not specified</span></p>
+                        <p><strong>Complainant Signature/Thumb Impression:</strong> <span id="previewComplainantSignature">Not specified</span></p>
+                        <p><strong>Dispatch Date & Time:</strong> <span id="previewDispatchDate">Not specified</span></p>
+                    </div>
+
+                    <div class="signature-area">
+                        <div class="signature-box">Signature of Complainant</div>
+                        <div class="signature-box">Signature of Investigation Officer</div>
+                    </div>
+
+                    <div class="preview-section">
+                        <p>Generated on: <span id="generationDate"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2023 CCTNS System | For official use only</p>
+        </div>
+    </div>
+
+    <script>
+        // Add this at the very top of each form's JavaScript
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check if user is authenticated
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+
+            if (!token || !user) {
+                alert('Authentication required. Please login first.');
+                window.location.href = '../index.html';
+                return;
+            }
+
+            // Set officer name from logged in user
+            try {
+                const userData = JSON.parse(user);
+                document.getElementById('officerName').value = userData.fullName || 'Officer';
+            } catch (e) {
+                console.error('Error parsing user data:', e);
+            }
+        });
+      
+        document.addEventListener('DOMContentLoaded', function () {
+            // Set current date
+            const now = new Date();
+            document.getElementById('generationDate').textContent = now.toLocaleString();
+
+            // Generate preview button
+            document.getElementById('btnGenerate').addEventListener('click', generatePreview);
+
+            // Export as PDF button
+            document.getElementById('btnExport').addEventListener('click', exportAsPDF);
+
+            // Export as Word button
+            document.getElementById('btnExportWord').addEventListener('click', exportAsWord);
+
+            // Save form button
+            document.getElementById('btnSave').addEventListener('click', saveToRecords);
+
+            // Load form button
+            document.getElementById('btnLoad').addEventListener('click', loadFormLocal);
+
+            // Delete form button
+            document.getElementById('btnDelete').addEventListener('click', deleteFormLocal);
+
+            // Generate preview function
+            function generatePreview() {
+                // Get form values
+                const district = document.getElementById('district').value || 'Not specified';
+                const policeStation = document.getElementById('policeStation').value || 'Not specified';
+                const year = document.getElementById('year').value || 'Not specified';
+                const firNo = document.getElementById('firNo').value || 'Not specified';
+                const firDate = document.getElementById('firDate').value;
+                const day = document.getElementById('day').value || 'Not specified';
+                const occurrenceTime = document.getElementById('occurrenceTime').value || 'Not specified';
+                const infoDate = document.getElementById('infoDate').value;
+                const infoTime = document.getElementById('infoTime').value || 'Not specified';
+                const entryNo = document.getElementById('entryNo').value || 'Not specified';
+                const diaryTime = document.getElementById('diaryTime').value || 'Not specified';
+                const direction = document.getElementById('direction').value || 'Not specified';
+                const beatNo = document.getElementById('beatNo').value || 'Not specified';
+                const address = document.getElementById('address').value || 'Not specified';
+                const outsidePS = document.getElementById('outsidePS').value || 'Not specified';
+                const outsideDistrict = document.getElementById('outsideDistrict').value || 'Not specified';
+                const complainantName = document.getElementById('complainantName').value || 'Not specified';
+                const complainantFather = document.getElementById('complainantFather').value || 'Not specified';
+                const complainantDob = document.getElementById('complainantDob').value || 'Not specified';
+                const nationality = document.getElementById('nationality').value || 'Not specified';
+                const passportNo = document.getElementById('passportNo').value || 'Not specified';
+                const passportDate = document.getElementById('passportDate').value;
+                const passportPlace = document.getElementById('passportPlace').value || 'Not specified';
+                const complainantOccupation = document.getElementById('complainantOccupation').value || 'Not specified';
+                const complainantAddress = document.getElementById('complainantAddress').value || 'Not specified';
+                const accusedDetails = document.getElementById('accusedDetails').value || 'Not specified';
+                const delayDetails = document.getElementById('delayDetails').value || 'Not specified';
+                const propertyInfo = document.getElementById('propertyInfo').value || 'Not specified';
+                const propertyValue = document.getElementById('propertyValue').value || 'Not specified';
+                const inquestNo = document.getElementById('inquestNo').value || 'Not specified';
+                const firText = document.getElementById('firText').value || 'Not specified';
+                const actionDetails = document.getElementById('actionDetails').value || 'Not specified';
+                const firReadOver = document.getElementById('firReadOver').checked;
+                const officerName = document.getElementById('officerName').value || 'Not specified';
+                const officerRank = document.getElementById('officerRank').value || 'Not specified';
+                const officerNo = document.getElementById('officerNo').value || 'Not specified';
+                const complainantSignature = document.getElementById('complainantSignature').value || 'Not specified';
+                const dispatchDate = document.getElementById('dispatchDate').value;
+
+                // Format date and time
+                const formattedFirDate = firDate ? new Date(firDate).toLocaleDateString('en-GB') : 'Not specified';
+                const formattedInfoDate = infoDate ? new Date(infoDate).toLocaleDateString('en-GB') : 'Not specified';
+                const formattedPassportDate = passportDate ? new Date(passportDate).toLocaleDateString('en-GB') : 'Not specified';
+                const formattedDispatchDate = dispatchDate ? new Date(dispatchDate).toLocaleString('en-GB') : 'Not specified';
+
+                // Update preview
+                document.getElementById('previewDistrict').textContent = district;
+                document.getElementById('previewPoliceStation').textContent = policeStation;
+                document.getElementById('previewYear').textContent = year;
+                document.getElementById('previewFirNo').textContent = firNo;
+                document.getElementById('previewFirDate').textContent = formattedFirDate;
+                document.getElementById('previewDay').textContent = day;
+                document.getElementById('previewOccurrenceTime').textContent = occurrenceTime;
+                document.getElementById('previewInfoDate').textContent = formattedInfoDate;
+                document.getElementById('previewInfoTime').textContent = infoTime;
+                document.getElementById('previewEntryNo').textContent = entryNo;
+                document.getElementById('previewDiaryTime').textContent = diaryTime;
+                document.getElementById('previewDirection').textContent = direction;
+                document.getElementById('previewBeatNo').textContent = beatNo;
+                document.getElementById('previewAddress').textContent = address;
+                document.getElementById('previewOutsidePS').textContent = outsidePS;
+                document.getElementById('previewOutsideDistrict').textContent = outsideDistrict;
+                document.getElementById('previewComplainantName').textContent = complainantName;
+                document.getElementById('previewComplainantFather').textContent = complainantFather;
+                document.getElementById('previewComplainantDob').textContent = complainantDob;
+                document.getElementById('previewNationality').textContent = nationality;
+                document.getElementById('previewPassportNo').textContent = passportNo;
+                document.getElementById('previewPassportDate').textContent = formattedPassportDate;
+                document.getElementById('previewPassportPlace').textContent = passportPlace;
+                document.getElementById('previewComplainantOccupation').textContent = complainantOccupation;
+                document.getElementById('previewComplainantAddress').textContent = complainantAddress;
+                document.getElementById('previewAccusedDetails').textContent = accusedDetails;
+                document.getElementById('previewDelayDetails').textContent = delayDetails;
+                document.getElementById('previewPropertyInfo').textContent = propertyInfo;
+                document.getElementById('previewPropertyValue').textContent = propertyValue;
+                document.getElementById('previewInquestNo').textContent = inquestNo;
+                document.getElementById('previewFirText').textContent = firText;
+                document.getElementById('previewActionDetails').textContent = actionDetails;
+                document.getElementById('previewFirReadOver').textContent = firReadOver ? 'Yes' : 'No';
+                document.getElementById('previewOfficerName').textContent = officerName;
+                document.getElementById('previewOfficerRank').textContent = officerRank;
+                document.getElementById('previewOfficerNo').textContent = officerNo;
+                document.getElementById('previewComplainantSignature').textContent = complainantSignature;
+                document.getElementById('previewDispatchDate').textContent = formattedDispatchDate;
+
+                // Update tables
+                updatePreviewTable('actsTable', 'previewActsTable');
+
+                // Update generation date
+                document.getElementById('generationDate').textContent = new Date().toLocaleString();
+            }
+
+            // Function to update preview tables
+            function updatePreviewTable(sourceTableId, targetTableId) {
+                const sourceTable = document.getElementById(sourceTableId);
+                const targetTable = document.getElementById(targetTableId);
+
+                // Clear existing rows
+                targetTable.querySelector('tbody').innerHTML = '';
+
+                let hasData = false;
+
+                for (let i = 1; i < sourceTable.rows.length; i++) {
+                    const row = sourceTable.rows[i];
+                    const newRow = document.createElement('tr');
+
+                    // Check if the row has any data
+                    let rowHasData = false;
+
+                    for (let j = 1; j < row.cells.length - 1; j++) {
+                        const input = row.cells[j].querySelector('input');
+                        if (input && input.value) {
+                            rowHasData = true;
+                            break;
+                        }
+                    }
+
+                    if (rowHasData) {
+                        hasData = true;
+
+                        // Add serial number
+                        const serialCell = document.createElement('td');
+                        serialCell.textContent = i;
+                        newRow.appendChild(serialCell);
+
+                        // Add data cells
+                        for (let j = 1; j < row.cells.length - 1; j++) {
+                            const input = row.cells[j].querySelector('input');
+                            const cell = document.createElement('td');
+                            cell.textContent = input ? input.value : '';
+                            newRow.appendChild(cell);
+                        }
+
+                        targetTable.querySelector('tbody').appendChild(newRow);
+                    }
+                }
+
+                if (!hasData) {
+                    const newRow = document.createElement('tr');
+                    const cell = document.createElement('td');
+                    cell.colSpan = targetTable.rows[0].cells.length;
+                    cell.textContent = 'No data available';
+                    newRow.appendChild(cell);
+                    targetTable.querySelector('tbody').appendChild(newRow);
+                }
+            }
+
+            // Export as PDF function
+            function exportAsPDF() {
+                generatePreview();
+
+                const element = document.getElementById('formPreview');
+                const opt = {
+                    margin: 10,
+                    filename: 'iif-1-form.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                html2pdf().set(opt).from(element).save();
+            }
+
+            // Export as Word function
+            function exportAsWord() {
+                try {
+                    generatePreview();
+
+                    // Create HTML content for Word
+                    const htmlContent = `
+                                    <html xmlns:o="urn:schemas-microsoft-com:office:office"
+                                          xmlns:w="urn:schemas-microsoft-com:office:word"
+                                          xmlns="http://www.w3.org/TR/REC-html40">
+                                    <head>
+                                        <meta charset="utf-8">
+                                        <title>IIF-1 Form</title>
+                                        <style>
+                                            body {
+                                                font-family: 'Times New Roman', serif;
+                                                font-size: 12pt;
+                                                line-height: 1.5;
+                                            }
+                                            h1, h2, h3, h4 {
+                                                color: #1a2a6c;
+                                            }
+                                            h1 {
+                                                font-size: 16pt;
+                                                text-align: center;
+                                            }
+                                            h2 {
+                                                font-size: 14pt;
+                                                margin-top: 12pt;
+                                                margin-bottom: 6pt;
+                                            }
+                                            table {
+                                                width: 100%;
+                                                border-collapse: collapse;
+                                                margin: 6pt 0;
+                                            }
+                                            th, td {
+                                                border: 1px solid #000;
+                                                padding: 4pt;
+                                                text-align: left;
+                                            }
+                                            th {
+                                                background-color: #f3f6fb;
+                                                font-weight: bold;
+                                            }
+                                            .field-label {
+                                                font-weight: bold;
+                                                width: 220px;
+                                                display: inline-block;
+                                            }
+                                            .signature-area {
+                                                margin-top: 30pt;
+                                                display: flex;
+                                                justify-content: space-between;
+                                            }
+                                            .signature-box {
+                                                border-top: 1px solid #000;
+                                                width: 250px;
+                                                padding-top: 5px;
+                                                text-align: center;
+                                            }
+                                        </style>
+                                    </head>
+                                    <body>
+                                        <h1>IIF-1 Form</h1>
+                                        <p style="text-align: center; font-style: italic;">First Information Report (Under Section 154 Cr.P.C)</p>
+                                        ${document.getElementById('formPreview').innerHTML}
+                                    </body>
+                                    </html>
+                                `;
+
+                    // Create download link
+                    const blob = new Blob([htmlContent], { type: 'application/msword' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `IIF1_Form_${document.getElementById('firNo').value || 'report'}.doc`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+
+                    // Clean up
+                    setTimeout(() => URL.revokeObjectURL(url), 100);
+                } catch (error) {
+                    console.error("Error generating Word document:", error);
+                    alert("Error generating Word document: " + error.message);
+                }
+            }
+
+            // Save to Records function
+            async function saveToRecords() {
+                generatePreview();
+
+                try {
+                    // Generate PDF and Word files
+                    const pdfData = await generatePDFBlob();
+                    const wordData = await generateWordBlob();
+
+                    // Convert Blobs to base64 for storage
+                    const pdfBase64 = await blobToBase64(pdfData);
+                    const wordBase64 = await blobToBase64(wordData);
+
+                    // Collect form data
+                    const formData = collectFormData();
+
+                    // Create record object
+                    const record = {
+                        id: Date.now(),
+                        type: "IIF-1",
+                        date: new Date().toISOString().split('T')[0],
+                        policeStation: formData.policeStation,
+                        officerName: formData.officerName,
+                        formData: formData,
+                        pdfFile: pdfBase64,
+                        wordFile: wordBase64
+                    };
+
+                    // Get existing records from localStorage
+                    let records = JSON.parse(localStorage.getItem('iifRecords')) || [];
+
+                    // Add the new record
+                    records.push(record);
+
+                    // Save back to localStorage
+                    localStorage.setItem('iifRecords', JSON.stringify(records));
+
+                    alert('Form saved to records successfully!');
+                } catch (error) {
+                    console.error("Error saving to records:", error);
+                    alert("Error saving form to records: " + error.message);
+                }
+            }
+
+            // Generate PDF as Blob
+            async function generatePDFBlob() {
+                return new Promise((resolve, reject) => {
+                    const element = document.getElementById('formPreview');
+                    const opt = {
+                        margin: 10,
+                        filename: 'iif-1-form.pdf',
+                        image: { type: 'jpeg', quality: 0.98 },
+                        html2canvas: { scale: 2 },
+                        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                    };
+
+                    html2pdf().set(opt).from(element).output('blob').then(resolve).catch(reject);
+                });
+            }
+
+            // Generate Word as Blob
+            async function generateWordBlob() {
+                return new Promise((resolve) => {
+                    // Create HTML content for Word
+                    const htmlContent = `
+                            <html xmlns:o="urn:schemas-microsoft-com:office:office"
+                                  xmlns:w="urn:schemas-microsoft-com:office:word"
+                                  xmlns="http://www.w3.org/TR/REC-html40">
+                            <head>
+                                <meta charset="utf-8">
+                                <title>IIF-1 Form</title>
+                                <style>
+                                    body {
+                                        font-family: 'Times New Roman', serif;
+                                        font-size: 12pt;
+                                        line-height: 1.5;
+                                    }
+                                    h1, h2, h3, h4 {
+                                        color: #1a2a6c;
+                                    }
+                                    h1 {
+                                        font-size: 16pt;
+                                        text-align: center;
+                                    }
+                                    h2 {
+                                        font-size: 14pt;
+                                        margin-top: 12pt;
+                                        margin-bottom: 6pt;
+                                    }
+                                    table {
+                                        width: 100%;
+                                        border-collapse: collapse;
+                                        margin: 6pt 0;
+                                    }
+                                    th, td {
+                                        border: 1px solid #000;
+                                        padding: 4pt;
+                                        text-align: left;
+                                    }
+                                    th {
+                                        background-color: #f3f6fb;
+                                        font-weight: bold;
+                                    }
+                                    .field-label {
+                                        font-weight: bold;
+                                        width: 220px;
+                                        display: inline-block;
+                                    }
+                                    .signature-area {
+                                        margin-top: 30pt;
+                                        display: flex;
+                                        justify-content: space-between;
+                                    }
+                                    .signature-box {
+                                        border-top: 1px solid #000;
+                                        width: 250px;
+                                        padding-top: 5px;
+                                        text-align: center;
+                                    }
+                                </style>
+                            </head>
+                            <body>
+                                <h1>IIF-1 Form</h1>
+                                <p style="text-align: center; font-style: italic;">First Information Report (Under Section 154 Cr.P.C)</p>
+                                ${document.getElementById('formPreview').innerHTML}
+                            </body>
+                            </html>
+                        `;
+
+                    const blob = new Blob([htmlContent], { type: 'application/msword' });
+                    resolve(blob);
+                });
+            }
+
+            // Convert Blob to base64
+            function blobToBase64(blob) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(blob);
+                });
+            }
+
+            // Collect all form data
+            function collectFormData() {
+                const data = {
+                    district: document.getElementById('district').value,
+                    policeStation: document.getElementById('policeStation').value,
+                    year: document.getElementById('year').value,
+                    firNo: document.getElementById('firNo').value,
+                    firDate: document.getElementById('firDate').value,
+                    day: document.getElementById('day').value,
+                    occurrenceTime: document.getElementById('occurrenceTime').value,
+                    infoDate: document.getElementById('infoDate').value,
+                    infoTime: document.getElementById('infoTime').value,
+                    entryNo: document.getElementById('entryNo').value,
+                    diaryTime: document.getElementById('diaryTime').value,
+                    direction: document.getElementById('direction').value,
+                    beatNo: document.getElementById('beatNo').value,
+                    address: document.getElementById('address').value,
+                    outsidePS: document.getElementById('outsidePS').value,
+                    outsideDistrict: document.getElementById('outsideDistrict').value,
+                    complainantName: document.getElementById('complainantName').value,
+                    complainantFather: document.getElementById('complainantFather').value,
+                    complainantDob: document.getElementById('complainantDob').value,
+                    nationality: document.getElementById('nationality').value,
+                    passportNo: document.getElementById('passportNo').value,
+                    passportDate: document.getElementById('passportDate').value,
+                    passportPlace: document.getElementById('passportPlace').value,
+                    complainantOccupation: document.getElementById('complainantOccupation').value,
+                    complainantAddress: document.getElementById('complainantAddress').value,
+                    accusedDetails: document.getElementById('accusedDetails').value,
+                    delayDetails: document.getElementById('delayDetails').value,
+                    propertyInfo: document.getElementById('propertyInfo').value,
+                    propertyValue: document.getElementById('propertyValue').value,
+                    inquestNo: document.getElementById('inquestNo').value,
+                    firText: document.getElementById('firText').value,
+                    actionDetails: document.getElementById('actionDetails').value,
+                    firReadOver: document.getElementById('firReadOver').checked,
+                    officerName: document.getElementById('officerName').value,
+                    officerRank: document.getElementById('officerRank').value,
+                    officerNo: document.getElementById('officerNo').value,
+                    complainantSignature: document.getElementById('complainantSignature').value,
+                    dispatchDate: document.getElementById('dispatchDate').value,
+
+                    // Table data
+                    actsTable: getTableData('actsTable')
+                };
+
+                return data;
+            }
+
+            // Get data from a table
+            function getTableData(tableId) {
+                const table = document.getElementById(tableId);
+                const data = [];
+
+                for (let i = 1; i < table.rows.length; i++) {
+                    const row = table.rows[i];
+                    const rowData = {};
+
+                    for (let j = 1; j < row.cells.length - 1; j++) {
+                        const input = row.cells[j].querySelector('input');
+                        if (input) {
+                            rowData[`col${j}`] = input.value;
+                        }
+                    }
+
+                    data.push(rowData);
+                }
+
+                return data;
+            }
+
+            // Restore data to a table
+            function restoreTableData(tableId, tableData) {
+                const table = document.getElementById(tableId);
+
+                // Clear existing rows (except header)
+                while (table.rows.length > 1) {
+                    table.deleteRow(1);
+                }
+
+                // Add rows with data
+                if (tableData && tableData.length > 0) {
+                    for (let i = 0; i < tableData.length; i++) {
+                        addNewRow(tableId);
+                        const row = table.rows[table.rows.length - 1];
+
+                        for (let j = 1; j < row.cells.length - 1; j++) {
+                            const input = row.cells[j].querySelector('input');
+                            if (input && tableData[i][`col${j}`]) {
+                                input.value = tableData[i][`col${j}`];
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Save form data to localStorage
+            function saveFormLocal() {
+                const formData = collectFormData();
+                localStorage.setItem('iif1Form', JSON.stringify(formData));
+                alert('Form saved locally.');
+            }
+
+            // Load form data from localStorage
+            function loadFormLocal() {
+                const raw = localStorage.getItem('iif1Form');
+                if (!raw) {
+                    alert('No saved form found.');
+                    return;
+                }
+
+                try {
+                    const data = JSON.parse(raw);
+
+                    // Restore basic information
+                    document.getElementById('district').value = data.district || '';
+                    document.getElementById('policeStation').value = data.policeStation || '';
+                    document.getElementById('year').value = data.year || '';
+                    document.getElementById('firNo').value = data.firNo || '';
+                    document.getElementById('firDate').value = data.firDate || '';
+                    document.getElementById('day').value = data.day || '';
+                    document.getElementById('occurrenceTime').value = data.occurrenceTime || '';
+                    document.getElementById('infoDate').value = data.infoDate || '';
+                    document.getElementById('infoTime').value = data.infoTime || '';
+                    document.getElementById('entryNo').value = data.entryNo || '';
+                    document.getElementById('diaryTime').value = data.diaryTime || '';
+                    document.getElementById('direction').value = data.direction || '';
+                    document.getElementById('beatNo').value = data.beatNo || '';
+                    document.getElementById('address').value = data.address || '';
+                    document.getElementById('outsidePS').value = data.outsidePS || '';
+                    document.getElementById('outsideDistrict').value = data.outsideDistrict || '';
+                    document.getElementById('complainantName').value = data.complainantName || '';
+                    document.getElementById('complainantFather').value = data.complainantFather || '';
+                    document.getElementById('complainantDob').value = data.complainantDob || '';
+                    document.getElementById('nationality').value = data.nationality || '';
+                    document.getElementById('passportNo').value = data.passportNo || '';
+                    document.getElementById('passportDate').value = data.passportDate || '';
+                    document.getElementById('passportPlace').value = data.passportPlace || '';
+                    document.getElementById('complainantOccupation').value = data.complainantOccupation || '';
+                    document.getElementById('complainantAddress').value = data.complainantAddress || '';
+                    document.getElementById('accusedDetails').value = data.accusedDetails || '';
+                    document.getElementById('delayDetails').value = data.delayDetails || '';
+                    document.getElementById('propertyInfo').value = data.propertyInfo || '';
+                    document.getElementById('propertyValue').value = data.propertyValue || '';
+                    document.getElementById('inquestNo').value = data.inquestNo || '';
+                    document.getElementById('firText').value = data.firText || '';
+                    document.getElementById('actionDetails').value = data.actionDetails || '';
+                    document.getElementById('firReadOver').checked = data.firReadOver || false;
+                    document.getElementById('officerName').value = data.officerName || '';
+                    document.getElementById('officerRank').value = data.officerRank || '';
+                    document.getElementById('officerNo').value = data.officerNo || '';
+                    document.getElementById('complainantSignature').value = data.complainantSignature || '';
+                    document.getElementById('dispatchDate').value = data.dispatchDate || '';
+
+                    // Restore tables
+                    restoreTableData('actsTable', data.actsTable);
+
+                    generatePreview();
+                    alert('Saved form loaded.');
+                } catch (error) {
+                    console.error("Error loading form data:", error);
+                    alert("Error loading saved form.");
+                }
+            }
+
+            // Delete saved form data
+            function deleteFormLocal() {
+                if (!confirm('Delete locally saved form?')) return;
+                localStorage.removeItem('iif1Form');
+                alert('Saved form deleted.');
+            }
+
+            // Toggle section visibility
+            function toggleSection(sectionId) {
+                const section = document.getElementById(sectionId);
+                section.classList.toggle('active');
+            }
+
+            // Add new row to table
+            function addNewRow(tableId) {
+                const table = document.getElementById(tableId);
+                const rowCount = table.rows.length;
+                const row = table.insertRow(-1);
+
+                // Add serial number cell
+                const serialCell = row.insertCell(0);
+                serialCell.innerHTML = rowCount;
+
+                // Add data cells based on table type
+                if (tableId === 'actsTable') {
+                    const cell1 = row.insertCell(1);
+                    const cell2 = row.insertCell(2);
+                    const cell3 = row.insertCell(3);
+
+                    cell1.innerHTML = '<input type="text" placeholder="Enter Act">';
+                    cell2.innerHTML = '<input type="text" placeholder="Enter Section">';
+                    cell3.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+                } else {
+                    // Default for single column tables
+                    const cell1 = row.insertCell(1);
+                    const cell2 = row.insertCell(2);
+
+                    cell1.innerHTML = '<input type="text">';
+                    cell2.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+                }
+            }
+
+            // Remove row from table
+            function removeRow(button) {
+                const row = button.parentNode.parentNode;
+                row.parentNode.removeChild(row);
+
+                // Update row numbers
+                const table = row.parentNode.parentNode;
+                for (let i = 1; i < table.rows.length; i++) {
+                    table.rows[i].cells[0].innerHTML = i;
+                }
+            }
+
+            // Make functions global for onclick attributes
+            window.removeRow = removeRow;
+            window.addNewRow = addNewRow;
+            window.toggleSection = toggleSection;
+
+            // Generate initial preview
+            generatePreview();
+        });
+    </script>
+</body>
+</html>

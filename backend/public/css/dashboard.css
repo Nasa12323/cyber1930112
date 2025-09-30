@@ -1,0 +1,76 @@
+﻿body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+}
+
+.gov-header {
+    background: #003366;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+}
+
+    .gov-header .logo {
+        height: 50px;
+    }
+
+.logout-btn {
+    background: #cc0000;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.container {
+    display: flex;
+}
+
+.sidebar {
+    width: 220px;
+    background: #004080;
+    color: white;
+    min-height: 100vh;
+    padding-top: 20px;
+}
+
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+    }
+
+        .sidebar ul li {
+            padding: 12px 20px;
+        }
+
+            .sidebar ul li a {
+                color: white;
+                text-decoration: none;
+                display: block;
+            }
+
+                .sidebar ul li a:hover {
+                    background: #0059b3;
+                    border-radius: 4px;
+                }
+
+.submenu ul {
+    padding-left: 20px;
+    display: none;
+}
+
+.submenu:hover ul {
+    display: block;
+    background: #003366;
+}
+
+main {
+    flex: 1;
+    padding: 20px;
+    background: #fff;
+    min-height: 100vh;
+}

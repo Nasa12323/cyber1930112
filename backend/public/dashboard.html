@@ -1,0 +1,2468 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charge Sheet System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7f9;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        .gov-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 30px;
+            background: #1a2a6c;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            height: 70px;
+            width: auto;
+            border-radius: 8px;
+        }
+
+        .header-title {
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        .user-name {
+            font-weight: 500;
+            cursor: pointer;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+            .user-name:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            color: #333;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            min-width: 200px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .user-name:hover .user-dropdown {
+            display: block;
+        }
+
+        .user-dropdown-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .user-dropdown-item:hover {
+                background: #f5f7f9;
+            }
+
+            .user-dropdown-item:last-child {
+                border-bottom: none;
+            }
+
+        /* Top Navigation */
+        .top-nav {
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 0 30px;
+        }
+
+        .nav-items {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-item {
+            padding: 15px 25px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #555;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+            .nav-item:hover {
+                background: #f0f7ff;
+                color: #1a2a6c;
+            }
+
+            .nav-item.active {
+                color: #1a2a6c;
+                border-bottom: 3px solid #1a2a6c;
+                background: #f0f7ff;
+            }
+
+        /* Main Content */
+        .main-container {
+            display: flex;
+            flex: 1;
+        }
+
+        .content {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        .content-section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            color: #1a2a6c;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* Dashboard Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-title {
+            font-size: 16px;
+            color: #555;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .icon-primary {
+            background: rgba(26, 42, 108, 0.1);
+            color: #1a2a6c;
+        }
+
+        .icon-success {
+            background: rgba(46, 125, 50, 0.1);
+            color: #2e7d32;
+        }
+
+        .icon-warning {
+            background: rgba(245, 124, 0, 0.1);
+            color: #f57c00;
+        }
+
+        .icon-danger {
+            background: rgba(198, 40, 40, 0.1);
+            color: #c62828;
+        }
+
+        .icon-info {
+            background: rgba(33, 150, 243, 0.1);
+            color: #2196f3;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .stat-subtext {
+            font-size: 14px;
+            color: #777;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .action-button {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+            .action-button:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                color: #1a2a6c;
+            }
+
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #f0f7ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 20px;
+            color: #1a2a6c;
+        }
+
+        .action-text {
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* Form Statistics */
+        .form-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .form-stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+            .form-stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                text-decoration: none;
+                color: inherit;
+            }
+
+        .form-stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #f0f7ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 20px;
+            color: #1a2a6c;
+        }
+
+        .form-stat-title {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .form-stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a2a6c;
+        }
+
+        /* Status Section */
+        .status-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .status-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .status-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .status-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        .status-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .status-list {
+            list-style: none;
+        }
+
+        .status-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            .status-item:last-child {
+                border-bottom: none;
+            }
+
+        .status-item-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-item-title {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .status-item-date {
+            font-size: 12px;
+            color: #777;
+        }
+
+        .status-item-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-pending {
+            background: #fff8e1;
+            color: #f57c00;
+        }
+
+        .badge-approved {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .badge-rejected {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        /* Records Styles */
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+        }
+
+        .filter-label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .filter-input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background: #1a2a6c;
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f0f7ff;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 5px;
+            color: white;
+            display: inline-block;
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .btn-view {
+            background: #1a2a6c;
+        }
+
+        .btn-load {
+            background: #2e7d32;
+        }
+
+        .btn-delete {
+            background: #c62828;
+        }
+
+        .btn-word {
+            background: #1a6c5c;
+        }
+
+        .btn-pdf {
+            background: #b21f1f;
+        }
+
+        .doc-status {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .no-records {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+            font-style: italic;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a2a6c;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #777;
+        }
+
+        /* Form Preview Styles */
+        .form-preview {
+            font-family: 'Times New Roman', serif;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .preview-field {
+            margin-bottom: 10px;
+        }
+
+        .preview-label {
+            font-weight: 600;
+            min-width: 200px;
+            display: inline-block;
+            color: #222;
+            vertical-align: top;
+        }
+
+        .preview-value {
+            display: inline-block;
+            width: calc(100% - 220px);
+            word-break: break-word;
+        }
+
+        .document-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* CS Section 4 Replacement */
+        .cs-section-4 {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+        }
+
+        .cs-section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a2a6c;
+            margin-bottom: 15px;
+        }
+
+        .cs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .cs-item {
+            background: #f9f9f9;
+            border-radius: 6px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+            .cs-item:hover {
+                background: #f0f7ff;
+                transform: translateY(-3px);
+            }
+
+        .cs-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #1a2a6c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            color: white;
+            font-size: 20px;
+        }
+
+        .cs-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .cs-desc {
+            font-size: 12px;
+            color: #777;
+        }
+
+        /* Tool Results Section */
+        .tool-results {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            margin-top: 20px;
+            display: none;
+        }
+
+            .tool-results.active {
+                display: block;
+            }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .results-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a2a6c;
+        }
+
+        .close-results {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #777;
+        }
+
+        .results-content {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* Load Record Modal */
+        .load-modal-content {
+            max-width: 600px;
+        }
+
+        .load-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .load-option {
+            background: #f9f9f9;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+            .load-option:hover {
+                background: #f0f7ff;
+                transform: translateY(-3px);
+            }
+
+        .load-option-icon {
+            font-size: 24px;
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+
+        .load-option-text {
+            font-weight: 600;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #1a2a6c;
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+            .stats-grid,
+            .form-stats,
+            .status-cards {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+
+            .profile-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .gov-header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+
+            .nav-items {
+                flex-direction: column;
+            }
+
+            .nav-item {
+                border-bottom: 1px solid #eee;
+                border-left: 3px solid transparent;
+            }
+
+                .nav-item.active {
+                    border-bottom: 1px solid #eee;
+                    border-left: 3px solid #1a2a6c;
+                }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .doc-status {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .preview-label, .preview-value {
+                display: block;
+                width: 100%;
+            }
+
+            .preview-label {
+                margin-bottom: 5px;
+            }
+
+            .profile-form {
+                grid-template-columns: 1fr;
+            }
+
+            .load-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="gov-header">
+            <div class="logo-container">
+                <!-- Updated logo with medium size -->
+                <img src="puducherry-police-logo - Copy.png" alt="Charge Sheet System Logo" class="logo">
+                <div class="header-title">Charge Sheet System</div> <!-- Updated title -->
+            </div>
+            <div class="user-info">
+                <div class="user-name">
+                    Inspector Rajesh Kumar
+                    <div class="user-dropdown">
+                        <div class="user-dropdown-item" onclick="openProfileModal()">
+                            <i class="fas fa-user"></i> Profile
+                        </div>
+                        <div class="user-dropdown-item" onclick="showLogoutPrompt()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </div>
+                    </div>
+                </div>
+                <!-- Removed the separate logout button as requested -->
+            </div>
+        </header>
+
+        <!-- Top Navigation -->
+        <nav class="top-nav">
+            <ul class="nav-items">
+                <li class="nav-item active" data-section="dashboard">Dashboard</li>
+                <li class="nav-item" data-section="chargesheet">Chargesheet</li>
+                <li class="nav-item" data-section="records">Records</li>
+                <!-- Removed Profile tab as requested -->
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-container">
+            <div class="content">
+                <!-- Dashboard Section -->
+                <div id="dashboard-section" class="content-section">
+                    <h2 class="section-title">Dashboard Overview</h2>
+
+                    <!-- Summary Stats -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-title">Total Forms Submitted</div>
+                                <div class="stat-icon icon-primary">
+                                    <i class="fas fa-file"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="total-forms">0</div>
+                            <div class="stat-subtext">Across all IIF forms</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-title">Pending Approval</div>
+                                <div class="stat-icon icon-warning">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="pending-approval">0</div>
+                            <div class="stat-subtext">Awaiting review</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-title">Completed Cases</div>
+                                <div class="stat-icon icon-success">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="completed-cases">0</div>
+                            <div class="stat-subtext">Successfully processed</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-title">Rejected Forms</div>
+                                <div class="stat-icon icon-danger">
+                                    <i class="fas fa-times-circle"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="rejected-forms">0</div>
+                            <div class="stat-subtext">Requires correction</div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <h3 class="section-title">Quick Actions</h3>
+                    <div class="quick-actions">
+                        <button class="action-button" onclick="loadIIFForm('IIF-1')">
+                            <div class="action-icon">
+                                <i class="fas fa-file-invoice"></i>
+                            </div>
+                            <div class="action-text">Create IIF-1 Form</div>
+                        </button>
+
+                        <button class="action-button" onclick="loadIIFForm('IIF-2')">
+                            <div class="action-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="action-text">Create IIF-2 Form</div>
+                        </button>
+
+                        <button class="action-button" onclick="loadIIFForm('IIF-3')">
+                            <div class="action-icon">
+                                <i class="fas fa-file-contract"></i>
+                            </div>
+                            <div class="action-text">Create IIF-3 Form</div>
+                        </button>
+
+                        <button class="action-button" onclick="loadIIFForm('IIF-4')">
+                            <div class="action-icon">
+                                <i class="fas fa-file-signature"></i>
+                            </div>
+                            <div class="action-text">Create IIF-4 Form</div>
+                        </button>
+
+                        <button class="action-button" onclick="loadIIFForm('IIF-5')">
+                            <div class="action-icon">
+                                <i class="fas fa-file-export"></i>
+                            </div>
+                            <div class="action-text">Create IIF-5 Form</div>
+                        </button>
+
+                        <button class="action-button" onclick="setActiveSection('records')">
+                            <div class="action-icon">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <div class="action-text">View All Records</div>
+                        </button>
+                    </div>
+
+                    <!-- Form Type Statistics -->
+                    <h3 class="section-title">Form Submission Statistics</h3>
+                    <div class="form-stats">
+                        <a href="/Form/IIF-1.html" target="_blank" class="form-stat-card">
+                            <div class="form-stat-icon">
+                                <i class="fas fa-file-invoice"></i>
+                            </div>
+                            <div class="form-stat-title">IIF-1 Forms</div>
+                            <div class="form-stat-value" id="iif1-count">0</div>
+                        </a>
+
+                        <a href="Form/IIF-2.html" target="_blank" class="form-stat-card">
+                            <div class="form-stat-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="form-stat-title">IIF-2 Forms</div>
+                            <div class="form-stat-value" id="iif2-count">0</div>
+                        </a>
+
+                        <a href="Form/IIF-3.html" target="_blank" class="form-stat-card">
+                            <div class="form-stat-icon">
+                                <i class="fas fa-file-contract"></i>
+                            </div>
+                            <div class="form-stat-title">IIF-3 Forms</div>
+                            <div class="form-stat-value" id="iif3-count">0</div>
+                        </a>
+
+                        <a href="Form/IIF-4.html" target="_blank" class="form-stat-card">
+                            <div class="form-stat-icon">
+                                <i class="fas fa-file-signature"></i>
+                            </div>
+                            <div class="form-stat-title">IIF-4 Forms</div>
+                            <div class="form-stat-value" id="iif4-count">0</div>
+                        </a>
+
+                        <a href="Form/IIF-5.html" target="_blank" class="form-stat-card">
+                            <div class="form-stat-icon">
+                                <i class="fas fa-file-export"></i>
+                            </div>
+                            <div class="form-stat-title">IIF-5 Forms</div>
+                            <div class="form-stat-value" id="iif5-count">0</div>
+                        </a>
+                    </div>
+
+                    <!-- Status Overview -->
+                    <h3 class="section-title">Recent Activity</h3>
+                    <div class="status-cards">
+                        <div class="status-card">
+                            <div class="status-header">
+                                <div class="status-icon icon-warning">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="status-title">Pending Approval</div>
+                            </div>
+                            <ul class="status-list" id="pending-list">
+                                <!-- Will be populated by JavaScript -->
+                            </ul>
+                        </div>
+
+                        <div class="status-card">
+                            <div class="status-header">
+                                <div class="status-icon icon-success">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="status-title">Recently Approved</div>
+                            </div>
+                            <ul class="status-list" id="approved-list">
+                                <!-- Will be populated by JavaScript -->
+                            </ul>
+                        </div>
+
+                        <div class="status-card">
+                            <div class="status-header">
+                                <div class="status-icon icon-danger">
+                                    <i class="fas fa-times-circle"></i>
+                                </div>
+                                <div class="status-title">Recently Rejected</div>
+                            </div>
+                            <ul class="status-list" id="rejected-list">
+                                <!-- Will be populated by JavaScript -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Records Section (initially hidden) -->
+                <div id="records-section" class="content-section" style="display: none;">
+                    <h2 class="section-title">Charge Sheet System - Records Management</h2>
+
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label class="filter-label">IIF Type</label>
+                            <select class="filter-input" id="filter-type">
+                                <option value="">All Types</option>
+                                <option value="IIF-1">IIF-1</option>
+                                <option value="IIF-2">IIF-2</option>
+                                <option value="IIF-3">IIF-3</option>
+                                <option value="IIF-4">IIF-4</option>
+                                <option value="IIF-5">IIF-5</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Police Station</label>
+                            <input type="text" class="filter-input" id="filter-station" placeholder="Filter by station">
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Officer Name</label>
+                            <input type="text" class="filter-input" id="filter-officer" placeholder="Filter by officer">
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Date Range</label>
+                            <input type="date" class="filter-input" id="filter-date-from">
+                            <span style="text-align: center; margin: 5px 0;">to</span>
+                            <input type="date" class="filter-input" id="filter-date-to">
+                        </div>
+                        <div class="filter-group" style="justify-content: center;">
+                            <button class="action-btn btn-view" onclick="clearFilters()" style="margin-top: 20px;">
+                                <i class="fas fa-sync"></i> Clear Filters
+                            </button>
+                        </div>
+                    </div>
+
+                    <table id="recordsTable">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>IIF Type</th>
+                                <th>Date</th>
+                                <th>Police Station</th>
+                                <th>Officer Name</th>
+                                <th>Status</th>
+                                <th>Documents</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="records-body">
+                            <!-- Will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+
+                    <div id="no-records" class="no-records" style="display: none;">
+                        <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 15px;"></i>
+                        <p>No records found. Save forms from the IIF forms section to see them here.</p>
+                    </div>
+                </div>
+
+                <!-- Chargesheet Section (initially hidden) -->
+                <div id="chargesheet-section" class="content-section" style="display: none;">
+                    <h2 class="section-title">Chargesheet Forms</h2>
+                    <p>Select a form type to create or manage charge sheets.</p>
+
+                    <div class="form-stats">
+                        <a href="/Form/IIF-1.html" target="_blank" class="form-stat-card">
+                            <div class="form-stat-icon">
+                                <i class="fas fa-file-invoice"></i>
+                            </div>
+                            <div class="form-stat-title">IIF-1 FIR</div>
+                            <div class="form-stat-value">Create New</div>
+                        </a>
+
+                        <a href="Form/IIF-2.html" target="_blank" class="form-stat-card">
+                            <div class="form-stat-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="form-stat-title">IIF-2 Crime</div>
+                            <div class="form-stat-value">Create New</div>
+                        </a>
+
+                        <a href="Form/IIF-3.html" target="_blank" class="form-stat-card">
+                            <div class="form-stat-icon">
+                                <i class="fas fa-file-contract"></i>
+                            </div>
+                            <div class="form-stat-title">IIF-3 Arrest</div>
+                            <div class="form-stat-value">Create New</div>
+                        </a>
+
+                        <a href="Form/IIF-4.html" target="_blank" class="form-stat-card">
+                            <div class="form-stat-icon">
+                                <i class="fas fa-file-signature"></i>
+                            </div>
+                            <div class="form-stat-title">IIF-4 Property</div>
+                            <div class="form-stat-value">Create New</div>
+                        </a>
+
+                        <a href="Form/IIF-5.html" target="_blank" class="form-stat-card">
+                            <div class="form-stat-icon">
+                                <i class="fas fa-file-export"></i>
+                            </div>
+                            <div class="form-stat-title">IIF-5 Final Report</div>
+                            <div class="form-stat-value">Create New</div>
+                        </a>
+                    </div>
+
+                    <!-- NEW: Data Analysis Tools Section -->
+                    <div class="cs-section-4">
+                        <h3 class="cs-section-title">Data Analysis Tools</h3>
+                        <div class="cs-grid">
+                            <div class="cs-item" onclick="generateCaseSummary()">
+                                <div class="cs-icon">
+                                    <i class="fas fa-chart-pie"></i>
+                                </div>
+                                <div class="cs-title">Case Summary</div>
+                                <div class="cs-desc">Generate case statistics and insights</div>
+                            </div>
+                            <div class="cs-item" onclick="showOfficerPerformance()">
+                                <div class="cs-icon">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
+                                <div class="cs-title">Officer Performance</div>
+                                <div class="cs-desc">View officer productivity metrics</div>
+                            </div>
+                            <div class="cs-item" onclick="showStationComparison()">
+                                <div class="cs-icon">
+                                    <i class="fas fa-balance-scale"></i>
+                                </div>
+                                <div class="cs-title">Station Comparison</div>
+                                <div class="cs-desc">Compare performance across stations</div>
+                            </div>
+                            <div class="cs-item" onclick="showTimelineAnalysis()">
+                                <div class="cs-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="cs-title">Timeline Analysis</div>
+                                <div class="cs-desc">Analyze case trends over time</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tool Results Section -->
+                    <div id="tool-results" class="tool-results">
+                        <div class="results-header">
+                            <h3 class="results-title" id="results-title">Tool Results</h3>
+                            <button class="close-results" onclick="closeToolResults()">&times;</button>
+                        </div>
+                        <div class="results-content" id="results-content">
+                            <!-- Results will be displayed here -->
+                        </div>
+                    </div>
+
+                    <!-- Recent Forms Section -->
+                    <div class="status-cards" style="margin-top: 30px;">
+                        <div class="status-card">
+                            <div class="status-header">
+                                <div class="status-icon icon-primary">
+                                    <i class="fas fa-history"></i>
+                                </div>
+                                <div class="status-title">Recently Created Forms</div>
+                            </div>
+                            <ul class="status-list" id="recent-forms-list">
+                                <!-- Will be populated by JavaScript -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- View Record Modal -->
+    <div id="view-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Form Details</h3>
+                <button class="close-modal" onclick="closeModal('view-modal')">&times;</button>
+            </div>
+            <div id="modal-body" class="form-preview">
+                <!-- Form details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Update Modal -->
+    <div id="status-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Update Form Status</h3>
+                <button class="close-modal" onclick="closeModal('status-modal')">&times;</button>
+            </div>
+            <div id="status-modal-body">
+                <div class="filter-group">
+                    <label class="filter-label">Select Status:</label>
+                    <select id="status-select" class="filter-input">
+                        <option value="Pending">Pending</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                </div>
+                <div class="filter-group" style="margin-top: 20px;">
+                    <button class="action-btn btn-view" onclick="updateRecordStatus()">Update Status</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Record Modal -->
+    <div id="load-modal" class="modal">
+        <div class="modal-content load-modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Load Record Options</h3>
+                <button class="close-modal" onclick="closeModal('load-modal')">&times;</button>
+            </div>
+            <div style="padding: 20px;">
+                <p>How would you like to load this record?</p>
+                <div class="load-options">
+                    <div class="load-option" onclick="loadRecordForEdit()">
+                        <div class="load-option-icon">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <div class="load-option-text">Edit in Form</div>
+                        <p style="font-size: 12px; color: #777; margin-top: 5px;">Open form with data pre-filled for editing</p>
+                    </div>
+                    <div class="load-option" onclick="loadRecordForView()">
+                        <div class="load-option-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="load-option-text">View Only</div>
+                        <p style="font-size: 12px; color: #777; margin-top: 5px;">Open form in read-only mode</p>
+                    </div>
+                </div>
+                <div class="progress-container" id="load-progress" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <div class="progress-text" id="progress-text">Loading record data...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profile-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Officer Profile</h3>
+                <button class="close-modal" onclick="closeModal('profile-modal')">&times;</button>
+            </div>
+            <div class="profile-container">
+                <!-- Profile Overview Card -->
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <div class="profile-info">
+                            <h3 id="profile-name">Inspector Rajesh Kumar</h3>
+                            <p id="profile-rank">Police Inspector</p>
+                            <p id="profile-id">ID: PI-2023-0876</p>
+                        </div>
+                    </div>
+
+                    <div class="profile-details">
+                        <div class="profile-detail">
+                            <span class="detail-label">Department:</span>
+                            <span class="detail-value" id="profile-dept">Puducherry Police</span>
+                        </div>
+                        <div class="profile-detail">
+                            <span class="detail-label">Police Station:</span>
+                            <span class="detail-value" id="profile-station">Grand Bazaar Police Station</span>
+                        </div>
+                        <div class="profile-detail">
+                            <span class="detail-label">Service Since:</span>
+                            <span class="detail-value" id="profile-service">2015</span>
+                        </div>
+                        <div class="profile-detail">
+                            <span class="detail-label">Email:</span>
+                            <span class="detail-value" id="profile-email">rajesh.kumar@police.puducherry.gov.in</span>
+                        </div>
+                        <div class="profile-detail">
+                            <span class="detail-label">Phone:</span>
+                            <span class="detail-value" id="profile-phone">+91-9876543210</span>
+                        </div>
+                        <div class="profile-detail">
+                            <span class="detail-label">Last Login:</span>
+                            <span class="detail-value" id="profile-lastlogin">Today, 10:45 AM</span>
+                        </div>
+                    </div>
+
+                    <div class="profile-actions">
+                        <button class="action-btn btn-view" onclick="toggleEditMode()">
+                            <i class="fas fa-edit"></i> Edit Profile
+                        </button>
+                        <button class="action-btn btn-load" onclick="printProfile()">
+                            <i class="fas fa-print"></i> Print Profile
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Profile Edit Form -->
+                <div class="profile-card">
+                    <h3 class="section-title">Update Profile Information</h3>
+                    <form id="profile-form" class="profile-form">
+                        <div class="form-group">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-input" id="edit-name" value="Inspector Rajesh Kumar">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Rank/Designation</label>
+                            <input type="text" class="form-input" id="edit-rank" value="Police Inspector">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Police Station</label>
+                            <input type="text" class="form-input" id="edit-station" value="Grand Bazaar Police Station">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-input" id="edit-email" value="rajesh.kumar@police.puducherry.gov.in">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-input" id="edit-phone" value="+91-9876543210">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Emergency Contact</label>
+                            <input type="tel" class="form-input" id="edit-emergency" value="+91-9123456780">
+                        </div>
+                        <div class="form-group full-width">
+                            <label class="form-label">Residential Address</label>
+                            <textarea class="form-input" id="edit-address" rows="3">No. 45, Police Quarters, Lawspet, Puducherry - 605008</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Blood Group</label>
+                            <input type="text" class="form-input" id="edit-blood" value="O+">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Identification Marks</label>
+                            <input type="text" class="form-input" id="edit-marks" value="Scar on left cheek">
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="action-btn btn-delete" onclick="cancelEdit()">Cancel</button>
+                            <button type="button" class="action-btn btn-load" onclick="saveProfile()">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logout Confirmation Modal -->
+    <div id="logout-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Confirm Logout</h3>
+                <button class="close-modal" onclick="closeModal('logout-modal')">&times;</button>
+            </div>
+            <div style="padding: 20px;">
+                <p>Are you sure you want to logout from the Charge Sheet System?</p>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="action-btn btn-view" onclick="closeModal('logout-modal')" style="flex: 1;">Cancel</button>
+                    <button class="action-btn btn-delete" onclick="performLogout()" style="flex: 1;">Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables from Project A
+        let records = JSON.parse(localStorage.getItem('iifRecords')) || [];
+        let currentRecordId = null;
+        let currentRecord = null;
+
+        // Form file paths - CORRECTED with consistent naming
+        const formPaths = {
+            'IIF-1': 'Form/IIF-1.html',
+            'IIF-2': 'Form/IIF-2.html',
+            'IIF-3': 'Form/IIF-3.html',
+            'IIF-4': 'Form/IIF-4.html',
+            'IIF-5': 'Form/IIF-5.html'
+        };
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function () {
+            // Set up navigation
+            const navItems = document.querySelectorAll('.nav-item');
+
+            // Set dashboard as default active
+            setActiveSection('dashboard');
+
+            // Add click event listeners to navigation items
+            navItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    const section = this.getAttribute('data-section');
+                    setActiveSection(section);
+                });
+            });
+
+            // Initialize data
+            updateDashboard();
+            updateFormStatistics();
+            updateRecentFormsList();
+
+            // Add event listeners to filters
+            document.getElementById('filter-type').addEventListener('change', filterRecords);
+            document.getElementById('filter-station').addEventListener('input', filterRecords);
+            document.getElementById('filter-officer').addEventListener('input', filterRecords);
+            document.getElementById('filter-date-from').addEventListener('change', filterRecords);
+            document.getElementById('filter-date-to').addEventListener('change', filterRecords);
+
+            // Load profile data
+            loadProfileData();
+        });
+
+        // Set active section
+        function setActiveSection(section) {
+            // Update navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`.nav-item[data-section="${section}"]`).classList.add('active');
+
+            // Update content visibility
+            document.getElementById('dashboard-section').style.display = 'none';
+            document.getElementById('chargesheet-section').style.display = 'none';
+            document.getElementById('records-section').style.display = 'none';
+
+            document.getElementById(`${section}-section`).style.display = 'block';
+
+            // If switching to records, refresh the table
+            if (section === 'records') {
+                displayRecords(records);
+            }
+        }
+
+        // Load IIF Form - opens your existing form files
+        function loadIIFForm(formType) {
+            if (formPaths[formType]) {
+                // Track form opening
+                trackFormOpening(formType);
+                // Open the form in a new tab
+                window.open(formPaths[formType], '_blank');
+            } else {
+                alert(`Form ${formType} not found!`);
+            }
+        }
+
+        // Track when forms are opened
+        function trackFormOpening(formType) {
+            let formHistory = JSON.parse(localStorage.getItem('formHistory')) || [];
+
+            // Add current form opening to history
+            formHistory.unshift({
+                type: formType,
+                timestamp: new Date().toISOString(),
+                action: 'opened'
+            });
+
+            // Keep only last 10 entries
+            formHistory = formHistory.slice(0, 10);
+
+            localStorage.setItem('formHistory', JSON.stringify(formHistory));
+            updateRecentFormsList();
+        }
+
+        // Update recent forms list in the Chargesheet section
+        function updateRecentFormsList() {
+            const recentList = document.getElementById('recent-forms-list');
+            const formHistory = JSON.parse(localStorage.getItem('formHistory')) || [];
+
+            recentList.innerHTML = '';
+
+            if (formHistory.length === 0) {
+                recentList.innerHTML = '<li class="status-item">No recent form activity</li>';
+                return;
+            }
+
+            formHistory.forEach(entry => {
+                const li = document.createElement('li');
+                li.className = 'status-item';
+
+                const timeAgo = getTimeAgo(entry.timestamp);
+                const actionText = entry.action === 'opened' ? 'Opened' : 'Created';
+
+                li.innerHTML = `
+                                    <div class="status-item-info">
+                                        <div class="status-item-title">${entry.type}</div>
+                                        <div class="status-item-date">${actionText} ${timeAgo}</div>
+                                    </div>
+                                    <span class="status-item-badge badge-pending">${entry.action}</span>
+                                `;
+
+                recentList.appendChild(li);
+            });
+        }
+
+        // Helper function to get time ago
+        function getTimeAgo(timestamp) {
+            const now = new Date();
+            const past = new Date(timestamp);
+            const diffInSeconds = Math.floor((now - past) / 1000);
+
+            if (diffInSeconds < 60) return 'just now';
+            if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+            if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+            return `${Math.floor(diffInSeconds / 86400)} days ago`;
+        }
+
+        // Check forms status and update dashboard
+        function checkFormsStatus() {
+            // Refresh the records from localStorage
+            records = JSON.parse(localStorage.getItem('iifRecords')) || [];
+
+            // Update all displays
+            updateDashboard();
+            updateFormStatistics();
+            updateRecentFormsList();
+
+            // Show confirmation
+            alert('Forms status updated successfully!');
+        }
+
+        // Update dashboard with current data
+        function updateDashboard() {
+            // Calculate stats
+            const total = records.length;
+            const pending = records.filter(record => record.status === 'Pending').length;
+            const approved = records.filter(record => record.status === 'Approved').length;
+            const rejected = records.filter(record => record.status === 'Rejected').length;
+
+            // Update stats
+            document.getElementById('total-forms').textContent = total;
+            document.getElementById('pending-approval').textContent = pending;
+            document.getElementById('completed-cases').textContent = approved;
+            document.getElementById('rejected-forms').textContent = rejected;
+
+            // Update recent activity
+            updateRecentActivity();
+        }
+
+        // Update form statistics
+        function updateFormStatistics() {
+            // Calculate form counts from stored data
+            const counts = {
+                'IIF-1': records.filter(record => record.type === 'IIF-1').length,
+                'IIF-2': records.filter(record => record.type === 'IIF-2').length,
+                'IIF-3': records.filter(record => record.type === 'IIF-3').length,
+                'IIF-4': records.filter(record => record.type === 'IIF-4').length,
+                'IIF-5': records.filter(record => record.type === 'IIF-5').length
+            };
+
+            // Update form statistics display
+            document.getElementById('iif1-count').textContent = counts['IIF-1'];
+            document.getElementById('iif2-count').textContent = counts['IIF-2'];
+            document.getElementById('iif3-count').textContent = counts['IIF-3'];
+            document.getElementById('iif4-count').textContent = counts['IIF-4'];
+            document.getElementById('iif5-count').textContent = counts['IIF-5'];
+        }
+
+        // Update recent activity lists
+        function updateRecentActivity() {
+            const pendingList = document.getElementById('pending-list');
+            const approvedList = document.getElementById('approved-list');
+            const rejectedList = document.getElementById('rejected-list');
+
+            // Clear lists
+            pendingList.innerHTML = '';
+            approvedList.innerHTML = '';
+            rejectedList.innerHTML = '';
+
+            // Get recent items (last 3 of each)
+            const pending = records.filter(record => record.status === 'Pending').slice(-3);
+            const approved = records.filter(record => record.status === 'Approved').slice(-3);
+            const rejected = records.filter(record => record.status === 'Rejected').slice(-3);
+
+            // Populate pending list
+            pending.forEach(record => {
+                const li = document.createElement('li');
+                li.className = 'status-item';
+                li.innerHTML = `
+                                    <div class="status-item-info">
+                                        <div class="status-item-title">${record.type}: ${record.id}</div>
+                                        <div class="status-item-date">Submitted: ${formatDate(record.date)}</div>
+                                    </div>
+                                    <span class="status-item-badge badge-pending">Pending</span>
+                                `;
+                pendingList.appendChild(li);
+            });
+
+            // Populate approved list
+            approved.forEach(record => {
+                const li = document.createElement('li');
+                li.className = 'status-item';
+                li.innerHTML = `
+                                    <div class="status-item-info">
+                                        <div class="status-item-title">${record.type}: ${record.id}</div>
+                                        <div class="status-item-date">Approved: ${formatDate(record.date)}</div>
+                                    </div>
+                                    <span class="status-item-badge badge-approved">Approved</span>
+                                `;
+                approvedList.appendChild(li);
+            });
+
+            // Populate rejected list
+            rejected.forEach(record => {
+                const li = document.createElement('li');
+                li.className = 'status-item';
+                li.innerHTML = `
+                                    <div class="status-item-info">
+                                        <div class="status-item-title">${record.type}: ${record.id}</div>
+                                        <div class="status-item-date">Rejected: ${formatDate(record.date)}</div>
+                                    </div>
+                                    <span class="status-item-badge badge-rejected">Rejected</span>
+                                `;
+                rejectedList.appendChild(li);
+            });
+        }
+
+        // Display records in the table
+        function displayRecords(recordsToDisplay) {
+            const recordsBody = document.getElementById('records-body');
+            const noRecords = document.getElementById('no-records');
+
+            recordsBody.innerHTML = '';
+
+            if (recordsToDisplay.length === 0) {
+                noRecords.style.display = 'block';
+                return;
+            }
+
+            noRecords.style.display = 'none';
+
+            recordsToDisplay.forEach((record, index) => {
+                const row = document.createElement('tr');
+
+                // Check if documents exist
+                const hasDocuments = record.pdfFile && record.wordFile;
+                const docStatus = hasDocuments ?
+                    `<div class="doc-status">
+                                            <span style="color: #2e7d32;"><i class="fas fa-check-circle"></i> Available</span>
+                                            <button class="action-btn btn-pdf" onclick="downloadRecord(${record.id}, 'pdf')">
+                                                <i class="fas fa-file-pdf"></i> PDF
+                                            </button>
+                                            <button class="action-btn btn-word" onclick="downloadRecord(${record.id}, 'word')">
+                                                <i class="fas fa-file-word"></i> Word
+                                            </button>
+                                        </div>` :
+                    `<span style="color: #c62828;"><i class="fas fa-times-circle"></i> Not Generated</span>`;
+
+                // Determine status badge color
+                let statusBadge = '';
+                switch (record.status) {
+                    case 'Approved':
+                        statusBadge = `<span class="status-item-badge badge-approved">Approved</span>`;
+                        break;
+                    case 'Rejected':
+                        statusBadge = `<span class="status-item-badge badge-rejected">Rejected</span>`;
+                        break;
+                    default:
+                        statusBadge = `<span class="status-item-badge badge-pending">Pending</span>`;
+                }
+
+                row.innerHTML = `
+                                        <td>${index + 1}</td>
+                                        <td>${record.type}</td>
+                                        <td>${record.date}</td>
+                                        <td>${record.policeStation}</td>
+                                        <td>${record.officerName}</td>
+                                        <td>${statusBadge}</td>
+                                        <td>${docStatus}</td>
+                                        <td>
+                                            <button class="action-btn btn-view" onclick="viewRecord(${record.id})">
+                                                <i class="fas fa-eye"></i> View
+                                            </button>
+                                            <button class="action-btn btn-load" onclick="openLoadModal(${record.id})">
+                                                <i class="fas fa-download"></i> Load
+                                            </button>
+                                            <button class="action-btn btn-view" onclick="openStatusModal(${record.id})">
+                                                <i class="fas fa-edit"></i> Status
+                                            </button>
+                                            <button class="action-btn btn-delete" onclick="deleteRecord(${record.id})">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </td>
+                                    `;
+
+                recordsBody.appendChild(row);
+            });
+        }
+
+        // Open load record modal
+        function openLoadModal(id) {
+            currentRecordId = id;
+            currentRecord = records.find(r => r.id === id);
+            if (!currentRecord) {
+                alert("Record not found!");
+                return;
+            }
+            document.getElementById('load-modal').style.display = 'flex';
+        }
+
+        // Load record for editing
+        function loadRecordForEdit() {
+            if (!currentRecord) return;
+
+            // Show progress
+            document.getElementById('load-progress').style.display = 'block';
+            simulateProgress(() => {
+                // Store record data for the form to use
+                localStorage.setItem('currentEditingRecord', JSON.stringify(currentRecord));
+                localStorage.setItem('loadMode', 'edit');
+
+                // Open the form
+                if (formPaths[currentRecord.type]) {
+                    // For demo purposes, we'll show what would happen
+                    alert(`Loading record ${currentRecord.id} for editing in ${currentRecord.type} form.\n\nIn a real implementation, the form would open with all data pre-filled.`);
+
+                    // In a real implementation, you would open the form:
+                    // window.open(formPaths[currentRecord.type], '_blank');
+                } else {
+                    alert(`Form ${currentRecord.type} not found!`);
+                }
+
+                // Close modal
+                document.getElementById('load-modal').style.display = 'none';
+            });
+        }
+
+        // Load record for viewing
+        function loadRecordForView() {
+            if (!currentRecord) return;
+
+            // Show progress
+            document.getElementById('load-progress').style.display = 'block';
+            simulateProgress(() => {
+                // Store record data for the form to use in view mode
+                localStorage.setItem('currentViewingRecord', JSON.stringify(currentRecord));
+                localStorage.setItem('loadMode', 'view');
+
+                // Open the form
+                if (formPaths[currentRecord.type]) {
+                    // For demo purposes, we'll show what would happen
+                    alert(`Loading record ${currentRecord.id} for viewing in ${currentRecord.type} form.\n\nIn a real implementation, the form would open in read-only mode with all data displayed.`);
+
+                    // In a real implementation, you would open the form:
+                    // window.open(formPaths[currentRecord.type] + '?mode=view', '_blank');
+                } else {
+                    alert(`Form ${currentRecord.type} not found!`);
+                }
+
+                // Close modal
+                document.getElementById('load-modal').style.display = 'none';
+            });
+        }
+
+        // Simulate progress for loading
+        function simulateProgress(callback) {
+            const progressFill = document.getElementById('progress-fill');
+            const progressText = document.getElementById('progress-text');
+
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    callback();
+                } else {
+                    width += 5;
+                    progressFill.style.width = width + '%';
+
+                    if (width < 30) {
+                        progressText.textContent = 'Loading record data...';
+                    } else if (width < 60) {
+                        progressText.textContent = 'Preparing form...';
+                    } else if (width < 90) {
+                        progressText.textContent = 'Finalizing...';
+                    } else {
+                        progressText.textContent = 'Ready!';
+                    }
+                }
+            }, 50);
+        }
+
+        // View record details
+        function viewRecord(id) {
+            const record = records.find(r => r.id === id);
+            if (!record) return;
+
+            let content = `
+                                    <div class="preview-field"><span class="preview-label">Record ID:</span> <span class="preview-value">${record.id}</span></div>
+                                    <div class="preview-field"><span class="preview-label">IIF Type:</span> <span class="preview-value">${record.type}</span></div>
+                                    <div class="preview-field"><span class="preview-label">Date:</span> <span class="preview-value">${record.date}</span></div>
+                                    <div class="preview-field"><span class="preview-label">Police Station:</span> <span class="preview-value">${record.policeStation}</span></div>
+                                    <div class="preview-field"><span class="preview-label">Officer Name:</span> <span class="preview-value">${record.officerName}</span></div>
+                                    <div class="preview-field"><span class="preview-label">Status:</span> <span class="preview-value">${record.status || 'Pending'}</span></div>
+                                    <hr style="margin: 15px 0;">
+                                    <h3 style="margin: 15px 0; color: #1a2a6c;">Form Data</h3>
+                                `;
+
+            // Add form data fields
+            for (const key in record.formData) {
+                if (record.formData.hasOwnProperty(key)) {
+                    const value = record.formData[key];
+                    if (Array.isArray(value)) {
+                        content += `<div class="preview-field"><span class="preview-label">${key}:</span> <span class="preview-value">`;
+                        value.forEach(item => {
+                            for (const itemKey in item) {
+                                content += `${itemKey}: ${item[itemKey]}; `;
+                            }
+                        });
+                        content += `</span></div>`;
+                    } else {
+                        content += `<div class="preview-field"><span class="preview-label">${key}:</span> <span class="preview-value">${value}</span></div>`;
+                    }
+                }
+            }
+
+            // Add document section if documents exist
+            if (record.pdfFile && record.wordFile) {
+                content += `
+                                        <hr style="margin: 15px 0;">
+                                        <h3 style="margin: 15px 0; color: #1a2a6c;">Attachments</h3>
+                                        <div class="document-actions">
+                                            <button class="action-btn btn-pdf" onclick="downloadRecord(${record.id}, 'pdf')">
+                                                <i class="fas fa-file-pdf"></i> Download PDF
+                                            </button>
+                                            <button class="action-btn btn-word" onclick="downloadRecord(${record.id}, 'word')">
+                                                <i class="fas fa-file-word"></i> Download Word
+                                            </button>
+                                            <button class="action-btn btn-view" onclick="viewDocument('${record.pdfFile}', 'pdf')">
+                                                <i class="fas fa-eye"></i> View PDF
+                                            </button>
+                                        </div>
+                                    `;
+            }
+
+            document.getElementById('modal-body').innerHTML = content;
+            document.getElementById('view-modal').style.display = 'flex';
+        }
+
+        // Open status update modal
+        function openStatusModal(id) {
+            currentRecordId = id;
+            const record = records.find(r => r.id === id);
+            if (record) {
+                document.getElementById('status-select').value = record.status || 'Pending';
+            }
+            document.getElementById('status-modal').style.display = 'flex';
+        }
+
+        // Close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Update record status
+        function updateRecordStatus() {
+            if (!currentRecordId) return;
+
+            const newStatus = document.getElementById('status-select').value;
+            const recordIndex = records.findIndex(r => r.id === currentRecordId);
+
+            if (recordIndex !== -1) {
+                records[recordIndex].status = newStatus;
+                localStorage.setItem('iifRecords', JSON.stringify(records));
+
+                // Refresh displays
+                displayRecords(records);
+                updateDashboard();
+                updateFormStatistics();
+
+                // Close modal
+                document.getElementById('status-modal').style.display = 'none';
+                alert('Status updated successfully!');
+            }
+        }
+
+        // Download record as Word or PDF
+        function downloadRecord(id, format) {
+            const record = records.find(r => r.id === id);
+            if (!record) {
+                alert("Record not found.");
+                return;
+            }
+
+            if (format === 'word') {
+                if (!record.wordFile) {
+                    alert("Word document not available for this record.");
+                    return;
+                }
+
+                // Create download link for Word document
+                const link = document.createElement('a');
+                link.href = record.wordFile;
+                link.download = `IIF1_Form_${record.id}.doc`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else if (format === 'pdf') {
+                if (!record.pdfFile) {
+                    alert("PDF document not available for this record.");
+                    return;
+                }
+
+                // Create download link for PDF document
+                const link = document.createElement('a');
+                link.href = record.pdfFile;
+                link.download = `IIF1_Form_${record.id}.pdf`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+
+        // View document in a new tab
+        function viewDocument(base64Data, fileType) {
+            if (fileType === 'pdf') {
+                const newWindow = window.open();
+                newWindow.document.write(`
+                                        <html>
+                                            <head><title>Document Viewer</title></head>
+                                            <body style="margin: 0; padding: 20px;">
+                                                <iframe src="${base64Data}" width="100%" height="100%"
+                                                style="border: none; min-height: 80vh;"></iframe>
+                                            </body>
+                                        </html>
+                                    `);
+            } else {
+                alert("Viewing Word documents directly in the browser is not supported. Please download the file.");
+            }
+        }
+
+        // Delete record
+        function deleteRecord(id) {
+            if (confirm('Are you sure you want to delete this record? This action cannot be undone.')) {
+                records = records.filter(record => record.id !== id);
+                localStorage.setItem('iifRecords', JSON.stringify(records));
+                displayRecords(records);
+                updateDashboard();
+                updateFormStatistics();
+            }
+        }
+
+        // Filter records
+        function filterRecords() {
+            const typeValue = document.getElementById('filter-type').value.toLowerCase();
+            const stationValue = document.getElementById('filter-station').value.toLowerCase();
+            const officerValue = document.getElementById('filter-officer').value.toLowerCase();
+            const dateFromValue = document.getElementById('filter-date-from').value;
+            const dateToValue = document.getElementById('filter-date-to').value;
+
+            const filteredRecords = records.filter(record => {
+                if (typeValue && !record.type.toLowerCase().includes(typeValue)) return false;
+                if (stationValue && !record.policeStation.toLowerCase().includes(stationValue)) return false;
+                if (officerValue && !record.officerName.toLowerCase().includes(officerValue)) return false;
+                if (dateFromValue && record.date < dateFromValue) return false;
+                if (dateToValue && record.date > dateToValue) return false;
+                return true;
+            });
+
+            displayRecords(filteredRecords);
+        }
+
+        // Clear filters
+        function clearFilters() {
+            document.getElementById('filter-type').value = '';
+            document.getElementById('filter-station').value = '';
+            document.getElementById('filter-officer').value = '';
+            document.getElementById('filter-date-from').value = '';
+            document.getElementById('filter-date-to').value = '';
+            displayRecords(records);
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+
+        // NEW: Data Analysis Tools Functions
+        function generateCaseSummary() {
+            document.getElementById('results-title').textContent = 'Case Summary Analysis';
+
+            // Calculate statistics
+            const totalCases = records.length;
+            const pendingCases = records.filter(r => r.status === 'Pending').length;
+            const approvedCases = records.filter(r => r.status === 'Approved').length;
+            const rejectedCases = records.filter(r => r.status === 'Rejected').length;
+
+            // Calculate by form type
+            const formTypeCounts = {};
+            records.forEach(record => {
+                formTypeCounts[record.type] = (formTypeCounts[record.type] || 0) + 1;
+            });
+
+            // Calculate by police station
+            const stationCounts = {};
+            records.forEach(record => {
+                stationCounts[record.policeStation] = (stationCounts[record.policeStation] || 0) + 1;
+            });
+
+            document.getElementById('results-content').innerHTML = `
+                    <h4>Overall Statistics</h4>
+                    <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-bottom: 20px;">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-title">Total Cases</div>
+                                <div class="stat-icon icon-primary">
+                                    <i class="fas fa-folder"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value">${totalCases}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-title">Pending</div>
+                                <div class="stat-icon icon-warning">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value">${pendingCases}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-title">Approved</div>
+                                <div class="stat-icon icon-success">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value">${approvedCases}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-title">Rejected</div>
+                                <div class="stat-icon icon-danger">
+                                    <i class="fas fa-times"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value">${rejectedCases}</div>
+                        </div>
+                    </div>
+
+                    <h4>Cases by Form Type</h4>
+                    <div class="status-list">
+                        ${Object.entries(formTypeCounts).map(([type, count]) => `
+                            <div class="status-item">
+                                <div class="status-item-info">
+                                    <div class="status-item-title">${type}</div>
+                                </div>
+                                <span class="status-item-badge badge-pending">${count} cases</span>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <h4 style="margin-top: 20px;">Cases by Police Station</h4>
+                    <div class="status-list">
+                        ${Object.entries(stationCounts).map(([station, count]) => `
+                            <div class="status-item">
+                                <div class="status-item-info">
+                                    <div class="status-item-title">${station}</div>
+                                </div>
+                                <span class="status-item-badge badge-approved">${count} cases</span>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="document-actions" style="margin-top: 20px;">
+                        <button class="action-btn btn-pdf" onclick="exportCaseSummary()">
+                            <i class="fas fa-file-pdf"></i> Export as PDF
+                        </button>
+                        <button class="action-btn btn-word" onclick="exportCaseSummary('word')">
+                            <i class="fas fa-file-word"></i> Export as Word
+                        </button>
+                    </div>
+                `;
+            document.getElementById('tool-results').classList.add('active');
+        }
+
+        function showOfficerPerformance() {
+            document.getElementById('results-title').textContent = 'Officer Performance Analysis';
+
+            // Calculate officer performance
+            const officerStats = {};
+            records.forEach(record => {
+                if (!officerStats[record.officerName]) {
+                    officerStats[record.officerName] = {
+                        total: 0,
+                        approved: 0,
+                        pending: 0,
+                        rejected: 0
+                    };
+                }
+
+                officerStats[record.officerName].total++;
+                if (record.status === 'Approved') officerStats[record.officerName].approved++;
+                if (record.status === 'Pending') officerStats[record.officerName].pending++;
+                if (record.status === 'Rejected') officerStats[record.officerName].rejected++;
+            });
+
+            document.getElementById('results-content').innerHTML = `
+                    <h4>Officer Performance Metrics</h4>
+                    <div class="status-list">
+                        ${Object.entries(officerStats).map(([officer, stats]) => {
+                const approvalRate = stats.total > 0 ? Math.round((stats.approved / stats.total) * 100) : 0;
+                return `
+                                <div class="status-item">
+                                    <div class="status-item-info">
+                                        <div class="status-item-title">${officer}</div>
+                                        <div class="status-item-date">
+                                            Total: ${stats.total} | Approved: ${stats.approved} | Pending: ${stats.pending} | Rejected: ${stats.rejected}
+                                        </div>
+                                    </div>
+                                    <span class="status-item-badge ${approvalRate >= 80 ? 'badge-approved' : approvalRate >= 60 ? 'badge-pending' : 'badge-rejected'}">
+                                        ${approvalRate}% Approval
+                                    </span>
+                                </div>
+                            `;
+            }).join('')}
+                    </div>
+
+                    <h4 style="margin-top: 20px;">Performance Insights</h4>
+                    <div style="background: #f9f9f9; padding: 15px; border-radius: 6px; margin-top: 10px;">
+                        <p><strong>Top Performer:</strong> ${Object.entries(officerStats).reduce((a, b) =>
+                (a[1].approved / a[1].total) > (b[1].approved / b[1].total) ? a : b)[0]}</p>
+                        <p><strong>Most Active Officer:</strong> ${Object.entries(officerStats).reduce((a, b) =>
+                    a[1].total > b[1].total ? a : b)[0]}</p>
+                    </div>
+                `;
+            document.getElementById('tool-results').classList.add('active');
+        }
+
+        function showStationComparison() {
+            document.getElementById('results-title').textContent = 'Police Station Comparison';
+
+            // Calculate station statistics
+            const stationStats = {};
+            records.forEach(record => {
+                if (!stationStats[record.policeStation]) {
+                    stationStats[record.policeStation] = {
+                        total: 0,
+                        approved: 0,
+                        pending: 0,
+                        rejected: 0,
+                        forms: {}
+                    };
+                }
+
+                stationStats[record.policeStation].total++;
+                if (record.status === 'Approved') stationStats[record.policeStation].approved++;
+                if (record.status === 'Pending') stationStats[record.policeStation].pending++;
+                if (record.status === 'Rejected') stationStats[record.policeStation].rejected++;
+
+                // Count by form type
+                stationStats[record.policeStation].forms[record.type] =
+                    (stationStats[record.policeStation].forms[record.type] || 0) + 1;
+            });
+
+            document.getElementById('results-content').innerHTML = `
+                    <h4>Station Performance Comparison</h4>
+                    <div class="status-list">
+                        ${Object.entries(stationStats).map(([station, stats]) => {
+                const approvalRate = stats.total > 0 ? Math.round((stats.approved / stats.total) * 100) : 0;
+                return `
+                                <div class="status-item">
+                                    <div class="status-item-info">
+                                        <div class="status-item-title">${station}</div>
+                                        <div class="status-item-date">
+                                            Total: ${stats.total} | Approval Rate: ${approvalRate}%
+                                        </div>
+                                    </div>
+                                    <span class="status-item-badge ${approvalRate >= 80 ? 'badge-approved' : approvalRate >= 60 ? 'badge-pending' : 'badge-rejected'}">
+                                        ${stats.approved}/${stats.total}
+                                    </span>
+                                </div>
+                            `;
+            }).join('')}
+                    </div>
+
+                    <h4 style="margin-top: 20px;">Station Activity by Form Type</h4>
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Station</th>
+                                    <th>IIF-1</th>
+                                    <th>IIF-2</th>
+                                    <th>IIF-3</th>
+                                    <th>IIF-4</th>
+                                    <th>IIF-5</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${Object.entries(stationStats).map(([station, stats]) => `
+                                    <tr>
+                                        <td>${station}</td>
+                                        <td>${stats.forms['IIF-1'] || 0}</td>
+                                        <td>${stats.forms['IIF-2'] || 0}</td>
+                                        <td>${stats.forms['IIF-3'] || 0}</td>
+                                        <td>${stats.forms['IIF-4'] || 0}</td>
+                                        <td>${stats.forms['IIF-5'] || 0}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            document.getElementById('tool-results').classList.add('active');
+        }
+
+        function showTimelineAnalysis() {
+            document.getElementById('results-title').textContent = 'Case Timeline Analysis';
+
+            // Calculate monthly trends
+            const monthlyStats = {};
+            records.forEach(record => {
+                const date = new Date(record.date);
+                const monthYear = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+
+                if (!monthlyStats[monthYear]) {
+                    monthlyStats[monthYear] = {
+                        total: 0,
+                        approved: 0,
+                        pending: 0,
+                        rejected: 0
+                    };
+                }
+
+                monthlyStats[monthYear].total++;
+                if (record.status === 'Approved') monthlyStats[monthYear].approved++;
+                if (record.status === 'Pending') monthlyStats[monthYear].pending++;
+                if (record.status === 'Rejected') monthlyStats[monthYear].rejected++;
+            });
+
+            // Sort by date
+            const sortedMonths = Object.keys(monthlyStats).sort();
+
+            document.getElementById('results-content').innerHTML = `
+                    <h4>Monthly Case Trends</h4>
+                    <div class="status-list">
+                        ${sortedMonths.map(month => {
+                const stats = monthlyStats[month];
+                const approvalRate = stats.total > 0 ? Math.round((stats.approved / stats.total) * 100) : 0;
+                return `
+                                <div class="status-item">
+                                    <div class="status-item-info">
+                                        <div class="status-item-title">${month}</div>
+                                        <div class="status-item-date">
+                                            Total: ${stats.total} | Approved: ${stats.approved} | Pending: ${stats.pending} | Rejected: ${stats.rejected}
+                                        </div>
+                                    </div>
+                                    <span class="status-item-badge ${approvalRate >= 80 ? 'badge-approved' : approvalRate >= 60 ? 'badge-pending' : 'badge-rejected'}">
+                                        ${approvalRate}%
+                                    </span>
+                                </div>
+                            `;
+            }).join('')}
+                    </div>
+
+                    <h4 style="margin-top: 20px;">Trend Analysis</h4>
+                    <div style="background: #f9f9f9; padding: 15px; border-radius: 6px; margin-top: 10px;">
+                        <p><strong>Busiest Month:</strong> ${Object.entries(monthlyStats).reduce((a, b) =>
+                a[1].total > b[1].total ? a : b)[0]}</p>
+                        <p><strong>Highest Approval Rate:</strong> ${Object.entries(monthlyStats).reduce((a, b) =>
+                    (a[1].approved / a[1].total) > (b[1].approved / b[1].total) ? a : b)[0]}</p>
+                        <p><strong>Recent Activity:</strong> ${sortedMonths.slice(-3).join(', ')}</p>
+                    </div>
+                `;
+            document.getElementById('tool-results').classList.add('active');
+        }
+
+        function exportCaseSummary(format) {
+            alert(`Case summary would be exported as ${format || 'PDF'} in a real implementation.`);
+        }
+
+        function closeToolResults() {
+            document.getElementById('tool-results').classList.remove('active');
+        }
+
+        // Profile Management Functions
+        function openProfileModal() {
+            document.getElementById('profile-modal').style.display = 'flex';
+        }
+
+        function loadProfileData() {
+            // Load profile data from localStorage or use defaults
+            const profileData = JSON.parse(localStorage.getItem('profileData')) || {
+                name: "Inspector Rajesh Kumar",
+                rank: "Police Inspector",
+                id: "PI-2023-0876",
+                dept: "Puducherry Police",
+                station: "Grand Bazaar Police Station",
+                service: "2015",
+                email: "rajesh.kumar@police.puducherry.gov.in",
+                phone: "+91-9876543210",
+                emergency: "+91-9123456780",
+                address: "No. 45, Police Quarters, Lawspet, Puducherry - 605008",
+                blood: "O+",
+                marks: "Scar on left cheek",
+                lastLogin: "Today, 10:45 AM"
+            };
+
+            // Update profile display
+            document.getElementById('profile-name').textContent = profileData.name;
+            document.getElementById('profile-rank').textContent = profileData.rank;
+            document.getElementById('profile-id').textContent = `ID: ${profileData.id}`;
+            document.getElementById('profile-dept').textContent = profileData.dept;
+            document.getElementById('profile-station').textContent = profileData.station;
+            document.getElementById('profile-service').textContent = profileData.service;
+            document.getElementById('profile-email').textContent = profileData.email;
+            document.getElementById('profile-phone').textContent = profileData.phone;
+            document.getElementById('profile-lastlogin').textContent = profileData.lastLogin;
+
+            // Update form fields
+            document.getElementById('edit-name').value = profileData.name;
+            document.getElementById('edit-rank').value = profileData.rank;
+            document.getElementById('edit-station').value = profileData.station;
+            document.getElementById('edit-email').value = profileData.email;
+            document.getElementById('edit-phone').value = profileData.phone;
+            document.getElementById('edit-emergency').value = profileData.emergency;
+            document.getElementById('edit-address').value = profileData.address;
+            document.getElementById('edit-blood').value = profileData.blood;
+            document.getElementById('edit-marks').value = profileData.marks;
+        }
+
+        function saveProfile() {
+            // Get values from form
+            const profileData = {
+                name: document.getElementById('edit-name').value,
+                rank: document.getElementById('edit-rank').value,
+                id: "PI-2023-0876", // This would typically come from the system
+                dept: "Puducherry Police", // This would typically come from the system
+                station: document.getElementById('edit-station').value,
+                service: "2015", // This would typically come from the system
+                email: document.getElementById('edit-email').value,
+                phone: document.getElementById('edit-phone').value,
+                emergency: document.getElementById('edit-emergency').value,
+                address: document.getElementById('edit-address').value,
+                blood: document.getElementById('edit-blood').value,
+                marks: document.getElementById('edit-marks').value,
+                lastLogin: "Today, 10:45 AM" // This would typically come from the system
+            };
+
+            // Save to localStorage
+            localStorage.setItem('profileData', JSON.stringify(profileData));
+
+            // Update display
+            loadProfileData();
+
+            alert('Profile updated successfully!');
+        }
+
+        function toggleEditMode() {
+            // This function would enable/disable form fields in a real implementation
+            // For now, we'll just focus on the first field
+            document.getElementById('edit-name').focus();
+        }
+
+        function cancelEdit() {
+            // Reload original data
+            loadProfileData();
+        }
+
+        function printProfile() {
+            window.print();
+        }
+
+        // Logout Functions
+        function showLogoutPrompt() {
+            document.getElementById('logout-modal').style.display = 'flex';
+        }
+
+        function performLogout() {
+            // Clear user data
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+
+            // Show confirmation and redirect
+            alert('You have been logged out successfully!');
+            window.location.href = 'index.html'; // Redirect to login page
+        }
+    </script>
+</body>
+</html>

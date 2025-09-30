@@ -1,0 +1,1804 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCTNS IIF-2 Form Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: #1a2a6c;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 5px solid #fdbb2d;
+        }
+
+            header h1 {
+                margin-bottom: 10px;
+                font-size: 28px;
+            }
+
+            header p {
+                font-size: 16px;
+                opacity: 0.9;
+            }
+
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+
+        .form-container {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-right: 20px;
+            margin-bottom: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .preview-container {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        h2 {
+            color: #1a2a6c;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #fdbb2d;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+            button:hover {
+                background: #2a3a8c;
+            }
+
+        .btn-export {
+            background: #b21f1f;
+        }
+
+            .btn-export:hover {
+                background: #c22f2f;
+            }
+
+        .btn-word {
+            background: #1a6c5c;
+        }
+
+            .btn-word:hover {
+                background: #2a7c6c;
+            }
+
+        .btn-ghost {
+            background: #5f6368;
+        }
+
+            .btn-ghost:hover {
+                background: #6f7378;
+            }
+
+        .btn-danger {
+            background: #c62828;
+        }
+
+            .btn-danger:hover {
+                background: #d63838;
+            }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+            .action-buttons button {
+                flex: 1;
+                min-width: 120px;
+            }
+
+        .form-preview {
+            background: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            line-height: 1.5;
+            font-family: "Times New Roman", serif;
+        }
+
+        .preview-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1a2a6c;
+        }
+
+            .preview-header h3 {
+                color: #1a2a6c;
+                font-size: 22px;
+            }
+
+        .preview-section {
+            margin-bottom: 20px;
+        }
+
+            .preview-section h4 {
+                background: #f0f0f0;
+                padding: 8px;
+                margin-bottom: 10px;
+                color: #1a2a6c;
+                border-left: 4px solid #fdbb2d;
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #f0f0f0;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #1a2a6c;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .section-title {
+            background: #1a2a6c;
+            color: white;
+            padding: 10px;
+            margin: 20px 0 10px 0;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .section-content {
+            display: none;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .checkbox-group {
+            margin: 10px 0;
+        }
+
+            .checkbox-group label {
+                display: inline;
+                font-weight: normal;
+            }
+
+        .field-label {
+            font-weight: 700;
+            width: 220px;
+            display: inline-block;
+            color: #222;
+        }
+
+        .signature-area {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .signature-box {
+            border-top: 1px solid #000;
+            width: 250px;
+            padding-top: 5px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+
+            .form-container {
+                margin-right: 0;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+                .action-buttons button {
+                    width: 100%;
+                }
+
+            .signature-area {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .signature-box {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CCTNS IIF-2 Form Generator</h1>
+            <p>Crime Investigation Form - Complete with All Required Tables</p>
+        </header>
+
+        <div class="content">
+            <div class="form-container">
+                <h2>IIF-2 Form Details</h2>
+
+                <div class="section-title" onclick="toggleSection('basicInfo')">1. Basic Information</div>
+                <div id="basicInfo" class="section-content active">
+                    <div class="form-group">
+                        <label for="district">District</label>
+                        <input type="text" id="district" placeholder="Enter district">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="policeStation">Police Station</label>
+                        <input type="text" id="policeStation" placeholder="Enter police station">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="firNo">FIR No.</label>
+                        <input type="text" id="firNo" placeholder="Enter FIR number">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="firDate">Date</label>
+                        <input type="date" id="firDate">
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('actsSections')">2. Acts & Sections</div>
+                <div id="actsSections" class="section-content">
+                    <table id="actsTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Acts</th>
+                                <th>Sections</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Enter Act"></td>
+                                <td><input type="text" placeholder="Enter Section"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('actsTable')">Add New Row</button>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('placeOfOccurrence')">3. Place of Occurrence Shown By</div>
+                <div id="placeOfOccurrence" class="section-content">
+                    <table id="occurrenceTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Name</th>
+                                <th>Relative Type</th>
+                                <th>Relative Name</th>
+                                <th>Address</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Name"></td>
+                                <td><input type="text" placeholder="Relative Type"></td>
+                                <td><input type="text" placeholder="Relative Name"></td>
+                                <td><input type="text" placeholder="Address"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('occurrenceTable')">Add New Row</button>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('crimeType')">4. Type of Crime</div>
+                <div id="crimeType" class="section-content">
+                    <h4>I. Major Head</h4>
+                    <table id="majorHeadTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Major Head</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Major Head"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('majorHeadTable')">Add New Row</button>
+
+                    <h4>II. Minor Head</h4>
+                    <table id="minorHeadTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Minor Head</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Minor Head"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('minorHeadTable')">Add New Row</button>
+
+                    <h4>III. Modus Operandi</h4>
+                    <table id="modusOperandiTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Modus Operandi</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Modus Operandi"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('modusOperandiTable')">Add New Row</button>
+
+                    <h4>IV. Conveyance(s) Used</h4>
+                    <table id="conveyanceTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Conveyance(s) Used</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Conveyance(s) Used"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('conveyanceTable')">Add New Row</button>
+
+                    <h4>V. Character Assumed</h4>
+                    <table id="characterTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Character Assumed</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Character Assumed"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('characterTable')">Add New Row</button>
+
+                    <h4>VI. Language/Dialect Used</h4>
+                    <table id="languageTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Language/Dialect Used</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Language/Dialect Used"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('languageTable')">Add New Row</button>
+
+                    <h4>VII. Special Feature</h4>
+                    <table id="specialFeatureTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Special Feature</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Special Feature"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('specialFeatureTable')">Add New Row</button>
+
+                    <h4>VIII. Type of Place of Occurrence</h4>
+                    <table id="placeTypeTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Type of Place of Occurrence</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Type of Place of Occurrence"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('placeTypeTable')">Add New Row</button>
+
+                    <h4>IX. Type of Property Stolen</h4>
+                    <table id="propertyTypeTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Type of Property Stolen</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Type of Property Stolen"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('propertyTypeTable')">Add New Row</button>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('victimDetails')">5. Particulars of the Victim(s)</div>
+                <div id="victimDetails" class="section-content">
+                    <div class="form-group">
+                        <label for="victimInfo">Victim Details</label>
+                        <textarea id="victimInfo" placeholder="Enter victim details"></textarea>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('motive')">6. Motive of Crime</div>
+                <div id="motive" class="section-content">
+                    <table id="motiveTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Motive of Crime</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Motive of Crime"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('motiveTable')">Add New Row</button>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('stolenProperties')">7. Details of Properties Stolen</div>
+                <div id="stolenProperties" class="section-content">
+                    <table id="stolenPropertyTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Property Type</th>
+                                <th>Property Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Property Type"></td>
+                                <td><input type="text" placeholder="Property Name"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('stolenPropertyTable')">Add New Row</button>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('visitDetails')">8. Date and Time of Visit to the Place of Occurrence</div>
+                <div id="visitDetails" class="section-content">
+                    <table id="visitTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="date"></td>
+                                <td><input type="time"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('visitTable')">Add New Row</button>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('placeDescription')">9. Description of the Place of Occurrence</div>
+                <div id="placeDescription" class="section-content">
+                    <table id="descriptionTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Description of the Place of Occurrence</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Description"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('descriptionTable')">Add New Row</button>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('physicalEvidence')">10. Description of Physical Evidence</div>
+                <div id="physicalEvidence" class="section-content">
+                    <h4>Physical Evidence Details</h4>
+                    <table id="evidenceTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Details of Physical Evidence</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Physical Evidence"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('evidenceTable')">Add New Row</button>
+
+                    <h4>Witness Details</h4>
+                    <table id="witnessTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Witness Name</th>
+                                <th>Address</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Witness Name"></td>
+                                <td><input type="text" placeholder="Address"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('witnessTable')">Add New Row</button>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('sketch')">11. Sketch / Map of the Place of Occurrence</div>
+                <div id="sketch" class="section-content">
+                    <div class="form-group">
+                        <label for="sketchDetails">Sketch/Map Details</label>
+                        <textarea id="sketchDetails" placeholder="Enter sketch/map details"></textarea>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="draftsmanPrepared">
+                        <label for="draftsmanPrepared">Whether the Sketch/Map prepared by draftsman?</label>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('gist')">12. Gist</div>
+                <div id="gist" class="section-content">
+                    <table id="gistTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Gist</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Gist"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('gistTable')">Add New Row</button>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('signature')">Signature Details</div>
+                <div id="signature" class="section-content">
+                    <div class="form-group">
+                        <label for="investigationOfficer">Signature of the Investigation Officer</label>
+                        <input type="text" id="investigationOfficer" placeholder="Enter officer name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="officerName">Name</label>
+                        <input type="text" id="officerName" placeholder="Enter officer name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="officerRank">Rank</label>
+                        <input type="text" id="officerRank" placeholder="Enter officer rank">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="officerNo">No.</label>
+                        <input type="text" id="officerNo" placeholder="Enter officer number">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="completionDate">Date</label>
+                        <input type="date" id="completionDate">
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="btnGenerate">Generate Preview</button>
+                    <button id="btnExport" class="btn-export">Export as PDF</button>
+                    <button id="btnExportWord" class="btn-word">Export as Word</button>
+                    <button id="btnSave" class="btn-ghost">Save to Records</button>
+                    <button id="btnLoad" class="btn-ghost">Load Saved</button>
+                    <button id="btnDelete" class="btn-danger">Delete Saved</button>
+                </div>
+            </div>
+
+            <div class="preview-container">
+                <h2>IIF-2 Form Preview</h2>
+                <div id="formPreview" class="form-preview">
+                    <div class="preview-header">
+                        <h3>CCTNS IIF-2 Form</h3>
+                        <p>Crime Investigation Report</p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>1. Basic Information</h4>
+                        <p><strong>District:</strong> <span id="previewDistrict">Not specified</span></p>
+                        <p><strong>Police Station:</strong> <span id="previewPoliceStation">Not specified</span></p>
+                        <p><strong>FIR No.:</strong> <span id="previewFirNo">Not specified</span></p>
+                        <p><strong>Date:</strong> <span id="previewFirDate">Not specified</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>2. Acts & Sections</h4>
+                        <table id="previewActsTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Acts</th>
+                                    <th>Sections</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>3. Place of Occurrence Shown By</h4>
+                        <table id="previewOccurrenceTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Name</th>
+                                    <th>Relative Type</th>
+                                    <th>Relative Name</th>
+                                    <th>Address</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="5">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>4. Type of Crime</h4>
+
+                        <h4>I. Major Head</h4>
+                        <table id="previewMajorHeadTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Major Head</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4>II. Minor Head</h4>
+                        <table id="previewMinorHeadTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Minor Head</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4>III. Modus Operandi</h4>
+                        <table id="previewModusOperandiTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Modus Operandi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4>IV. Conveyance(s) Used</h4>
+                        <table id="previewConveyanceTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Conveyance(s) Used</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4>V. Character Assumed</h4>
+                        <table id="previewCharacterTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Character Assumed</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4>VI. Language/Dialect Used</h4>
+                        <table id="previewLanguageTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Language/Dialect Used</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4>VII. Special Feature</h4>
+                        <table id="previewSpecialFeatureTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Special Feature</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4>VIII. Type of Place of Occurrence</h4>
+                        <table id="previewPlaceTypeTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Type of Place of Occurrence</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4>IX. Type of Property Stolen</h4>
+                        <table id="previewPropertyTypeTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Type of Property Stolen</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>5. Particulars of the Victim(s)</h4>
+                        <p id="previewVictimInfo">Not specified</p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>6. Motive of Crime</h4>
+                        <table id="previewMotiveTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Motive of Crime</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>7. Details of Properties Stolen</h4>
+                        <table id="previewStolenPropertyTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Property Type</th>
+                                    <th>Property Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>8. Date and Time of Visit to the Place of Occurrence</h4>
+                        <table id="previewVisitTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>9. Description of the Place of Occurrence</h4>
+                        <table id="previewDescriptionTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Description of the Place of Occurrence</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>10. Description of Physical Evidence</h4>
+
+                        <h4>Physical Evidence Details</h4>
+                        <table id="previewEvidenceTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Details of Physical Evidence</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4>Witness Details</h4>
+                        <table id="previewWitnessTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Witness Name</th>
+                                    <th>Address</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>11. Sketch / Map of the Place of Occurrence</h4>
+                        <p id="previewSketchDetails">Not specified</p>
+                        <p><strong>Prepared by draftsman:</strong> <span id="previewDraftsman">No</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>12. Gist</h4>
+                        <table id="previewGistTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Gist</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>Signature Details</h4>
+                        <p><strong>Investigation Officer:</strong> <span id="previewInvestigationOfficer">Not specified</span></p>
+                        <p><strong>Name:</strong> <span id="previewOfficerName">Not specified</span></p>
+                        <p><strong>Rank:</strong> <span id="previewOfficerRank">Not specified</span></p>
+                        <p><strong>No.:</strong> <span id="previewOfficerNo">Not specified</span></p>
+                        <p><strong>Date:</strong> <span id="previewCompletionDate">Not specified</span></p>
+                    </div>
+
+                    <div class="signature-area">
+                        <div class="signature-box">Signature of Investigation Officer</div>
+                        <div class="signature-box">Signature of Supervising Officer</div>
+                    </div>
+
+                    <div class="preview-section">
+                        <p>Generated on: <span id="generationDate"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2023 CCTNS System | For official use only</p>
+        </div>
+    </div>
+
+    <script>
+        // ==================== AUTHENTICATION & SECURITY ====================
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check if user is authenticated
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+
+            if (!token || !user) {
+                alert('Authentication required. Please login first.');
+                if (window.parent !== window) {
+                    window.parent.postMessage({ type: 'AUTH_REQUIRED' }, '*');
+                } else {
+                    window.location.href = '../index.html';
+                }
+                return;
+            }
+
+            // Set officer name from logged in user
+            try {
+                const userData = JSON.parse(user);
+                document.getElementById('officerName').value = userData.fullName || 'Officer';
+                document.getElementById('investigationOfficer').value = userData.fullName || 'Officer';
+            } catch (e) {
+                console.error('Error parsing user data:', e);
+            }
+
+            // Listen for authentication token from parent
+            window.addEventListener('message', function (event) {
+                if (event.data.type === 'AUTH_TOKEN' && event.data.token) {
+                    localStorage.setItem('token', event.data.token);
+                }
+            });
+
+            // Notify parent that form is loaded
+            if (window.parent !== window) {
+                window.parent.postMessage({ type: 'FORM_LOADED', formType: 'IIF-2' }, '*');
+            }
+
+            // Set current date
+            const now = new Date();
+            document.getElementById('generationDate').textContent = now.toLocaleString();
+            document.getElementById('firDate').valueAsDate = now;
+            document.getElementById('completionDate').valueAsDate = now;
+
+            // Generate preview button
+            document.getElementById('btnGenerate').addEventListener('click', generatePreview);
+
+            // Export as PDF button
+            document.getElementById('btnExport').addEventListener('click', exportAsPDF);
+
+            // Export as Word button
+            document.getElementById('btnExportWord').addEventListener('click', exportAsWord);
+
+            // Save to Records button
+            document.getElementById('btnSave').addEventListener('click', saveToRecords);
+
+            // Load form button
+            document.getElementById('btnLoad').addEventListener('click', loadFormLocal);
+
+            // Delete form button
+            document.getElementById('btnDelete').addEventListener('click', deleteFormLocal);
+
+            // Generate initial preview
+            generatePreview();
+        });
+
+        // ==================== FORM FUNCTIONS ====================
+        function generatePreview() {
+            // Get form values
+            const district = document.getElementById('district').value || 'Not specified';
+            const policeStation = document.getElementById('policeStation').value || 'Not specified';
+            const firNo = document.getElementById('firNo').value || 'Not specified';
+            const firDate = document.getElementById('firDate').value;
+            const victimInfo = document.getElementById('victimInfo').value || 'Not specified';
+            const sketchDetails = document.getElementById('sketchDetails').value || 'Not specified';
+            const draftsmanPrepared = document.getElementById('draftsmanPrepared').checked;
+            const investigationOfficer = document.getElementById('investigationOfficer').value || 'Not specified';
+            const officerName = document.getElementById('officerName').value || 'Not specified';
+            const officerRank = document.getElementById('officerRank').value || 'Not specified';
+            const officerNo = document.getElementById('officerNo').value || 'Not specified';
+            const completionDate = document.getElementById('completionDate').value;
+
+            // Format date and time
+            const formattedFirDate = firDate ? new Date(firDate).toLocaleDateString('en-GB') : 'Not specified';
+            const formattedCompletionDate = completionDate ? new Date(completionDate).toLocaleDateString('en-GB') : 'Not specified';
+
+            // Update preview
+            document.getElementById('previewDistrict').textContent = district;
+            document.getElementById('previewPoliceStation').textContent = policeStation;
+            document.getElementById('previewFirNo').textContent = firNo;
+            document.getElementById('previewFirDate').textContent = formattedFirDate;
+            document.getElementById('previewVictimInfo').textContent = victimInfo;
+            document.getElementById('previewSketchDetails').textContent = sketchDetails;
+            document.getElementById('previewDraftsman').textContent = draftsmanPrepared ? 'Yes' : 'No';
+            document.getElementById('previewInvestigationOfficer').textContent = investigationOfficer;
+            document.getElementById('previewOfficerName').textContent = officerName;
+            document.getElementById('previewOfficerRank').textContent = officerRank;
+            document.getElementById('previewOfficerNo').textContent = officerNo;
+            document.getElementById('previewCompletionDate').textContent = formattedCompletionDate;
+
+            // Update tables
+            updatePreviewTable('actsTable', 'previewActsTable');
+            updatePreviewTable('occurrenceTable', 'previewOccurrenceTable');
+            updatePreviewTable('majorHeadTable', 'previewMajorHeadTable');
+            updatePreviewTable('minorHeadTable', 'previewMinorHeadTable');
+            updatePreviewTable('modusOperandiTable', 'previewModusOperandiTable');
+            updatePreviewTable('conveyanceTable', 'previewConveyanceTable');
+            updatePreviewTable('characterTable', 'previewCharacterTable');
+            updatePreviewTable('languageTable', 'previewLanguageTable');
+            updatePreviewTable('specialFeatureTable', 'previewSpecialFeatureTable');
+            updatePreviewTable('placeTypeTable', 'previewPlaceTypeTable');
+            updatePreviewTable('propertyTypeTable', 'previewPropertyTypeTable');
+            updatePreviewTable('motiveTable', 'previewMotiveTable');
+            updatePreviewTable('stolenPropertyTable', 'previewStolenPropertyTable');
+            updatePreviewTable('visitTable', 'previewVisitTable');
+            updatePreviewTable('descriptionTable', 'previewDescriptionTable');
+            updatePreviewTable('evidenceTable', 'previewEvidenceTable');
+            updatePreviewTable('witnessTable', 'previewWitnessTable');
+            updatePreviewTable('gistTable', 'previewGistTable');
+
+            // Update generation date
+            document.getElementById('generationDate').textContent = new Date().toLocaleString();
+        }
+
+        function updatePreviewTable(sourceTableId, targetTableId) {
+            const sourceTable = document.getElementById(sourceTableId);
+            const targetTable = document.getElementById(targetTableId);
+
+            // Clear existing rows
+            targetTable.querySelector('tbody').innerHTML = '';
+
+            let hasData = false;
+
+            for (let i = 1; i < sourceTable.rows.length; i++) {
+                const row = sourceTable.rows[i];
+                const newRow = document.createElement('tr');
+
+                // Check if the row has any data
+                let rowHasData = false;
+
+                for (let j = 1; j < row.cells.length - 1; j++) {
+                    const input = row.cells[j].querySelector('input');
+                    if (input && input.value) {
+                        rowHasData = true;
+                        break;
+                    }
+                }
+
+                if (rowHasData) {
+                    hasData = true;
+
+                    // Add serial number
+                    const serialCell = document.createElement('td');
+                    serialCell.textContent = i;
+                    newRow.appendChild(serialCell);
+
+                    // Add data cells
+                    for (let j = 1; j < row.cells.length - 1; j++) {
+                        const input = row.cells[j].querySelector('input');
+                        const cell = document.createElement('td');
+                        cell.textContent = input ? input.value : '';
+                        newRow.appendChild(cell);
+                    }
+
+                    targetTable.querySelector('tbody').appendChild(newRow);
+                }
+            }
+
+            if (!hasData) {
+                const newRow = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.colSpan = targetTable.rows[0].cells.length;
+                cell.textContent = 'No data available';
+                newRow.appendChild(cell);
+                targetTable.querySelector('tbody').appendChild(newRow);
+            }
+        }
+
+        function exportAsPDF() {
+            generatePreview();
+
+            const element = document.getElementById('formPreview');
+            const opt = {
+                margin: 10,
+                filename: 'iif-2-form.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save();
+        }
+
+        function exportAsWord() {
+            try {
+                generatePreview();
+
+                // Create HTML content for Word
+                const htmlContent = `
+                                <html xmlns:o="urn:schemas-microsoft-com:office:office"
+                                      xmlns:w="urn:schemas-microsoft-com:office:word"
+                                      xmlns="http://www.w3.org/TR/REC-html40">
+                                <head>
+                                    <meta charset="utf-8">
+                                    <title>IIF-2 Form</title>
+                                    <style>
+                                        body {
+                                            font-family: 'Times New Roman', serif;
+                                            font-size: 12pt;
+                                            line-height: 1.5;
+                                        }
+                                        h1, h2, h3, h4 {
+                                            color: #1a2a6c;
+                                        }
+                                        h1 {
+                                            font-size: 16pt;
+                                            text-align: center;
+                                        }
+                                        h2 {
+                                            font-size: 14pt;
+                                            margin-top: 12pt;
+                                            margin-bottom: 6pt;
+                                        }
+                                        table {
+                                            width: 100%;
+                                            border-collapse: collapse;
+                                            margin: 6pt 0;
+                                        }
+                                        th, td {
+                                            border: 1px solid #000;
+                                            padding: 4pt;
+                                            text-align: left;
+                                        }
+                                        th {
+                                            background-color: #f3f6fb;
+                                            font-weight: bold;
+                                        }
+                                        .field-label {
+                                            font-weight: bold;
+                                            width: 220px;
+                                            display: inline-block;
+                                        }
+                                        .signature-area {
+                                            margin-top: 30pt;
+                                            display: flex;
+                                            justify-content: space-between;
+                                        }
+                                        .signature-box {
+                                            border-top: 1px solid #000;
+                                            width: 250px;
+                                            padding-top: 5px;
+                                            text-align: center;
+                                        }
+                                    </style>
+                                </head>
+                                <body>
+                                    <h1>IIF-2 Form</h1>
+                                    <p style="text-align: center; font-style: italic;">Crime Investigation Report</p>
+                                    ${document.getElementById('formPreview').innerHTML}
+                                </body>
+                                </html>
+                            `;
+
+                // Create download link
+                const blob = new Blob([htmlContent], { type: 'application/msword' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `IIF2_Form_${document.getElementById('firNo').value || 'report'}.doc`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+
+                // Clean up
+                setTimeout(() => URL.revokeObjectURL(url), 100);
+            } catch (error) {
+                console.error("Error generating Word document:", error);
+                alert("Error generating Word document: " + error.message);
+            }
+        }
+
+        // ==================== RECORD MANAGEMENT ====================
+        async function saveToRecords() {
+            generatePreview();
+
+            try {
+                // Generate PDF and Word files
+                const pdfData = await generatePDFBlob();
+                const wordData = await generateWordBlob();
+
+                // Convert Blobs to base64 for storage
+                const pdfBase64 = await blobToBase64(pdfData);
+                const wordBase64 = await blobToBase64(wordData);
+
+                // Collect form data
+                const formData = collectFormData();
+
+                // Create record object
+                const record = {
+                    id: Date.now(),
+                    type: "IIF-2",
+                    date: new Date().toISOString().split('T')[0],
+                    policeStation: formData.policeStation,
+                    officerName: formData.officerName,
+                    formData: formData,
+                    pdfFile: pdfBase64,
+                    wordFile: wordBase64,
+                    status: "Pending"
+                };
+
+                // Get existing records from localStorage
+                let records = JSON.parse(localStorage.getItem('iifRecords')) || [];
+
+                // Add the new record
+                records.push(record);
+
+                // Save back to localStorage
+                localStorage.setItem('iifRecords', JSON.stringify(records));
+
+                // Notify parent window (dashboard) that form was saved
+                if (window.parent !== window) {
+                    window.parent.postMessage({
+                        type: 'FORM_SAVED',
+                        formType: 'IIF-2',
+                        recordId: record.id
+                    }, '*');
+                }
+
+                alert('Form saved to records successfully!');
+            } catch (error) {
+                console.error("Error saving to records:", error);
+                alert("Error saving form to records: " + error.message);
+            }
+        }
+
+        async function generatePDFBlob() {
+            return new Promise((resolve, reject) => {
+                const element = document.getElementById('formPreview');
+                const opt = {
+                    margin: 10,
+                    filename: 'iif-2-form.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                html2pdf().set(opt).from(element).output('blob').then(resolve).catch(reject);
+            });
+        }
+
+        async function generateWordBlob() {
+            return new Promise((resolve) => {
+                // Create HTML content for Word
+                const htmlContent = `
+                            <html xmlns:o="urn:schemas-microsoft-com:office:office"
+                                  xmlns:w="urn:schemas-microsoft-com:office:word"
+                                  xmlns="http://www.w3.org/TR/REC-html40">
+                            <head>
+                                <meta charset="utf-8">
+                                <title>IIF-2 Form</title>
+                                <style>
+                                    body {
+                                        font-family: 'Times New Roman', serif;
+                                        font-size: 12pt;
+                                        line-height: 1.5;
+                                    }
+                                    h1, h2, h3, h4 {
+                                        color: #1a2a6c;
+                                    }
+                                    h1 {
+                                        font-size: 16pt;
+                                        text-align: center;
+                                    }
+                                    h2 {
+                                        font-size: 14pt;
+                                        margin-top: 12pt;
+                                        margin-bottom: 6pt;
+                                    }
+                                    table {
+                                        width: 100%;
+                                        border-collapse: collapse;
+                                        margin: 6pt 0;
+                                    }
+                                    th, td {
+                                        border: 1px solid #000;
+                                        padding: 4pt;
+                                        text-align: left;
+                                    }
+                                    th {
+                                        background-color: #f3f6fb;
+                                        font-weight: bold;
+                                    }
+                                    .field-label {
+                                        font-weight: bold;
+                                        width: 220px;
+                                        display: inline-block;
+                                    }
+                                    .signature-area {
+                                        margin-top: 30pt;
+                                        display: flex;
+                                        justify-content: space-between;
+                                    }
+                                    .signature-box {
+                                        border-top: 1px solid #000;
+                                        width: 250px;
+                                        padding-top: 5px;
+                                        text-align: center;
+                                    }
+                                </style>
+                            </head>
+                            <body>
+                                <h1>IIF-2 Form</h1>
+                                <p style="text-align: center; font-style: italic;">Crime Investigation Report</p>
+                                ${document.getElementById('formPreview').innerHTML}
+                            </body>
+                            </html>
+                        `;
+
+                const blob = new Blob([htmlContent], { type: 'application/msword' });
+                resolve(blob);
+            });
+        }
+
+        function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        function collectFormData() {
+            const data = {
+                district: document.getElementById('district').value,
+                policeStation: document.getElementById('policeStation').value,
+                firNo: document.getElementById('firNo').value,
+                firDate: document.getElementById('firDate').value,
+                victimInfo: document.getElementById('victimInfo').value,
+                sketchDetails: document.getElementById('sketchDetails').value,
+                draftsmanPrepared: document.getElementById('draftsmanPrepared').checked,
+                investigationOfficer: document.getElementById('investigationOfficer').value,
+                officerName: document.getElementById('officerName').value,
+                officerRank: document.getElementById('officerRank').value,
+                officerNo: document.getElementById('officerNo').value,
+                completionDate: document.getElementById('completionDate').value,
+
+                // Table data
+                actsTable: getTableData('actsTable'),
+                occurrenceTable: getTableData('occurrenceTable'),
+                majorHeadTable: getTableData('majorHeadTable'),
+                minorHeadTable: getTableData('minorHeadTable'),
+                modusOperandiTable: getTableData('modusOperandiTable'),
+                conveyanceTable: getTableData('conveyanceTable'),
+                characterTable: getTableData('characterTable'),
+                languageTable: getTableData('languageTable'),
+                specialFeatureTable: getTableData('specialFeatureTable'),
+                placeTypeTable: getTableData('placeTypeTable'),
+                propertyTypeTable: getTableData('propertyTypeTable'),
+                motiveTable: getTableData('motiveTable'),
+                stolenPropertyTable: getTableData('stolenPropertyTable'),
+                visitTable: getTableData('visitTable'),
+                descriptionTable: getTableData('descriptionTable'),
+                evidenceTable: getTableData('evidenceTable'),
+                witnessTable: getTableData('witnessTable'),
+                gistTable: getTableData('gistTable')
+            };
+
+            return data;
+        }
+
+        function getTableData(tableId) {
+            const table = document.getElementById(tableId);
+            const data = [];
+
+            for (let i = 1; i < table.rows.length; i++) {
+                const row = table.rows[i];
+                const rowData = {};
+
+                for (let j = 1; j < row.cells.length - 1; j++) {
+                    const input = row.cells[j].querySelector('input');
+                    if (input) {
+                        rowData[`col${j}`] = input.value;
+                    }
+                }
+
+                data.push(rowData);
+            }
+
+            return data;
+        }
+
+        function restoreTableData(tableId, tableData) {
+            const table = document.getElementById(tableId);
+
+            // Clear existing rows (except header)
+            while (table.rows.length > 1) {
+                table.deleteRow(1);
+            }
+
+            // Add rows with data
+            if (tableData && tableData.length > 0) {
+                for (let i = 0; i < tableData.length; i++) {
+                    addNewRow(tableId);
+                    const row = table.rows[table.rows.length - 1];
+
+                    for (let j = 1; j < row.cells.length - 1; j++) {
+                        const input = row.cells[j].querySelector('input');
+                        if (input && tableData[i][`col${j}`]) {
+                            input.value = tableData[i][`col${j}`];
+                        }
+                    }
+                }
+            }
+        }
+
+        // ==================== LOCAL STORAGE FUNCTIONS ====================
+        function saveFormLocal() {
+            const formData = collectFormData();
+            localStorage.setItem('iif2Form', JSON.stringify(formData));
+            alert('Form saved locally.');
+        }
+
+        function loadFormLocal() {
+            const raw = localStorage.getItem('iif2Form');
+            if (!raw) {
+                alert('No saved form found.');
+                return;
+            }
+
+            try {
+                const data = JSON.parse(raw);
+
+                // Restore basic information
+                document.getElementById('district').value = data.district || '';
+                document.getElementById('policeStation').value = data.policeStation || '';
+                document.getElementById('firNo').value = data.firNo || '';
+                document.getElementById('firDate').value = data.firDate || '';
+                document.getElementById('victimInfo').value = data.victimInfo || '';
+                document.getElementById('sketchDetails').value = data.sketchDetails || '';
+                document.getElementById('draftsmanPrepared').checked = data.draftsmanPrepared || false;
+                document.getElementById('investigationOfficer').value = data.investigationOfficer || '';
+                document.getElementById('officerName').value = data.officerName || '';
+                document.getElementById('officerRank').value = data.officerRank || '';
+                document.getElementById('officerNo').value = data.officerNo || '';
+                document.getElementById('completionDate').value = data.completionDate || '';
+
+                // Restore tables
+                restoreTableData('actsTable', data.actsTable);
+                restoreTableData('occurrenceTable', data.occurrenceTable);
+                restoreTableData('majorHeadTable', data.majorHeadTable);
+                restoreTableData('minorHeadTable', data.minorHeadTable);
+                restoreTableData('modusOperandiTable', data.modusOperandiTable);
+                restoreTableData('conveyanceTable', data.conveyanceTable);
+                restoreTableData('characterTable', data.characterTable);
+                restoreTableData('languageTable', data.languageTable);
+                restoreTableData('specialFeatureTable', data.specialFeatureTable);
+                restoreTableData('placeTypeTable', data.placeTypeTable);
+                restoreTableData('propertyTypeTable', data.propertyTypeTable);
+                restoreTableData('motiveTable', data.motiveTable);
+                restoreTableData('stolenPropertyTable', data.stolenPropertyTable);
+                restoreTableData('visitTable', data.visitTable);
+                restoreTableData('descriptionTable', data.descriptionTable);
+                restoreTableData('evidenceTable', data.evidenceTable);
+                restoreTableData('witnessTable', data.witnessTable);
+                restoreTableData('gistTable', data.gistTable);
+
+                generatePreview();
+                alert('Saved form loaded.');
+            } catch (error) {
+                console.error("Error loading form data:", error);
+                alert("Error loading saved form.");
+            }
+        }
+
+        function deleteFormLocal() {
+            if (!confirm('Delete locally saved form?')) return;
+            localStorage.removeItem('iif2Form');
+            alert('Saved form deleted.');
+        }
+
+        // ==================== UTILITY FUNCTIONS ====================
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.classList.toggle('active');
+        }
+
+        function addNewRow(tableId) {
+            const table = document.getElementById(tableId);
+            const rowCount = table.rows.length;
+            const row = table.insertRow(-1);
+
+            // Add serial number cell
+            const serialCell = row.insertCell(0);
+            serialCell.innerHTML = rowCount;
+
+            // Add data cells based on table type
+            if (tableId === 'actsTable') {
+                const cell1 = row.insertCell(1);
+                const cell2 = row.insertCell(2);
+                const cell3 = row.insertCell(3);
+
+                cell1.innerHTML = '<input type="text" placeholder="Enter Act">';
+                cell2.innerHTML = '<input type="text" placeholder="Enter Section">';
+                cell3.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+            } else if (tableId === 'occurrenceTable') {
+                const cell1 = row.insertCell(1);
+                const cell2 = row.insertCell(2);
+                const cell3 = row.insertCell(3);
+                const cell4 = row.insertCell(4);
+                const cell5 = row.insertCell(5);
+
+                cell1.innerHTML = '<input type="text" placeholder="Name">';
+                cell2.innerHTML = '<input type="text" placeholder="Relative Type">';
+                cell3.innerHTML = '<input type="text" placeholder="Relative Name">';
+                cell4.innerHTML = '<input type="text" placeholder="Address">';
+                cell5.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+            } else if (tableId === 'stolenPropertyTable') {
+                const cell1 = row.insertCell(1);
+                const cell2 = row.insertCell(2);
+                const cell3 = row.insertCell(3);
+
+                cell1.innerHTML = '<input type="text" placeholder="Property Type">';
+                cell2.innerHTML = '<input type="text" placeholder="Property Name">';
+                cell3.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+            } else if (tableId === 'visitTable') {
+                const cell1 = row.insertCell(1);
+                const cell2 = row.insertCell(2);
+                const cell3 = row.insertCell(3);
+
+                cell1.innerHTML = '<input type="date">';
+                cell2.innerHTML = '<input type="time">';
+                cell3.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+            } else if (tableId === 'witnessTable') {
+                const cell1 = row.insertCell(1);
+                const cell2 = row.insertCell(2);
+                const cell3 = row.insertCell(3);
+
+                cell1.innerHTML = '<input type="text" placeholder="Witness Name">';
+                cell2.innerHTML = '<input type="text" placeholder="Address">';
+                cell3.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+            } else {
+                // Default for single column tables
+                const cell1 = row.insertCell(1);
+                const cell2 = row.insertCell(2);
+
+                cell1.innerHTML = '<input type="text">';
+                cell2.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+            }
+        }
+
+        function removeRow(button) {
+            const row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+
+            // Update row numbers
+            const table = row.parentNode.parentNode;
+            for (let i = 1; i < table.rows.length; i++) {
+                table.rows[i].cells[0].innerHTML = i;
+            }
+        }
+
+        // Make functions global for onclick attributes
+        window.removeRow = removeRow;
+        window.addNewRow = addNewRow;
+        window.toggleSection = toggleSection;
+    </script>
+</body>
+</html>

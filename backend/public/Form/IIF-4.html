@@ -1,0 +1,1781 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCTNS IIF-4 Form Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: #1a2a6c;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 5px solid #fdbb2d;
+        }
+
+            header h1 {
+                margin-bottom: 10px;
+                font-size: 28px;
+            }
+
+            header p {
+                font-size: 16px;
+                opacity: 0.9;
+            }
+
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+
+        .form-container {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-right: 20px;
+            margin-bottom: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .preview-container {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        h2 {
+            color: #1a2a6c;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #fdbb2d;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+            button:hover {
+                background: #2a3a8c;
+            }
+
+        .btn-export {
+            background: #b21f1f;
+        }
+
+            .btn-export:hover {
+                background: #c22f2f;
+            }
+
+        .btn-word {
+            background: #1a6c5c;
+        }
+
+            .btn-word:hover {
+                background: #2a7c6c;
+            }
+
+        .btn-ghost {
+            background: #5f6368;
+        }
+
+            .btn-ghost:hover {
+                background: #6f7378;
+            }
+
+        .btn-danger {
+            background: #c62828;
+        }
+
+            .btn-danger:hover {
+                background: #d63838;
+            }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+            .action-buttons button {
+                flex: 1;
+                min-width: 120px;
+            }
+
+        .form-preview {
+            background: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            line-height: 1.5;
+            font-family: "Times New Roman", serif;
+        }
+
+        .preview-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1a2a6c;
+        }
+
+            .preview-header h3 {
+                color: #1a2a6c;
+                font-size: 22px;
+            }
+
+        .preview-section {
+            margin-bottom: 20px;
+        }
+
+            .preview-section h4 {
+                background: #f0f0f0;
+                padding: 8px;
+                margin-bottom: 10px;
+                color: #1a2a6c;
+                border-left: 4px solid #fdbb2d;
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #f0f0f0;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #1a2a6c;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .section-title {
+            background: #1a2a6c;
+            color: white;
+            padding: 10px;
+            margin: 20px 0 10px 0;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .section-content {
+            display: none;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .checkbox-group {
+            margin: 10px 0;
+        }
+
+            .checkbox-group label {
+                display: inline;
+                font-weight: normal;
+            }
+
+        .field-label {
+            font-weight: 700;
+            width: 220px;
+            display: inline-block;
+            color: #222;
+        }
+
+        .signature-area {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .signature-box {
+            border-top: 1px solid #000;
+            width: 250px;
+            padding-top: 5px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .two-column {
+            display: flex;
+            gap: 15px;
+        }
+
+            .two-column .form-group {
+                flex: 1;
+            }
+
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+
+            .form-container {
+                margin-right: 0;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+                .action-buttons button {
+                    width: 100%;
+                }
+
+            .signature-area {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .signature-box {
+                width: 100%;
+                max-width: 250px;
+            }
+
+            .two-column {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+
+        .required::after {
+            content: "*";
+            color: red;
+            margin-left: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CCTNS IIF-4 Form Generator</h1>
+            <p>Property Seizure/Recovery Form - Complete with All Required Tables</p>
+        </header>
+
+        <div class="content">
+            <div class="form-container">
+                <h2>IIF-4 Form Details</h2>
+
+                <div class="section-title" onclick="toggleSection('basicInfo')">1. Basic Information</div>
+                <div id="basicInfo" class="section-content active">
+                    <div class="form-group">
+                        <label for="district" class="required">District</label>
+                        <input type="text" id="district" placeholder="Enter district">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="policeStation" class="required">Police Station</label>
+                        <input type="text" id="policeStation" placeholder="Enter police station">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="year" class="required">Year</label>
+                        <input type="text" id="year" placeholder="Enter year">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="firNo" class="required">FIR/GD No.</label>
+                        <input type="text" id="firNo" placeholder="Enter FIR/GD number">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="firDate" class="required">Date</label>
+                        <input type="date" id="firDate">
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('actsSections')">2. Acts & Sections</div>
+                <div id="actsSections" class="section-content">
+                    <table id="actsTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Acts</th>
+                                <th>Sections</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Enter Act"></td>
+                                <td><input type="text" placeholder="Enter Section"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('actsTable')">Add New Row</button>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('propertySeized')">3. Property Seized/Recovered</div>
+                <div id="propertySeized" class="section-content">
+                    <div class="form-group">
+                        <label for="seizureDate" class="required">Date</label>
+                        <input type="date" id="seizureDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="seizureTime" class="required">Time</label>
+                        <input type="time" id="seizureTime">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="seizurePlace" class="required">Place</label>
+                        <input type="text" id="seizurePlace" placeholder="Enter place of seizure">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="placeDescription" class="required">Description of the place</label>
+                        <textarea id="placeDescription" placeholder="Enter description of the place"></textarea>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('natureProperty')">4. Nature of Property Seized</div>
+                <div id="natureProperty" class="section-content">
+                    <table id="naturePropertyTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Nature of property seized</th>
+                                <th>Property Category</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Nature of property"></td>
+                                <td><input type="text" placeholder="Property Category"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('naturePropertyTable')">Add New Row</button>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('personRecovered')">5. Person from whom recovered</div>
+                <div id="personRecovered" class="section-content">
+                    <div class="form-group">
+                        <label for="personName" class="required">Name</label>
+                        <input type="text" id="personName" placeholder="Enter name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="husbandName" class="required">Husband's Name</label>
+                        <input type="text" id="husbandName" placeholder="Enter husband's name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="personAge" class="required">Age</label>
+                        <input type="number" id="personAge" placeholder="Enter age">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="personOccupation" class="required">Occupation</label>
+                        <input type="text" id="personOccupation" placeholder="Enter occupation">
+                    </div>
+
+                    <h4>Address</h4>
+                    <table id="addressTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Address Type</th>
+                                <th>Address</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Address Type"></td>
+                                <td><input type="text" placeholder="Address"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('addressTable')">Add New Row</button>
+
+                    <div class="form-group">
+                        <label for="professionalReceiver" class="required">Professional receiver of stolen property</label>
+                        <select id="professionalReceiver">
+                            <option value="">Select</option>
+                            <option value="YES">YES</option>
+                            <option value="NO">NO</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('propertiesRecovered')">Details of Properties Recovered</div>
+                <div id="propertiesRecovered" class="section-content">
+                    <table id="propertiesTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Property Category</th>
+                                <th>Property Belongs to</th>
+                                <th>Value (In Rs/-)</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Property Category"></td>
+                                <td><input type="text" placeholder="Property Belongs to"></td>
+                                <td><input type="number" placeholder="Value"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('propertiesTable')">Add New Row</button>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('witnesses')">6. Witnesses</div>
+                <div id="witnesses" class="section-content">
+                    <h4>Witness 1</h4>
+                    <div class="form-group">
+                        <label for="witness1Name" class="required">Name</label>
+                        <input type="text" id="witness1Name" placeholder="Enter name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="witness1Father" class="required">Father Name</label>
+                        <input type="text" id="witness1Father" placeholder="Enter father's name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="witness1Age" class="required">Age</label>
+                        <input type="number" id="witness1Age" placeholder="Enter age">
+                    </div>
+
+                    <h4>Witness 1 Address</h4>
+                    <table id="witness1AddressTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Address Type</th>
+                                <th>Address</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Address Type"></td>
+                                <td><input type="text" placeholder="Address"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('witness1AddressTable')">Add New Row</button>
+
+                    <h4>Witness 2</h4>
+                    <div class="form-group">
+                        <label for="witness2Name" class="required">Name</label>
+                        <input type="text" id="witness2Name" placeholder="Enter name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="witness2Father" class="required">Father Name</label>
+                        <input type="text" id="witness2Father" placeholder="Enter father's name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="witness2Age" class="required">Age</label>
+                        <input type="number" id="witness2Age" placeholder="Enter age">
+                    </div>
+
+                    <h4>Witness 2 Address</h4>
+                    <table id="witness2AddressTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Address Type</th>
+                                <th>Address</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Address Type"></td>
+                                <td><input type="text" placeholder="Address"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('witness2AddressTable')">Add New Row</button>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('perishableProperty')">7. Action taken/recommended for disposal of Perishable Property</div>
+                <div id="perishableProperty" class="section-content">
+                    <table id="perishableTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Property Category</th>
+                                <th>Action Taken</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Property Category"></td>
+                                <td><input type="text" placeholder="Action Taken"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('perishableTable')">Add New Row</button>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('valuableProperty')">8. Action taken/recommended for keeping of Valuable Property</div>
+                <div id="valuableProperty" class="section-content">
+                    <table id="valuableTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Property Category</th>
+                                <th>Action Taken</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Property Category"></td>
+                                <td><input type="text" placeholder="Action Taken"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('valuableTable')">Add New Row</button>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('identification')">9. Identification required</div>
+                <div id="identification" class="section-content">
+                    <div class="form-group">
+                        <label for="identificationRequired" class="required">Identification required</label>
+                        <select id="identificationRequired">
+                            <option value="">Select</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('circumstances')">10. Circumstances / Grounds for Seizure</div>
+                <div id="circumstances" class="section-content">
+                    <div class="form-group">
+                        <label for="seizureGrounds" class="required">Circumstances / Grounds for Seizure</label>
+                        <textarea id="seizureGrounds" placeholder="Enter circumstances/grounds for seizure"></textarea>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('seizureStatement')">11. Seizure Statement</div>
+                <div id="seizureStatement" class="section-content">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="seizureStatementCheck">
+                        <label for="seizureStatementCheck">The above mentioned properties were seized in accordance with the provisions of law in the presence of the above said witnesses and a copy of the seizure form was given to the person/ the occupant of the place from whom seized</label>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('packingSealing')">12. Packing and Sealing Details</div>
+                <div id="packingSealing" class="section-content">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="packingSealingCheck">
+                        <label for="packingSealingCheck">The following properties were packed and/or sealed and the signature of the above said witnesses obtained thereon or on the body of the property.</label>
+                    </div>
+
+                    <table id="packingTable">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Property</th>
+                                <th>Indicate whether signature obtained on the packet or on the body of the property</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" placeholder="Property"></td>
+                                <td><input type="text" placeholder="Signature Details"></td>
+                                <td><button onclick="removeRow(this)">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow('packingTable')">Add New Row</button>
+
+                    <div class="form-group">
+                        <label for="sealSpecimen" class="required">Specimen of the seal</label>
+                        <textarea id="sealSpecimen" placeholder="Enter specimen of the seal"></textarea>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('signatures')">Signatures</div>
+                <div id="signatures" class="section-content">
+                    <div class="form-group">
+                        <label for="personSignature">Signature of the person from whom seized (if present)</label>
+                        <input type="text" id="personSignature" placeholder="Enter signature details">
+                    </div>
+
+                    <h4>Witness 1</h4>
+                    <div class="form-group">
+                        <label for="witness1Signature" class="required">Signature</label>
+                        <input type="text" id="witness1Signature" placeholder="Enter witness 1 signature">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="witness1NameFinal" class="required">Name</label>
+                        <input type="text" id="witness1NameFinal" placeholder="Enter witness 1 name">
+                    </div>
+
+                    <h4>Witness 2</h4>
+                    <div class="form-group">
+                        <label for="witness2Signature" class="required">Signature</label>
+                        <input type="text" id="witness2Signature" placeholder="Enter witness 2 signature">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="witness2NameFinal" class="required">Name</label>
+                        <input type="text" id="witness2NameFinal" placeholder="Enter witness 2 name">
+                    </div>
+
+                    <h4>Investigating Officer</h4>
+                    <div class="form-group">
+                        <label for="ioSignature" class="required">Signature of Investigating officer</label>
+                        <input type="text" id="ioSignature" placeholder="Enter IO signature">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ioName" class="required">Name</label>
+                        <input type="text" id="ioName" placeholder="Enter IO name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ioRank" class="required">Rank</label>
+                        <input type="text" id="ioRank" placeholder="Enter IO rank">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ioNo" class="required">No.</label>
+                        <input type="text" id="ioNo" placeholder="Enter IO number">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ioPlace" class="required">Place</label>
+                        <input type="text" id="ioPlace" placeholder="Enter place">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ioDate" class="required">Date</label>
+                        <input type="date" id="ioDate">
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="btnGenerate">Generate Preview</button>
+                    <button id="btnExport" class="btn-export">Export as PDF</button>
+                    <button id="btnExportWord" class="btn-word">Export as Word</button>
+                    <button id="btnSave" class="btn-ghost">Save to Records</button>
+                    <button id="btnLoad" class="btn-ghost">Load Saved</button>
+                    <button id="btnDelete" class="btn-danger">Delete Saved</button>
+                </div>
+            </div>
+
+            <div class="preview-container">
+                <h2>IIF-4 Form Preview</h2>
+                <div id="formPreview" class="form-preview">
+                    <div class="preview-header">
+                        <h3>CCTNS IIF-4 Form</h3>
+                        <p>Property Seizure/Recovery Report</p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>1. Basic Information</h4>
+                        <p><strong>District:</strong> <span id="previewDistrict">Not specified</span></p>
+                        <p><strong>Police Station:</strong> <span id="previewPoliceStation">Not specified</span></p>
+                        <p><strong>Year:</strong> <span id="previewYear">Not specified</span></p>
+                        <p><strong>FIR/GD No.:</strong> <span id="previewFirNo">Not specified</span></p>
+                        <p><strong>Date:</strong> <span id="previewFirDate">Not specified</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>2. Acts & Sections</h4>
+                        <table id="previewActsTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Acts</th>
+                                    <th>Sections</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>3. Property Seized/Recovered</h4>
+                        <p><strong>Date:</strong> <span id="previewSeizureDate">Not specified</span></p>
+                        <p><strong>Time:</strong> <span id="previewSeizureTime">Not specified</span></p>
+                        <p><strong>Place:</strong> <span id="previewSeizurePlace">Not specified</span></p>
+                        <p><strong>Description of the place:</strong> <span id="previewPlaceDescription">Not specified</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>4. Nature of Property Seized</h4>
+                        <table id="previewNaturePropertyTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Nature of property seized</th>
+                                    <th>Property Category</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>5. Person from whom recovered</h4>
+                        <p><strong>Name:</strong> <span id="previewPersonName">Not specified</span></p>
+                        <p><strong>Husband's Name:</strong> <span id="previewHusbandName">Not specified</span></p>
+                        <p><strong>Age:</strong> <span id="previewPersonAge">Not specified</span></p>
+                        <p><strong>Occupation:</strong> <span id="previewPersonOccupation">Not specified</span></p>
+
+                        <h4>Address</h4>
+                        <table id="previewAddressTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Address Type</th>
+                                    <th>Address</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p><strong>Professional receiver of stolen property:</strong> <span id="previewProfessionalReceiver">Not specified</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>Details of Properties Recovered</h4>
+                        <table id="previewPropertiesTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Property Category</th>
+                                    <th>Property Belongs to</th>
+                                    <th>Value (In Rs/-)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="4">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>6. Witnesses</h4>
+
+                        <h4>Witness 1</h4>
+                        <p><strong>Name:</strong> <span id="previewWitness1Name">Not specified</span></p>
+                        <p><strong>Father Name:</strong> <span id="previewWitness1Father">Not specified</span></p>
+                        <p><strong>Age:</strong> <span id="previewWitness1Age">Not specified</span></p>
+
+                        <h4>Witness 1 Address</h4>
+                        <table id="previewWitness1AddressTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Address Type</th>
+                                    <th>Address</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h4>Witness 2</h4>
+                        <p><strong>Name:</strong> <span id="previewWitness2Name">Not specified</span></p>
+                        <p><strong>Father Name:</strong> <span id="previewWitness2Father">Not specified</span></p>
+                        <p><strong>Age:</strong> <span id="previewWitness2Age">Not specified</span></p>
+
+                        <h4>Witness 2 Address</h4>
+                        <table id="previewWitness2AddressTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Address Type</th>
+                                    <th>Address</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>7. Action taken/recommended for disposal of Perishable Property</h4>
+                        <table id="previewPerishableTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Property Category</th>
+                                    <th>Action Taken</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>8. Action taken/recommended for keeping of Valuable Property</h4>
+                        <table id="previewValuableTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Property Category</th>
+                                    <th>Action Taken</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>9. Identification required</h4>
+                        <p><strong>Identification required:</strong> <span id="previewIdentificationRequired">Not specified</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>10. Circumstances / Grounds for Seizure</h4>
+                        <p id="previewSeizureGrounds">Not specified</p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>11. Seizure Statement</h4>
+                        <p id="previewSeizureStatement">Not specified</p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>12. Packing and Sealing Details</h4>
+                        <p id="previewPackingSealing">Not specified</p>
+
+                        <table id="previewPackingTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Property</th>
+                                    <th>Indicate whether signature obtained on the packet or on the body of the property</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p><strong>Specimen of the seal:</strong> <span id="previewSealSpecimen">Not specified</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>Signatures</h4>
+                        <p><strong>Signature of the person from whom seized:</strong> <span id="previewPersonSignature">Not specified</span></p>
+
+                        <h4>Witness 1</h4>
+                        <p><strong>Signature:</strong> <span id="previewWitness1Signature">Not specified</span></p>
+                        <p><strong>Name:</strong> <span id="previewWitness1NameFinal">Not specified</span></p>
+
+                        <h4>Witness 2</h4>
+                        <p><strong>Signature:</strong> <span id="previewWitness2Signature">Not specified</span></p>
+                        <p><strong>Name:</strong> <span id="previewWitness2NameFinal">Not specified</span></p>
+
+                        <h4>Investigating Officer</h4>
+                        <p><strong>Signature:</strong> <span id="previewIoSignature">Not specified</span></p>
+                        <p><strong>Name:</strong> <span id="previewIoName">Not specified</span></p>
+                        <p><strong>Rank:</strong> <span id="previewIoRank">Not specified</span></p>
+                        <p><strong>No.:</strong> <span id="previewIoNo">Not specified</span></p>
+                        <p><strong>Place:</strong> <span id="previewIoPlace">Not specified</span></p>
+                        <p><strong>Date:</strong> <span id="previewIoDate">Not specified</span></p>
+                    </div>
+
+                    <div class="signature-area">
+                        <div class="signature-box">Signature of Investigation Officer</div>
+                        <div class="signature-box">Signature of Supervising Officer</div>
+                    </div>
+
+                    <div class="preview-section">
+                        <p>Generated on: <span id="generationDate"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2023 CCTNS System | For official use only</p>
+        </div>
+    </div>
+
+    <script>
+        // ==================== AUTHENTICATION & SECURITY ====================
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check if user is authenticated
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+
+            if (!token || !user) {
+                alert('Authentication required. Please login first.');
+                if (window.parent !== window) {
+                    window.parent.postMessage({ type: 'AUTH_REQUIRED' }, '*');
+                } else {
+                    window.location.href = '../index.html';
+                }
+                return;
+            }
+
+            // Set officer name from logged in user
+            try {
+                const userData = JSON.parse(user);
+                document.getElementById('ioName').value = userData.fullName || 'Investigation Officer';
+            } catch (e) {
+                console.error('Error parsing user data:', e);
+            }
+
+            // Listen for authentication token from parent
+            window.addEventListener('message', function (event) {
+                if (event.data.type === 'AUTH_TOKEN' && event.data.token) {
+                    localStorage.setItem('token', event.data.token);
+                }
+            });
+
+            // Notify parent that form is loaded
+            if (window.parent !== window) {
+                window.parent.postMessage({ type: 'FORM_LOADED', formType: 'IIF-4' }, '*');
+            }
+
+            // Set current date
+            const now = new Date();
+            document.getElementById('generationDate').textContent = now.toLocaleString();
+            document.getElementById('firDate').valueAsDate = now;
+            document.getElementById('seizureDate').valueAsDate = now;
+            document.getElementById('ioDate').valueAsDate = now;
+
+            // Generate preview button
+            document.getElementById('btnGenerate').addEventListener('click', generatePreview);
+
+            // Export as PDF button
+            document.getElementById('btnExport').addEventListener('click', exportAsPDF);
+
+            // Export as Word button
+            document.getElementById('btnExportWord').addEventListener('click', exportAsWord);
+
+            // Save to Records button
+            document.getElementById('btnSave').addEventListener('click', saveToRecords);
+
+            // Load form button
+            document.getElementById('btnLoad').addEventListener('click', loadFormLocal);
+
+            // Delete form button
+            document.getElementById('btnDelete').addEventListener('click', deleteFormLocal);
+
+            // Generate initial preview
+            generatePreview();
+        });
+
+        // ==================== FORM FUNCTIONS ====================
+        function generatePreview() {
+            // Get form values
+            const district = document.getElementById('district').value || 'Not specified';
+            const policeStation = document.getElementById('policeStation').value || 'Not specified';
+            const year = document.getElementById('year').value || 'Not specified';
+            const firNo = document.getElementById('firNo').value || 'Not specified';
+            const firDate = document.getElementById('firDate').value;
+            const seizureDate = document.getElementById('seizureDate').value;
+            const seizureTime = document.getElementById('seizureTime').value;
+            const seizurePlace = document.getElementById('seizurePlace').value || 'Not specified';
+            const placeDescription = document.getElementById('placeDescription').value || 'Not specified';
+            const personName = document.getElementById('personName').value || 'Not specified';
+            const husbandName = document.getElementById('husbandName').value || 'Not specified';
+            const personAge = document.getElementById('personAge').value || 'Not specified';
+            const personOccupation = document.getElementById('personOccupation').value || 'Not specified';
+            const professionalReceiver = document.getElementById('professionalReceiver').value || 'Not specified';
+            const witness1Name = document.getElementById('witness1Name').value || 'Not specified';
+            const witness1Father = document.getElementById('witness1Father').value || 'Not specified';
+            const witness1Age = document.getElementById('witness1Age').value || 'Not specified';
+            const witness2Name = document.getElementById('witness2Name').value || 'Not specified';
+            const witness2Father = document.getElementById('witness2Father').value || 'Not specified';
+            const witness2Age = document.getElementById('witness2Age').value || 'Not specified';
+            const identificationRequired = document.getElementById('identificationRequired').value || 'Not specified';
+            const seizureGrounds = document.getElementById('seizureGrounds').value || 'Not specified';
+            const seizureStatementCheck = document.getElementById('seizureStatementCheck').checked;
+            const packingSealingCheck = document.getElementById('packingSealingCheck').checked;
+            const sealSpecimen = document.getElementById('sealSpecimen').value || 'Not specified';
+            const personSignature = document.getElementById('personSignature').value || 'Not specified';
+            const witness1Signature = document.getElementById('witness1Signature').value || 'Not specified';
+            const witness1NameFinal = document.getElementById('witness1NameFinal').value || 'Not specified';
+            const witness2Signature = document.getElementById('witness2Signature').value || 'Not specified';
+            const witness2NameFinal = document.getElementById('witness2NameFinal').value || 'Not specified';
+            const ioSignature = document.getElementById('ioSignature').value || 'Not specified';
+            const ioName = document.getElementById('ioName').value || 'Not specified';
+            const ioRank = document.getElementById('ioRank').value || 'Not specified';
+            const ioNo = document.getElementById('ioNo').value || 'Not specified';
+            const ioPlace = document.getElementById('ioPlace').value || 'Not specified';
+            const ioDate = document.getElementById('ioDate').value;
+
+            // Format date and time
+            const formatDate = (dateStr) => dateStr ? new Date(dateStr).toLocaleDateString('en-GB') : 'Not specified';
+            const formatTime = (timeStr) => timeStr ? new Date(`2000-01-01T${timeStr}`).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : 'Not specified';
+
+            // Update preview
+            document.getElementById('previewDistrict').textContent = district;
+            document.getElementById('previewPoliceStation').textContent = policeStation;
+            document.getElementById('previewYear').textContent = year;
+            document.getElementById('previewFirNo').textContent = firNo;
+            document.getElementById('previewFirDate').textContent = formatDate(firDate);
+            document.getElementById('previewSeizureDate').textContent = formatDate(seizureDate);
+            document.getElementById('previewSeizureTime').textContent = formatTime(seizureTime);
+            document.getElementById('previewSeizurePlace').textContent = seizurePlace;
+            document.getElementById('previewPlaceDescription').textContent = placeDescription;
+            document.getElementById('previewPersonName').textContent = personName;
+            document.getElementById('previewHusbandName').textContent = husbandName;
+            document.getElementById('previewPersonAge').textContent = personAge;
+            document.getElementById('previewPersonOccupation').textContent = personOccupation;
+            document.getElementById('previewProfessionalReceiver').textContent = professionalReceiver;
+            document.getElementById('previewWitness1Name').textContent = witness1Name;
+            document.getElementById('previewWitness1Father').textContent = witness1Father;
+            document.getElementById('previewWitness1Age').textContent = witness1Age;
+            document.getElementById('previewWitness2Name').textContent = witness2Name;
+            document.getElementById('previewWitness2Father').textContent = witness2Father;
+            document.getElementById('previewWitness2Age').textContent = witness2Age;
+            document.getElementById('previewIdentificationRequired').textContent = identificationRequired;
+            document.getElementById('previewSeizureGrounds').textContent = seizureGrounds;
+            document.getElementById('previewSeizureStatement').textContent = seizureStatementCheck ?
+                'The above mentioned properties were seized in accordance with the provisions of law in the presence of the above said witnesses and a copy of the seizure form was given to the person/ the occupant of the place from whom seized' :
+                'Not specified';
+            document.getElementById('previewPackingSealing').textContent = packingSealingCheck ?
+                'The following properties were packed and/or sealed and the signature of the above said witnesses obtained thereon or on the body of the property.' :
+                'Not specified';
+            document.getElementById('previewSealSpecimen').textContent = sealSpecimen;
+            document.getElementById('previewPersonSignature').textContent = personSignature;
+            document.getElementById('previewWitness1Signature').textContent = witness1Signature;
+            document.getElementById('previewWitness1NameFinal').textContent = witness1NameFinal;
+            document.getElementById('previewWitness2Signature').textContent = witness2Signature;
+            document.getElementById('previewWitness2NameFinal').textContent = witness2NameFinal;
+            document.getElementById('previewIoSignature').textContent = ioSignature;
+            document.getElementById('previewIoName').textContent = ioName;
+            document.getElementById('previewIoRank').textContent = ioRank;
+            document.getElementById('previewIoNo').textContent = ioNo;
+            document.getElementById('previewIoPlace').textContent = ioPlace;
+            document.getElementById('previewIoDate').textContent = formatDate(ioDate);
+
+            // Update tables
+            updatePreviewTable('actsTable', 'previewActsTable');
+            updatePreviewTable('naturePropertyTable', 'previewNaturePropertyTable');
+            updatePreviewTable('addressTable', 'previewAddressTable');
+            updatePreviewTable('propertiesTable', 'previewPropertiesTable');
+            updatePreviewTable('witness1AddressTable', 'previewWitness1AddressTable');
+            updatePreviewTable('witness2AddressTable', 'previewWitness2AddressTable');
+            updatePreviewTable('perishableTable', 'previewPerishableTable');
+            updatePreviewTable('valuableTable', 'previewValuableTable');
+            updatePreviewTable('packingTable', 'previewPackingTable');
+
+            // Update generation date
+            document.getElementById('generationDate').textContent = new Date().toLocaleString();
+        }
+
+        function updatePreviewTable(sourceTableId, targetTableId) {
+            const sourceTable = document.getElementById(sourceTableId);
+            const targetTable = document.getElementById(targetTableId);
+
+            // Clear existing rows
+            targetTable.querySelector('tbody').innerHTML = '';
+
+            let hasData = false;
+
+            for (let i = 1; i < sourceTable.rows.length; i++) {
+                const row = sourceTable.rows[i];
+                const newRow = document.createElement('tr');
+
+                // Check if the row has any data
+                let rowHasData = false;
+
+                for (let j = 1; j < row.cells.length - 1; j++) {
+                    const input = row.cells[j].querySelector('input');
+                    if (input && input.value) {
+                        rowHasData = true;
+                        break;
+                    }
+                }
+
+                if (rowHasData) {
+                    hasData = true;
+
+                    // Add serial number
+                    const serialCell = document.createElement('td');
+                    serialCell.textContent = i;
+                    newRow.appendChild(serialCell);
+
+                    // Add data cells
+                    for (let j = 1; j < row.cells.length - 1; j++) {
+                        const input = row.cells[j].querySelector('input');
+                        const cell = document.createElement('td');
+                        cell.textContent = input ? input.value : '';
+                        newRow.appendChild(cell);
+                    }
+
+                    targetTable.querySelector('tbody').appendChild(newRow);
+                }
+            }
+
+            if (!hasData) {
+                const newRow = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.colSpan = targetTable.rows[0].cells.length;
+                cell.textContent = 'No data available';
+                newRow.appendChild(cell);
+                targetTable.querySelector('tbody').appendChild(newRow);
+            }
+        }
+
+        function exportAsPDF() {
+            generatePreview();
+
+            const element = document.getElementById('formPreview');
+            const opt = {
+                margin: 10,
+                filename: 'iif-4-form.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save();
+        }
+
+        function exportAsWord() {
+            try {
+                generatePreview();
+
+                // Create HTML content for Word
+                const htmlContent = `
+                            <html xmlns:o="urn:schemas-microsoft-com:office:office"
+                                  xmlns:w="urn:schemas-microsoft-com:office:word"
+                                  xmlns="http://www.w3.org/TR/REC-html40">
+                            <head>
+                                <meta charset="utf-8">
+                                <title>IIF-4 Form</title>
+                                <style>
+                                    body {
+                                        font-family: 'Times New Roman', serif;
+                                        font-size: 12pt;
+                                        line-height: 1.5;
+                                    }
+                                    h1, h2, h3, h4 {
+                                        color: #1a2a6c;
+                                    }
+                                    h1 {
+                                        font-size: 16pt;
+                                        text-align: center;
+                                    }
+                                    h2 {
+                                        font-size: 14pt;
+                                        margin-top: 12pt;
+                                        margin-bottom: 6pt;
+                                    }
+                                    table {
+                                        width: 100%;
+                                        border-collapse: collapse;
+                                        margin: 6pt 0;
+                                    }
+                                    th, td {
+                                        border: 1px solid #000;
+                                        padding: 4pt;
+                                        text-align: left;
+                                    }
+                                    th {
+                                        background-color: #f3f6fb;
+                                        font-weight: bold;
+                                    }
+                                    .field-label {
+                                        font-weight: bold;
+                                        width: 220px;
+                                        display: inline-block;
+                                    }
+                                    .signature-area {
+                                        margin-top: 30pt;
+                                        display: flex;
+                                        justify-content: space-between;
+                                    }
+                                    .signature-box {
+                                        border-top: 1px solid #000;
+                                        width: 250px;
+                                        padding-top: 5px;
+                                        text-align: center;
+                                    }
+                                </style>
+                            </head>
+                            <body>
+                                <h1>IIF-4 Form</h1>
+                                <p style="text-align: center; font-style: italic;">Property Seizure/Recovery Report</p>
+                                ${document.getElementById('formPreview').innerHTML}
+                            </body>
+                            </html>
+                        `;
+
+                // Create download link
+                const blob = new Blob([htmlContent], { type: 'application/msword' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `IIF4_Form_${document.getElementById('firNo').value || 'report'}.doc`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+
+                // Clean up
+                setTimeout(() => URL.revokeObjectURL(url), 100);
+            } catch (error) {
+                console.error("Error generating Word document:", error);
+                alert("Error generating Word document: " + error.message);
+            }
+        }
+
+        // ==================== RECORD MANAGEMENT ====================
+        async function saveToRecords() {
+            generatePreview();
+
+            try {
+                // Generate PDF and Word files
+                const pdfData = await generatePDFBlob();
+                const wordData = await generateWordBlob();
+
+                // Convert Blobs to base64 for storage
+                const pdfBase64 = await blobToBase64(pdfData);
+                const wordBase64 = await blobToBase64(wordData);
+
+                // Collect form data
+                const formData = collectFormData();
+
+                // Create record object
+                const record = {
+                    id: Date.now(),
+                    type: "IIF-4",
+                    date: new Date().toISOString().split('T')[0],
+                    policeStation: formData.policeStation,
+                    officerName: formData.ioName,
+                    propertySeized: formData.personName || 'Property Seizure',
+                    formData: formData,
+                    pdfFile: pdfBase64,
+                    wordFile: wordBase64,
+                    status: "Pending"
+                };
+
+                // Get existing records from localStorage
+                let records = JSON.parse(localStorage.getItem('iifRecords')) || [];
+
+                // Add the new record
+                records.push(record);
+
+                // Save back to localStorage
+                localStorage.setItem('iifRecords', JSON.stringify(records));
+
+                // Notify parent window (dashboard) that form was saved
+                if (window.parent !== window) {
+                    window.parent.postMessage({
+                        type: 'FORM_SAVED',
+                        formType: 'IIF-4',
+                        recordId: record.id
+                    }, '*');
+                }
+
+                alert('Form saved to records successfully!');
+            } catch (error) {
+                console.error("Error saving to records:", error);
+                alert("Error saving form to records: " + error.message);
+            }
+        }
+
+        async function generatePDFBlob() {
+            return new Promise((resolve, reject) => {
+                const element = document.getElementById('formPreview');
+                const opt = {
+                    margin: 10,
+                    filename: 'iif-4-form.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                html2pdf().set(opt).from(element).output('blob').then(resolve).catch(reject);
+            });
+        }
+
+        async function generateWordBlob() {
+            return new Promise((resolve) => {
+                // Create HTML content for Word
+                const htmlContent = `
+                            <html xmlns:o="urn:schemas-microsoft-com:office:office"
+                                  xmlns:w="urn:schemas-microsoft-com:office:word"
+                                  xmlns="http://www.w3.org/TR/REC-html40">
+                            <head>
+                                <meta charset="utf-8">
+                                <title>IIF-4 Form</title>
+                                <style>
+                                    body {
+                                        font-family: 'Times New Roman', serif;
+                                        font-size: 12pt;
+                                        line-height: 1.5;
+                                    }
+                                    h1, h2, h3, h4 {
+                                        color: #1a2a6c;
+                                    }
+                                    h1 {
+                                        font-size: 16pt;
+                                        text-align: center;
+                                    }
+                                    h2 {
+                                        font-size: 14pt;
+                                        margin-top: 12pt;
+                                        margin-bottom: 6pt;
+                                    }
+                                    table {
+                                        width: 100%;
+                                        border-collapse: collapse;
+                                        margin: 6pt 0;
+                                    }
+                                    th, td {
+                                        border: 1px solid #000;
+                                        padding: 4pt;
+                                        text-align: left;
+                                    }
+                                    th {
+                                        background-color: #f3f6fb;
+                                        font-weight: bold;
+                                    }
+                                    .field-label {
+                                        font-weight: bold;
+                                        width: 220px;
+                                        display: inline-block;
+                                    }
+                                    .signature-area {
+                                        margin-top: 30pt;
+                                        display: flex;
+                                        justify-content: space-between;
+                                    }
+                                    .signature-box {
+                                        border-top: 1px solid #000;
+                                        width: 250px;
+                                        padding-top: 5px;
+                                        text-align: center;
+                                    }
+                                </style>
+                            </head>
+                            <body>
+                                <h1>IIF-4 Form</h1>
+                                <p style="text-align: center; font-style: italic;">Property Seizure/Recovery Report</p>
+                                ${document.getElementById('formPreview').innerHTML}
+                            </body>
+                            </html>
+                        `;
+
+                const blob = new Blob([htmlContent], { type: 'application/msword' });
+                resolve(blob);
+            });
+        }
+
+        function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        function collectFormData() {
+            const data = {
+                district: document.getElementById('district').value,
+                policeStation: document.getElementById('policeStation').value,
+                year: document.getElementById('year').value,
+                firNo: document.getElementById('firNo').value,
+                firDate: document.getElementById('firDate').value,
+                seizureDate: document.getElementById('seizureDate').value,
+                seizureTime: document.getElementById('seizureTime').value,
+                seizurePlace: document.getElementById('seizurePlace').value,
+                placeDescription: document.getElementById('placeDescription').value,
+                personName: document.getElementById('personName').value,
+                husbandName: document.getElementById('husbandName').value,
+                personAge: document.getElementById('personAge').value,
+                personOccupation: document.getElementById('personOccupation').value,
+                professionalReceiver: document.getElementById('professionalReceiver').value,
+                witness1Name: document.getElementById('witness1Name').value,
+                witness1Father: document.getElementById('witness1Father').value,
+                witness1Age: document.getElementById('witness1Age').value,
+                witness2Name: document.getElementById('witness2Name').value,
+                witness2Father: document.getElementById('witness2Father').value,
+                witness2Age: document.getElementById('witness2Age').value,
+                identificationRequired: document.getElementById('identificationRequired').value,
+                seizureGrounds: document.getElementById('seizureGrounds').value,
+                seizureStatementCheck: document.getElementById('seizureStatementCheck').checked,
+                packingSealingCheck: document.getElementById('packingSealingCheck').checked,
+                sealSpecimen: document.getElementById('sealSpecimen').value,
+                personSignature: document.getElementById('personSignature').value,
+                witness1Signature: document.getElementById('witness1Signature').value,
+                witness1NameFinal: document.getElementById('witness1NameFinal').value,
+                witness2Signature: document.getElementById('witness2Signature').value,
+                witness2NameFinal: document.getElementById('witness2NameFinal').value,
+                ioSignature: document.getElementById('ioSignature').value,
+                ioName: document.getElementById('ioName').value,
+                ioRank: document.getElementById('ioRank').value,
+                ioNo: document.getElementById('ioNo').value,
+                ioPlace: document.getElementById('ioPlace').value,
+                ioDate: document.getElementById('ioDate').value,
+
+                // Table data
+                actsTable: getTableData('actsTable'),
+                naturePropertyTable: getTableData('naturePropertyTable'),
+                addressTable: getTableData('addressTable'),
+                propertiesTable: getTableData('propertiesTable'),
+                witness1AddressTable: getTableData('witness1AddressTable'),
+                witness2AddressTable: getTableData('witness2AddressTable'),
+                perishableTable: getTableData('perishableTable'),
+                valuableTable: getTableData('valuableTable'),
+                packingTable: getTableData('packingTable')
+            };
+
+            return data;
+        }
+
+        function getTableData(tableId) {
+            const table = document.getElementById(tableId);
+            const data = [];
+
+            for (let i = 1; i < table.rows.length; i++) {
+                const row = table.rows[i];
+                const rowData = {};
+
+                for (let j = 1; j < row.cells.length - 1; j++) {
+                    const input = row.cells[j].querySelector('input');
+                    if (input) {
+                        rowData[`col${j}`] = input.value;
+                    }
+                }
+
+                data.push(rowData);
+            }
+
+            return data;
+        }
+
+        function restoreTableData(tableId, tableData) {
+            const table = document.getElementById(tableId);
+
+            // Clear existing rows (except header)
+            while (table.rows.length > 1) {
+                table.deleteRow(1);
+            }
+
+            // Add rows with data
+            if (tableData && tableData.length > 0) {
+                for (let i = 0; i < tableData.length; i++) {
+                    addNewRow(tableId);
+                    const row = table.rows[table.rows.length - 1];
+
+                    for (let j = 1; j < row.cells.length - 1; j++) {
+                        const input = row.cells[j].querySelector('input');
+                        if (input && tableData[i][`col${j}`]) {
+                            input.value = tableData[i][`col${j}`];
+                        }
+                    }
+                }
+            }
+        }
+
+        // ==================== LOCAL STORAGE FUNCTIONS ====================
+        function loadFormLocal() {
+            const raw = localStorage.getItem('iif4Form');
+            if (!raw) {
+                alert('No saved form found.');
+                return;
+            }
+
+            try {
+                const data = JSON.parse(raw);
+
+                // Restore basic information
+                document.getElementById('district').value = data.district || '';
+                document.getElementById('policeStation').value = data.policeStation || '';
+                document.getElementById('year').value = data.year || '';
+                document.getElementById('firNo').value = data.firNo || '';
+                document.getElementById('firDate').value = data.firDate || '';
+                document.getElementById('seizureDate').value = data.seizureDate || '';
+                document.getElementById('seizureTime').value = data.seizureTime || '';
+                document.getElementById('seizurePlace').value = data.seizurePlace || '';
+                document.getElementById('placeDescription').value = data.placeDescription || '';
+                document.getElementById('personName').value = data.personName || '';
+                document.getElementById('husbandName').value = data.husbandName || '';
+                document.getElementById('personAge').value = data.personAge || '';
+                document.getElementById('personOccupation').value = data.personOccupation || '';
+                document.getElementById('professionalReceiver').value = data.professionalReceiver || '';
+                document.getElementById('witness1Name').value = data.witness1Name || '';
+                document.getElementById('witness1Father').value = data.witness1Father || '';
+                document.getElementById('witness1Age').value = data.witness1Age || '';
+                document.getElementById('witness2Name').value = data.witness2Name || '';
+                document.getElementById('witness2Father').value = data.witness2Father || '';
+                document.getElementById('witness2Age').value = data.witness2Age || '';
+                document.getElementById('identificationRequired').value = data.identificationRequired || '';
+                document.getElementById('seizureGrounds').value = data.seizureGrounds || '';
+                document.getElementById('seizureStatementCheck').checked = data.seizureStatementCheck || false;
+                document.getElementById('packingSealingCheck').checked = data.packingSealingCheck || false;
+                document.getElementById('sealSpecimen').value = data.sealSpecimen || '';
+                document.getElementById('personSignature').value = data.personSignature || '';
+                document.getElementById('witness1Signature').value = data.witness1Signature || '';
+                document.getElementById('witness1NameFinal').value = data.witness1NameFinal || '';
+                document.getElementById('witness2Signature').value = data.witness2Signature || '';
+                document.getElementById('witness2NameFinal').value = data.witness2NameFinal || '';
+                document.getElementById('ioSignature').value = data.ioSignature || '';
+                document.getElementById('ioName').value = data.ioName || '';
+                document.getElementById('ioRank').value = data.ioRank || '';
+                document.getElementById('ioNo').value = data.ioNo || '';
+                document.getElementById('ioPlace').value = data.ioPlace || '';
+                document.getElementById('ioDate').value = data.ioDate || '';
+
+                // Restore tables
+                restoreTableData('actsTable', data.actsTable);
+                restoreTableData('naturePropertyTable', data.naturePropertyTable);
+                restoreTableData('addressTable', data.addressTable);
+                restoreTableData('propertiesTable', data.propertiesTable);
+                restoreTableData('witness1AddressTable', data.witness1AddressTable);
+                restoreTableData('witness2AddressTable', data.witness2AddressTable);
+                restoreTableData('perishableTable', data.perishableTable);
+                restoreTableData('valuableTable', data.valuableTable);
+                restoreTableData('packingTable', data.packingTable);
+
+                generatePreview();
+                alert('Saved form loaded.');
+            } catch (error) {
+                console.error("Error loading form data:", error);
+                alert("Error loading saved form.");
+            }
+        }
+
+        function deleteFormLocal() {
+            if (!confirm('Delete locally saved form?')) return;
+            localStorage.removeItem('iif4Form');
+            alert('Saved form deleted.');
+        }
+
+        // ==================== UTILITY FUNCTIONS ====================
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.classList.toggle('active');
+        }
+
+        function addNewRow(tableId) {
+            const table = document.getElementById(tableId);
+            const rowCount = table.rows.length;
+            const row = table.insertRow(-1);
+
+            // Add serial number cell
+            const serialCell = row.insertCell(0);
+            serialCell.innerHTML = rowCount;
+
+            // Add data cells based on table type
+            if (tableId === 'actsTable') {
+                const cell1 = row.insertCell(1);
+                const cell2 = row.insertCell(2);
+                const cell3 = row.insertCell(3);
+
+                cell1.innerHTML = '<input type="text" placeholder="Enter Act">';
+                cell2.innerHTML = '<input type="text" placeholder="Enter Section">';
+                cell3.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+            } else if (tableId === 'naturePropertyTable') {
+                const cell1 = row.insertCell(1);
+                const cell2 = row.insertCell(2);
+                const cell3 = row.insertCell(3);
+
+                cell1.innerHTML = '<input type="text" placeholder="Nature of property">';
+                cell2.innerHTML = '<input type="text" placeholder="Property Category">';
+                cell3.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+            } else if (tableId === 'addressTable' || tableId === 'witness1AddressTable' || tableId === 'witness2AddressTable') {
+                const cell1 = row.insertCell(1);
+                const cell2 = row.insertCell(2);
+                const cell3 = row.insertCell(3);
+
+                cell1.innerHTML = '<input type="text" placeholder="Address Type">';
+                cell2.innerHTML = '<input type="text" placeholder="Address">';
+                cell3.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+            } else if (tableId === 'propertiesTable') {
+                const cell1 = row.insertCell(1);
+                const cell2 = row.insertCell(2);
+                const cell3 = row.insertCell(3);
+                const cell4 = row.insertCell(4);
+
+                cell1.innerHTML = '<input type="text" placeholder="Property Category">';
+                cell2.innerHTML = '<input type="text" placeholder="Property Belongs to">';
+                cell3.innerHTML = '<input type="number" placeholder="Value">';
+                cell4.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+            } else if (tableId === 'perishableTable' || tableId === 'valuableTable') {
+                const cell1 = row.insertCell(1);
+                const cell2 = row.insertCell(2);
+                const cell3 = row.insertCell(3);
+
+                cell1.innerHTML = '<input type="text" placeholder="Property Category">';
+                cell2.innerHTML = '<input type="text" placeholder="Action Taken">';
+                cell3.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+            } else if (tableId === 'packingTable') {
+                const cell1 = row.insertCell(1);
+                const cell2 = row.insertCell(2);
+                const cell3 = row.insertCell(3);
+
+                cell1.innerHTML = '<input type="text" placeholder="Property">';
+                cell2.innerHTML = '<input type="text" placeholder="Signature Details">';
+                cell3.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+            } else {
+                // Default for single column tables
+                const cell1 = row.insertCell(1);
+                const cell2 = row.insertCell(2);
+
+                cell1.innerHTML = '<input type="text">';
+                cell2.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+            }
+        }
+
+        function removeRow(button) {
+            const row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+
+            // Update row numbers
+            const table = row.parentNode.parentNode;
+            for (let i = 1; i < table.rows.length; i++) {
+                table.rows[i].cells[0].innerHTML = i;
+            }
+        }
+
+        // Make functions global for onclick attributes
+        window.removeRow = removeRow;
+        window.addNewRow = addNewRow;
+        window.toggleSection = toggleSection;
+    </script>
+</body>
+</html>

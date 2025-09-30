@@ -1,0 +1,89 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  background: #f1f5f9;
+  color: #333;
+}
+
+.gov-header {
+  display: flex;
+  align-items: center;
+  background: #002d62;
+  color: white;
+  padding: 10px 20px;
+}
+
+.gov-header .logo {
+  height: 40px;
+  margin-right: 15px;
+}
+
+.auth-card {
+  max-width: 400px;
+  margin: 60px auto;
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.tabs {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.tab {
+  flex: 1;
+  padding: 10px;
+  background: #eee;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.tab.active {
+  background: #002d62;
+  color: white;
+}
+
+.form {
+  display: none;
+}
+
+.form.active {
+  display: block;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  margin-top: 15px;
+  width: 100%;
+  padding: 10px;
+  background: #ff9933;
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #e67e00;
+}
+
+.msg {
+  margin-top: 10px;
+  font-size: 14px;
+}

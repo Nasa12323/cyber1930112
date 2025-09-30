@@ -1,0 +1,1842 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCTNS IIF-3 Form Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: #1a2a6c;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 5px solid #fdbb2d;
+        }
+
+            header h1 {
+                margin-bottom: 10px;
+                font-size: 28px;
+            }
+
+            header p {
+                font-size: 16px;
+                opacity: 0.9;
+            }
+
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+
+        .form-container {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-right: 20px;
+            margin-bottom: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .preview-container {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        h2 {
+            color: #1a2a6c;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #fdbb2d;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+            button:hover {
+                background: #2a3a8c;
+            }
+
+        .btn-export {
+            background: #b21f1f;
+        }
+
+            .btn-export:hover {
+                background: #c22f2f;
+            }
+
+        .btn-word {
+            background: #1a6c5c;
+        }
+
+            .btn-word:hover {
+                background: #2a7c6c;
+            }
+
+        .btn-ghost {
+            background: #5f6368;
+        }
+
+            .btn-ghost:hover {
+                background: #6f7378;
+            }
+
+        .btn-danger {
+            background: #c62828;
+        }
+
+            .btn-danger:hover {
+                background: #d63838;
+            }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+            .action-buttons button {
+                flex: 1;
+                min-width: 120px;
+            }
+
+        .form-preview {
+            background: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            line-height: 1.5;
+            font-family: "Times New Roman", serif;
+        }
+
+        .preview-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1a2a6c;
+        }
+
+            .preview-header h3 {
+                color: #1a2a6c;
+                font-size: 22px;
+            }
+
+        .preview-section {
+            margin-bottom: 20px;
+        }
+
+            .preview-section h4 {
+                background: #f0f0f0;
+                padding: 8px;
+                margin-bottom: 10px;
+                color: #1a2a6c;
+                border-left: 4px solid #fdbb2d;
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #f0f0f0;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #1a2a6c;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .section-title {
+            background: #1a2a6c;
+            color: white;
+            padding: 10px;
+            margin: 20px 0 10px 0;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .section-content {
+            display: none;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .checkbox-group {
+            margin: 10px 0;
+        }
+
+            .checkbox-group label {
+                display: inline;
+                font-weight: normal;
+            }
+
+        .field-label {
+            font-weight: 700;
+            width: 220px;
+            display: inline-block;
+            color: #222;
+        }
+
+        .signature-area {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .signature-box {
+            border-top: 1px solid #000;
+            width: 250px;
+            padding-top: 5px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .two-column {
+            display: flex;
+            gap: 15px;
+        }
+
+            .two-column .form-group {
+                flex: 1;
+            }
+
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+
+            .form-container {
+                margin-right: 0;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+                .action-buttons button {
+                    width: 100%;
+                }
+
+            .signature-area {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .signature-box {
+                width: 100%;
+                max-width: 250px;
+            }
+
+            .two-column {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CCTNS IIF-3 Form Generator</h1>
+            <p>Arrest/Court Surrender Memo - Complete with All Required Details</p>
+        </header>
+
+        <div class="content">
+            <div class="form-container">
+                <h2>IIF-3 Form Details</h2>
+
+                <div class="section-title" onclick="toggleSection('caseDetails')">1. Case Details</div>
+                <div id="caseDetails" class="section-content active">
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="district">District</label>
+                            <input type="text" id="district" placeholder="Enter district">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="policeStation">Police Station</label>
+                            <input type="text" id="policeStation" placeholder="Enter police station">
+                        </div>
+                    </div>
+
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="year">Year</label>
+                            <input type="text" id="year" placeholder="Enter year">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="firNo">FIR No. / Proceeding No.</label>
+                            <input type="text" id="firNo" placeholder="Enter FIR/Proceeding number">
+                        </div>
+                    </div>
+
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="firDate">Date</label>
+                            <input type="date" id="firDate">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="accusedCode">Alphanumeric code of the Accused</label>
+                            <input type="text" id="accusedCode" placeholder="e.g., A1, B1, etc.">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('arrestDetails')">2. Arrest / Surrender Details</div>
+                <div id="arrestDetails" class="section-content">
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="arrestDate">Date of Arrest / Surrender</label>
+                            <input type="date" id="arrestDate">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="arrestTime">Time of Arrest / Surrender</label>
+                            <input type="time" id="arrestTime">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gdNo">G.D. No.</label>
+                        <input type="text" id="gdNo" placeholder="Enter G.D. number">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="courtName">Name of the Court (if surrendered)</label>
+                        <input type="text" id="courtName" placeholder="Enter court name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="actsSections">Acts and Sections</label>
+                        <input type="text" id="actsSections" placeholder="Enter acts and sections">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Arrest/Surrender Status</label>
+                        <div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="status1" name="arrestStatus">
+                                <label for="status1">Arrested and sent up</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="status2" name="arrestStatus">
+                                <label for="status2">Arrested and released on bail</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="status3" name="arrestStatus">
+                                <label for="status3">Surrendered in court and bailed out</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="status4" name="arrestStatus">
+                                <label for="status4">Surrendered in court and sent to judicial custody</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="status5" name="arrestStatus">
+                                <label for="status5">Surrendered in court and remanded to Police custody</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('accusedDetails')">3. Particulars of the Accused</div>
+                <div id="accusedDetails" class="section-content">
+                    <div class="form-group">
+                        <label for="accusedName">(i) Name</label>
+                        <input type="text" id="accusedName" placeholder="Enter accused name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fatherHusbandName">(ii) Father's / Husband's Name</label>
+                        <input type="text" id="fatherHusbandName" placeholder="Enter father's/husband's name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="firstAlias">(iii) First Alias</label>
+                        <input type="text" id="firstAlias" placeholder="Enter first alias">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="secondAlias">(iv) Second Aliases</label>
+                        <input type="text" id="secondAlias" placeholder="Enter second aliases">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="otherAliases">(v) Other Aliases</label>
+                        <input type="text" id="otherAliases" placeholder="Enter other aliases">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nationality">(vi) Nationality</label>
+                        <input type="text" id="nationality" placeholder="Enter nationality">
+                    </div>
+
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="passportNo">(vii)(a) Passport No.</label>
+                            <input type="text" id="passportNo" placeholder="Enter passport number">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="passportIssueDate">(b) Date of Issue</label>
+                            <input type="date" id="passportIssueDate">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="passportIssuePlace">(c) Place of Issue</label>
+                        <input type="text" id="passportIssuePlace" placeholder="Enter place of issue">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="religion">(viii) Religion</label>
+                        <input type="text" id="religion" placeholder="Enter religion">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="casteTribe">(ix) Caste / Tribe</label>
+                        <input type="text" id="casteTribe" placeholder="Enter caste/tribe">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="scst">(x) SC/ST</label>
+                        <input type="text" id="scst" placeholder="Enter SC/ST status">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="occupation">(xi) Occupation</label>
+                        <input type="text" id="occupation" placeholder="Enter occupation">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="permanentAddress">(xii) Permanent address</label>
+                        <textarea id="permanentAddress" placeholder="Enter permanent address"></textarea>
+                    </div>
+
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="permanentDistrict">District</label>
+                            <input type="text" id="permanentDistrict" placeholder="Enter district">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="permanentPS">P.S.</label>
+                            <input type="text" id="permanentPS" placeholder="Enter police station">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="presentAddress">(xiii) Present Address</label>
+                        <textarea id="presentAddress" placeholder="Enter present address"></textarea>
+                    </div>
+
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="presentDistrict">District</label>
+                            <input type="text" id="presentDistrict" placeholder="Enter district">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="presentPS">P.S.</label>
+                            <input type="text" id="presentPS" placeholder="Enter police station">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('injuries')">4. Injuries and Physical Condition</div>
+                <div id="injuries" class="section-content">
+                    <div class="form-group">
+                        <label for="injuriesDetails">Injuries, cause of injuries and physical condition of the accused person (Indicate if medically examined)</label>
+                        <textarea id="injuriesDetails" placeholder="Enter details of injuries and physical condition"></textarea>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('arrestProcedure')">5. Arrest Procedure and Personal Effects</div>
+                <div id="arrestProcedure" class="section-content">
+                    <div class="form-group">
+                        <label for="custodyDetails">The accused, after being informed of the grounds of arrest and his legal rights, was duly taken into custody on</label>
+                        <div class="two-column">
+                            <input type="date" id="custodyDate" placeholder="Date">
+                            <input type="time" id="custodyTime" placeholder="Time">
+                        </div>
+                        <input type="text" id="custodyPlace" placeholder="Place" style="margin-top: 10px;">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="articlesFound">The following article(s) was/were found on physical search, conducted on the person of the accused, and were taken into possession for which a receipt was given to the accused.</label>
+                        <table id="articlesTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Article Description</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" placeholder="Article description"></td>
+                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button onclick="addNewRow('articlesTable')">Add Article</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="intimation">Intimation given to</label>
+                        <input type="text" id="intimationRelationship" placeholder="Relationship" style="margin-bottom: 10px;">
+                        <input type="text" id="intimationName" placeholder="Name">
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('physicalFeatures')">6. Physical Features and Identification</div>
+                <div id="physicalFeatures" class="section-content">
+                    <table id="physicalFeaturesTable">
+                        <thead>
+                            <tr>
+                                <th>*Sex</th>
+                                <th>*Date/Year of Birth</th>
+                                <th>*Build</th>
+                                <th>*Height in Cms.</th>
+                                <th>*Complexion</th>
+                                <th>*Identification Marks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" placeholder="Sex"></td>
+                                <td><input type="text" placeholder="Date/Year"></td>
+                                <td><input type="text" placeholder="Build"></td>
+                                <td><input type="text" placeholder="Height"></td>
+                                <td><input type="text" placeholder="Complexion"></td>
+                                <td><input type="text" placeholder="Identification Marks"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table id="physicalFeaturesTable2">
+                        <thead>
+                            <tr>
+                                <th>*Deformities/peculiarities</th>
+                                <th>*Teeth</th>
+                                <th>*Hair</th>
+                                <th>*Eye</th>
+                                <th>*Habit(s)</th>
+                                <th>*Dress habits</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table id="physicalFeaturesTable3">
+                        <thead>
+                            <tr>
+                                <th>*Languages/Dialect</th>
+                                <th colspan="5">PLACE OF</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th>*Burn Mark</th>
+                                <th>*Leucoderma</th>
+                                <th>*Mole</th>
+                                <th>*Scar</th>
+                                <th>*Tattoo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="form-group">
+                        <label for="otherFeatures">*Other features</label>
+                        <input type="text" id="otherFeatures" placeholder="Enter other features">
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('fingerprint')">7. Fingerprint Information</div>
+                <div id="fingerprint" class="section-content">
+                    <div class="form-group">
+                        <label for="fingerprintStatus">Whether finger-print taken or not?</label>
+                        <input type="text" id="fingerprintStatus" placeholder="Enter fingerprint status">
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('socioEconomic')">8. Socio-economic Profile</div>
+                <div id="socioEconomic" class="section-content">
+                    <div class="form-group">
+                        <label for="livingStatus">(a) Living Status</label>
+                        <select id="livingStatus">
+                            <option value="">Select Living Status</option>
+                            <option value="alone">Living alone</option>
+                            <option value="family">With Family/Relation/Associate in Pucca House</option>
+                            <option value="hotel">Hotel</option>
+                            <option value="hostel">Hostel</option>
+                            <option value="kachcha">Kachcha House</option>
+                            <option value="thatched">Thatched House</option>
+                            <option value="slum">Slum</option>
+                            <option value="homeless">Homeless</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="education">(b) Educational qualification(s)</label>
+                        <input type="text" id="education" placeholder="Enter educational qualifications">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="socioOccupation">(c) Occupation</label>
+                        <input type="text" id="socioOccupation" placeholder="Enter occupation">
+                    </div>
+
+                    <div class="form-group">
+                        <label>(d) Income Group</label>
+                        <div>
+                            <div class="checkbox-group">
+                                <input type="radio" id="income1" name="incomeGroup" value="Lower Income (Below Rs. 500/P.M.)">
+                                <label for="income1">Lower Income (Below Rs. 500/P.M.)</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="radio" id="income2" name="incomeGroup" value="Lower middle Income (From Rs. 501 to Rs. 1000)">
+                                <label for="income2">Lower middle Income (From Rs. 501 to Rs. 1000)</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="radio" id="income3" name="incomeGroup" value="Middle Income (From Rs. 1001 to Rs. 2000)">
+                                <label for="income3">Middle Income (From Rs. 1001 to Rs. 2000)</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="radio" id="income4" name="incomeGroup" value="Upper Middle Income (From Rs. 2001 to 3000)">
+                                <label for="income4">Upper Middle Income (From Rs. 2001 to 3000)</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="radio" id="income5" name="incomeGroup" value="Upper Income (above Rs. 3000)">
+                                <label for="income5">Upper Income (above Rs. 3000)</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('additionalInfo')">9. Additional Information</div>
+                <div id="additionalInfo" class="section-content">
+                    <div class="form-group">
+                        <label>Whether the accused person, as per the observations and known Police records:</label>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="dangerous">
+                            <label for="dangerous">(a) Is dangerous</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="escapedBail">
+                            <label for="escapedBail">(b) Previously escaped any bail</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="generallyArmed">
+                            <label for="generallyArmed">(c) Is generally armed</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="operatesWithAccomplices">
+                            <label for="operatesWithAccomplices">(d) Operates with accomplices</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="pastCriminalRecords">
+                            <label for="pastCriminalRecords">(e) Has past criminal records</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="recidivist">
+                            <label for="recidivist">(f) Is recidivist</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="likelyEscapeBail">
+                            <label for="likelyEscapeBail">(g) Is likely to escape bail</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="likelyCommitCrime">
+                            <label for="likelyCommitCrime">(h) If released on bail, is likely to commit another crime Immediately or threaten the victims / witnesses</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="wantedOtherCase">
+                            <label for="wantedOtherCase">(i) Is wanted in any other case</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('signature')">10. Signature of the Investigating officer</div>
+                <div id="signature" class="section-content">
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="ioName">Name</label>
+                            <input type="text" id="ioName" placeholder="Enter name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ioRank">Rank</label>
+                            <input type="text" id="ioRank" placeholder="Enter rank">
+                        </div>
+                    </div>
+
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="ioNumber">Number, if any</label>
+                            <input type="text" id="ioNumber" placeholder="Enter number">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ioDate">Date</label>
+                            <input type="date" id="ioDate">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ioPlace">Place</label>
+                        <input type="text" id="ioPlace" placeholder="Enter place">
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="btnGenerate">Generate Preview</button>
+                    <button id="btnExport" class="btn-export">Export as PDF</button>
+                    <button id="btnExportWord" class="btn-word">Export as Word</button>
+                    <button id="btnSave" class="btn-ghost">Save to Records</button>
+                    <button id="btnLoad" class="btn-ghost">Load Saved</button>
+                    <button id="btnDelete" class="btn-danger">Delete Saved</button>
+                </div>
+            </div>
+
+            <div class="preview-container">
+                <h2>IIF-3 Form Preview</h2>
+                <div id="formPreview" class="form-preview">
+                    <div class="preview-header">
+                        <h3>CCTNS IIF-3 Form</h3>
+                        <p>Arrest/Court Surrender Memo - Separate Memo for each accused</p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>1. Case Details</h4>
+                        <p><strong>District:</strong> <span id="previewDistrict">Not specified</span></p>
+                        <p><strong>Police Station:</strong> <span id="previewPoliceStation">Not specified</span></p>
+                        <p><strong>Year:</strong> <span id="previewYear">Not specified</span></p>
+                        <p><strong>FIR No. / Proceeding No.:</strong> <span id="previewFirNo">Not specified</span></p>
+                        <p><strong>Date:</strong> <span id="previewFirDate">Not specified</span></p>
+                        <p><strong>Alphanumeric code of the Accused:</strong> <span id="previewAccusedCode">Not specified</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>2. Arrest / Surrender Details</h4>
+                        <p><strong>Date of Arrest / Surrender:</strong> <span id="previewArrestDate">Not specified</span></p>
+                        <p><strong>Time of Arrest / Surrender:</strong> <span id="previewArrestTime">Not specified</span></p>
+                        <p><strong>G.D. No.:</strong> <span id="previewGdNo">Not specified</span></p>
+                        <p><strong>Name of the Court (if surrendered):</strong> <span id="previewCourtName">Not specified</span></p>
+                        <p><strong>Acts and Sections:</strong> <span id="previewActsSections">Not specified</span></p>
+                        <p><strong>Arrest/Surrender Status:</strong> <span id="previewArrestStatus">Not specified</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>3. Particulars of the Accused</h4>
+                        <p><strong>Name:</strong> <span id="previewAccusedName">Not specified</span></p>
+                        <p><strong>Father's / Husband's Name:</strong> <span id="previewFatherHusbandName">Not specified</span></p>
+                        <p><strong>First Alias:</strong> <span id="previewFirstAlias">Not specified</span></p>
+                        <p><strong>Second Aliases:</strong> <span id="previewSecondAlias">Not specified</span></p>
+                        <p><strong>Other Aliases:</strong> <span id="previewOtherAliases">Not specified</span></p>
+                        <p><strong>Nationality:</strong> <span id="previewNationality">Not specified</span></p>
+                        <p><strong>Passport No.:</strong> <span id="previewPassportNo">Not specified</span></p>
+                        <p><strong>Date of Issue:</strong> <span id="previewPassportIssueDate">Not specified</span></p>
+                        <p><strong>Place of Issue:</strong> <span id="previewPassportIssuePlace">Not specified</span></p>
+                        <p><strong>Religion:</strong> <span id="previewReligion">Not specified</span></p>
+                        <p><strong>Caste / Tribe:</strong> <span id="previewCasteTribe">Not specified</span></p>
+                        <p><strong>SC/ST:</strong> <span id="previewScst">Not specified</span></p>
+                        <p><strong>Occupation:</strong> <span id="previewOccupation">Not specified</span></p>
+                        <p><strong>Permanent address:</strong> <span id="previewPermanentAddress">Not specified</span></p>
+                        <p><strong>Permanent District:</strong> <span id="previewPermanentDistrict">Not specified</span></p>
+                        <p><strong>Permanent P.S.:</strong> <span id="previewPermanentPS">Not specified</span></p>
+                        <p><strong>Present Address:</strong> <span id="previewPresentAddress">Not specified</span></p>
+                        <p><strong>Present District:</strong> <span id="previewPresentDistrict">Not specified</span></p>
+                        <p><strong>Present P.S.:</strong> <span id="previewPresentPS">Not specified</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>4. Injuries and Physical Condition</h4>
+                        <p><span id="previewInjuriesDetails">Not specified</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>5. Arrest Procedure and Personal Effects</h4>
+                        <p><strong>Taken into custody on:</strong> <span id="previewCustodyDateTime">Not specified</span> at <span id="previewCustodyPlace">Not specified</span></p>
+                        <p><strong>Articles found:</strong></p>
+                        <table id="previewArticlesTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Article Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p><strong>Intimation given to:</strong> <span id="previewIntimationName">Not specified</span> (<span id="previewIntimationRelationship">Not specified</span>)</p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>6. Physical Features and Identification</h4>
+                        <table id="previewPhysicalFeaturesTable">
+                            <thead>
+                                <tr>
+                                    <th>*Sex</th>
+                                    <th>*Date/Year of Birth</th>
+                                    <th>*Build</th>
+                                    <th>*Height in Cms.</th>
+                                    <th>*Complexion</th>
+                                    <th>*Identification Marks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table id="previewPhysicalFeaturesTable2">
+                            <thead>
+                                <tr>
+                                    <th>*Deformities/peculiarities</th>
+                                    <th>*Teeth</th>
+                                    <th>*Hair</th>
+                                    <th>*Eye</th>
+                                    <th>*Habit(s)</th>
+                                    <th>*Dress habits</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table id="previewPhysicalFeaturesTable3">
+                            <thead>
+                                <tr>
+                                    <th>*Languages/Dialect</th>
+                                    <th>*Burn Mark</th>
+                                    <th>*Leucoderma</th>
+                                    <th>*Mole</th>
+                                    <th>*Scar</th>
+                                    <th>*Tattoo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p><strong>Other features:</strong> <span id="previewOtherFeatures">Not specified</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>7. Fingerprint Information</h4>
+                        <p><strong>Fingerprint status:</strong> <span id="previewFingerprintStatus">Not specified</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>8. Socio-economic Profile</h4>
+                        <p><strong>Living Status:</strong> <span id="previewLivingStatus">Not specified</span></p>
+                        <p><strong>Educational qualification(s):</strong> <span id="previewEducation">Not specified</span></p>
+                        <p><strong>Occupation:</strong> <span id="previewSocioOccupation">Not specified</span></p>
+                        <p><strong>Income Group:</strong> <span id="previewIncomeGroup">Not specified</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>9. Additional Information</h4>
+                        <p><span id="previewAdditionalInfo">Not specified</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>10. Signature of the Investigating officer</h4>
+                        <p><strong>Name:</strong> <span id="previewIoName">Not specified</span></p>
+                        <p><strong>Rank:</strong> <span id="previewIoRank">Not specified</span></p>
+                        <p><strong>Number:</strong> <span id="previewIoNumber">Not specified</span></p>
+                        <p><strong>Date:</strong> <span id="previewIoDate">Not specified</span></p>
+                        <p><strong>Place:</strong> <span id="previewIoPlace">Not specified</span></p>
+                    </div>
+
+                    <div class="signature-area">
+                        <div class="signature-box">Signature of Investigation Officer</div>
+                        <div class="signature-box">Signature of Supervising Officer</div>
+                    </div>
+
+                    <div class="preview-section">
+                        <p>Generated on: <span id="generationDate"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2023 CCTNS System | For official use only</p>
+        </div>
+    </div>
+
+    <script>
+        // ==================== AUTHENTICATION & SECURITY ====================
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check if user is authenticated
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+
+            if (!token || !user) {
+                alert('Authentication required. Please login first.');
+                if (window.parent !== window) {
+                    window.parent.postMessage({ type: 'AUTH_REQUIRED' }, '*');
+                } else {
+                    window.location.href = '../index.html';
+                }
+                return;
+            }
+
+            // Set officer name from logged in user
+            try {
+                const userData = JSON.parse(user);
+                document.getElementById('ioName').value = userData.fullName || 'Investigation Officer';
+            } catch (e) {
+                console.error('Error parsing user data:', e);
+            }
+
+            // Listen for authentication token from parent
+            window.addEventListener('message', function (event) {
+                if (event.data.type === 'AUTH_TOKEN' && event.data.token) {
+                    localStorage.setItem('token', event.data.token);
+                }
+            });
+
+            // Notify parent that form is loaded
+            if (window.parent !== window) {
+                window.parent.postMessage({ type: 'FORM_LOADED', formType: 'IIF-3' }, '*');
+            }
+
+            // Set current date
+            const now = new Date();
+            document.getElementById('generationDate').textContent = now.toLocaleString();
+            document.getElementById('firDate').valueAsDate = now;
+            document.getElementById('arrestDate').valueAsDate = now;
+            document.getElementById('custodyDate').valueAsDate = now;
+            document.getElementById('ioDate').valueAsDate = now;
+
+            // Generate preview button
+            document.getElementById('btnGenerate').addEventListener('click', generatePreview);
+
+            // Export as PDF button
+            document.getElementById('btnExport').addEventListener('click', exportAsPDF);
+
+            // Export as Word button
+            document.getElementById('btnExportWord').addEventListener('click', exportAsWord);
+
+            // Save to Records button
+            document.getElementById('btnSave').addEventListener('click', saveToRecords);
+
+            // Load form button
+            document.getElementById('btnLoad').addEventListener('click', loadFormLocal);
+
+            // Delete form button
+            document.getElementById('btnDelete').addEventListener('click', deleteFormLocal);
+
+            // Generate initial preview
+            generatePreview();
+        });
+
+        // ==================== FORM FUNCTIONS ====================
+        function generatePreview() {
+            // Get form values
+            const district = document.getElementById('district').value || 'Not specified';
+            const policeStation = document.getElementById('policeStation').value || 'Not specified';
+            const year = document.getElementById('year').value || 'Not specified';
+            const firNo = document.getElementById('firNo').value || 'Not specified';
+            const firDate = document.getElementById('firDate').value;
+            const accusedCode = document.getElementById('accusedCode').value || 'Not specified';
+            const arrestDate = document.getElementById('arrestDate').value;
+            const arrestTime = document.getElementById('arrestTime').value;
+            const gdNo = document.getElementById('gdNo').value || 'Not specified';
+            const courtName = document.getElementById('courtName').value || 'Not specified';
+            const actsSections = document.getElementById('actsSections').value || 'Not specified';
+            const accusedName = document.getElementById('accusedName').value || 'Not specified';
+            const fatherHusbandName = document.getElementById('fatherHusbandName').value || 'Not specified';
+            const firstAlias = document.getElementById('firstAlias').value || 'Not specified';
+            const secondAlias = document.getElementById('secondAlias').value || 'Not specified';
+            const otherAliases = document.getElementById('otherAliases').value || 'Not specified';
+            const nationality = document.getElementById('nationality').value || 'Not specified';
+            const passportNo = document.getElementById('passportNo').value || 'Not specified';
+            const passportIssueDate = document.getElementById('passportIssueDate').value;
+            const passportIssuePlace = document.getElementById('passportIssuePlace').value || 'Not specified';
+            const religion = document.getElementById('religion').value || 'Not specified';
+            const casteTribe = document.getElementById('casteTribe').value || 'Not specified';
+            const scst = document.getElementById('scst').value || 'Not specified';
+            const occupation = document.getElementById('occupation').value || 'Not specified';
+            const permanentAddress = document.getElementById('permanentAddress').value || 'Not specified';
+            const permanentDistrict = document.getElementById('permanentDistrict').value || 'Not specified';
+            const permanentPS = document.getElementById('permanentPS').value || 'Not specified';
+            const presentAddress = document.getElementById('presentAddress').value || 'Not specified';
+            const presentDistrict = document.getElementById('presentDistrict').value || 'Not specified';
+            const presentPS = document.getElementById('presentPS').value || 'Not specified';
+            const injuriesDetails = document.getElementById('injuriesDetails').value || 'Not specified';
+            const custodyDate = document.getElementById('custodyDate').value;
+            const custodyTime = document.getElementById('custodyTime').value;
+            const custodyPlace = document.getElementById('custodyPlace').value || 'Not specified';
+            const intimationRelationship = document.getElementById('intimationRelationship').value || 'Not specified';
+            const intimationName = document.getElementById('intimationName').value || 'Not specified';
+            const fingerprintStatus = document.getElementById('fingerprintStatus').value || 'Not specified';
+            const livingStatus = document.getElementById('livingStatus').value || 'Not specified';
+            const education = document.getElementById('education').value || 'Not specified';
+            const socioOccupation = document.getElementById('socioOccupation').value || 'Not specified';
+            const otherFeatures = document.getElementById('otherFeatures').value || 'Not specified';
+            const ioName = document.getElementById('ioName').value || 'Not specified';
+            const ioRank = document.getElementById('ioRank').value || 'Not specified';
+            const ioNumber = document.getElementById('ioNumber').value || 'Not specified';
+            const ioDate = document.getElementById('ioDate').value;
+            const ioPlace = document.getElementById('ioPlace').value || 'Not specified';
+
+            // Get arrest status
+            let arrestStatus = [];
+            if (document.getElementById('status1').checked) arrestStatus.push("Arrested and sent up");
+            if (document.getElementById('status2').checked) arrestStatus.push("Arrested and released on bail");
+            if (document.getElementById('status3').checked) arrestStatus.push("Surrendered in court and bailed out");
+            if (document.getElementById('status4').checked) arrestStatus.push("Surrendered in court and sent to judicial custody");
+            if (document.getElementById('status5').checked) arrestStatus.push("Surrendered in court and remanded to Police custody");
+
+            if (arrestStatus.length === 0) arrestStatus = "Not specified";
+            else arrestStatus = arrestStatus.join(", ");
+
+            // Get income group
+            let incomeGroup = "Not specified";
+            const incomeRadios = document.getElementsByName('incomeGroup');
+            for (const radio of incomeRadios) {
+                if (radio.checked) {
+                    incomeGroup = radio.value;
+                    break;
+                }
+            }
+
+            // Get additional info
+            let additionalInfo = [];
+            if (document.getElementById('dangerous').checked) additionalInfo.push("Is dangerous");
+            if (document.getElementById('escapedBail').checked) additionalInfo.push("Previously escaped any bail");
+            if (document.getElementById('generallyArmed').checked) additionalInfo.push("Is generally armed");
+            if (document.getElementById('operatesWithAccomplices').checked) additionalInfo.push("Operates with accomplices");
+            if (document.getElementById('pastCriminalRecords').checked) additionalInfo.push("Has past criminal records");
+            if (document.getElementById('recidivist').checked) additionalInfo.push("Is recidivist");
+            if (document.getElementById('likelyEscapeBail').checked) additionalInfo.push("Is likely to escape bail");
+            if (document.getElementById('likelyCommitCrime').checked) additionalInfo.push("If released on bail, is likely to commit another crime Immediately or threaten the victims / witnesses");
+            if (document.getElementById('wantedOtherCase').checked) additionalInfo.push("Is wanted in any other case");
+
+            if (additionalInfo.length === 0) additionalInfo = "Not specified";
+            else additionalInfo = additionalInfo.join(", ");
+
+            // Format date and time
+            const formatDate = (dateStr) => dateStr ? new Date(dateStr).toLocaleDateString('en-GB') : 'Not specified';
+            const formatTime = (timeStr) => timeStr ? new Date(`2000-01-01T${timeStr}`).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : 'Not specified';
+
+            // Update preview
+            document.getElementById('previewDistrict').textContent = district;
+            document.getElementById('previewPoliceStation').textContent = policeStation;
+            document.getElementById('previewYear').textContent = year;
+            document.getElementById('previewFirNo').textContent = firNo;
+            document.getElementById('previewFirDate').textContent = formatDate(firDate);
+            document.getElementById('previewAccusedCode').textContent = accusedCode;
+            document.getElementById('previewArrestDate').textContent = formatDate(arrestDate);
+            document.getElementById('previewArrestTime').textContent = formatTime(arrestTime);
+            document.getElementById('previewGdNo').textContent = gdNo;
+            document.getElementById('previewCourtName').textContent = courtName;
+            document.getElementById('previewActsSections').textContent = actsSections;
+            document.getElementById('previewArrestStatus').textContent = arrestStatus;
+            document.getElementById('previewAccusedName').textContent = accusedName;
+            document.getElementById('previewFatherHusbandName').textContent = fatherHusbandName;
+            document.getElementById('previewFirstAlias').textContent = firstAlias;
+            document.getElementById('previewSecondAlias').textContent = secondAlias;
+            document.getElementById('previewOtherAliases').textContent = otherAliases;
+            document.getElementById('previewNationality').textContent = nationality;
+            document.getElementById('previewPassportNo').textContent = passportNo;
+            document.getElementById('previewPassportIssueDate').textContent = formatDate(passportIssueDate);
+            document.getElementById('previewPassportIssuePlace').textContent = passportIssuePlace;
+            document.getElementById('previewReligion').textContent = religion;
+            document.getElementById('previewCasteTribe').textContent = casteTribe;
+            document.getElementById('previewScst').textContent = scst;
+            document.getElementById('previewOccupation').textContent = occupation;
+            document.getElementById('previewPermanentAddress').textContent = permanentAddress;
+            document.getElementById('previewPermanentDistrict').textContent = permanentDistrict;
+            document.getElementById('previewPermanentPS').textContent = permanentPS;
+            document.getElementById('previewPresentAddress').textContent = presentAddress;
+            document.getElementById('previewPresentDistrict').textContent = presentDistrict;
+            document.getElementById('previewPresentPS').textContent = presentPS;
+            document.getElementById('previewInjuriesDetails').textContent = injuriesDetails;
+            document.getElementById('previewCustodyDateTime').textContent = `${formatDate(custodyDate)} ${formatTime(custodyTime)}`;
+            document.getElementById('previewCustodyPlace').textContent = custodyPlace;
+            document.getElementById('previewIntimationRelationship').textContent = intimationRelationship;
+            document.getElementById('previewIntimationName').textContent = intimationName;
+            document.getElementById('previewFingerprintStatus').textContent = fingerprintStatus;
+            document.getElementById('previewLivingStatus').textContent = livingStatus;
+            document.getElementById('previewEducation').textContent = education;
+            document.getElementById('previewSocioOccupation').textContent = socioOccupation;
+            document.getElementById('previewOtherFeatures').textContent = otherFeatures;
+            document.getElementById('previewIncomeGroup').textContent = incomeGroup;
+            document.getElementById('previewAdditionalInfo').textContent = additionalInfo;
+            document.getElementById('previewIoName').textContent = ioName;
+            document.getElementById('previewIoRank').textContent = ioRank;
+            document.getElementById('previewIoNumber').textContent = ioNumber;
+            document.getElementById('previewIoDate').textContent = formatDate(ioDate);
+            document.getElementById('previewIoPlace').textContent = ioPlace;
+
+            // Update tables
+            updatePreviewTable('articlesTable', 'previewArticlesTable');
+            updatePreviewTable('physicalFeaturesTable', 'previewPhysicalFeaturesTable');
+            updatePreviewTable('physicalFeaturesTable2', 'previewPhysicalFeaturesTable2');
+            updatePreviewTable('physicalFeaturesTable3', 'previewPhysicalFeaturesTable3');
+
+            // Update generation date
+            document.getElementById('generationDate').textContent = new Date().toLocaleString();
+        }
+
+        function updatePreviewTable(sourceTableId, targetTableId) {
+            const sourceTable = document.getElementById(sourceTableId);
+            const targetTable = document.getElementById(targetTableId);
+
+            // Clear existing rows
+            targetTable.querySelector('tbody').innerHTML = '';
+
+            let hasData = false;
+
+            for (let i = 0; i < sourceTable.rows.length; i++) {
+                const row = sourceTable.rows[i];
+                const newRow = document.createElement('tr');
+
+                // Check if the row has any data
+                let rowHasData = false;
+
+                for (let j = 1; j < row.cells.length - 1; j++) {
+                    const input = row.cells[j].querySelector('input');
+                    if (input && input.value) {
+                        rowHasData = true;
+                        break;
+                    }
+                }
+
+                if (rowHasData) {
+                    hasData = true;
+
+                    // Add serial number for first column if it exists
+                    if (i > 0) {
+                        const serialCell = document.createElement('td');
+                        serialCell.textContent = i;
+                        newRow.appendChild(serialCell);
+                    }
+
+                    // Add data cells
+                    for (let j = 1; j < row.cells.length - 1; j++) {
+                        const input = row.cells[j].querySelector('input');
+                        const cell = document.createElement('td');
+                        cell.textContent = input ? input.value : '';
+                        newRow.appendChild(cell);
+                    }
+
+                    targetTable.querySelector('tbody').appendChild(newRow);
+                }
+            }
+
+            if (!hasData) {
+                const newRow = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.colSpan = targetTable.rows[0].cells.length;
+                cell.textContent = 'No data available';
+                newRow.appendChild(cell);
+                targetTable.querySelector('tbody').appendChild(newRow);
+            }
+        }
+
+        function exportAsPDF() {
+            generatePreview();
+
+            const element = document.getElementById('formPreview');
+            const opt = {
+                margin: 10,
+                filename: 'iif-3-form.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save();
+        }
+
+        function exportAsWord() {
+            try {
+                generatePreview();
+
+                // Create HTML content for Word
+                const htmlContent = `
+                                <html xmlns:o="urn:schemas-microsoft-com:office:office"
+                                      xmlns:w="urn:schemas-microsoft-com:office:word"
+                                      xmlns="http://www.w3.org/TR/REC-html40">
+                                <head>
+                                    <meta charset="utf-8">
+                                    <title>IIF-3 Form</title>
+                                    <style>
+                                        body {
+                                            font-family: 'Times New Roman', serif;
+                                            font-size: 12pt;
+                                            line-height: 1.5;
+                                        }
+                                        h1, h2, h3, h4 {
+                                            color: #1a2a6c;
+                                        }
+                                        h1 {
+                                            font-size: 16pt;
+                                            text-align: center;
+                                        }
+                                        h2 {
+                                            font-size: 14pt;
+                                            margin-top: 12pt;
+                                            margin-bottom: 6pt;
+                                        }
+                                        table {
+                                            width: 100%;
+                                            border-collapse: collapse;
+                                            margin: 6pt 0;
+                                        }
+                                        th, td {
+                                            border: 1px solid #000;
+                                            padding: 4pt;
+                                            text-align: left;
+                                        }
+                                        th {
+                                            background-color: #f3f6fb;
+                                            font-weight: bold;
+                                        }
+                                        .field-label {
+                                            font-weight: bold;
+                                            width: 220px;
+                                            display: inline-block;
+                                        }
+                                        .signature-area {
+                                            margin-top: 30pt;
+                                            display: flex;
+                                            justify-content: space-between;
+                                        }
+                                        .signature-box {
+                                            border-top: 1px solid #000;
+                                            width: 250px;
+                                            padding-top: 5px;
+                                            text-align: center;
+                                        }
+                                    </style>
+                                </head>
+                                <body>
+                                    <h1>IIF-3 Form</h1>
+                                    <p style="text-align: center; font-style: italic;">Arrest/Court Surrender Memo</p>
+                                    ${document.getElementById('formPreview').innerHTML}
+                                </body>
+                                </html>
+                            `;
+
+                // Create download link
+                const blob = new Blob([htmlContent], { type: 'application/msword' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `IIF3_Form_${document.getElementById('firNo').value || 'report'}.doc`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+
+                // Clean up
+                setTimeout(() => URL.revokeObjectURL(url), 100);
+            } catch (error) {
+                console.error("Error generating Word document:", error);
+                alert("Error generating Word document: " + error.message);
+            }
+        }
+
+        // ==================== RECORD MANAGEMENT ====================
+        async function saveToRecords() {
+            generatePreview();
+
+            try {
+                // Generate PDF and Word files
+                const pdfData = await generatePDFBlob();
+                const wordData = await generateWordBlob();
+
+                // Convert Blobs to base64 for storage
+                const pdfBase64 = await blobToBase64(pdfData);
+                const wordBase64 = await blobToBase64(wordData);
+
+                // Collect form data
+                const formData = collectFormData();
+
+                // Create record object
+                const record = {
+                    id: Date.now(),
+                    type: "IIF-3",
+                    date: new Date().toISOString().split('T')[0],
+                    policeStation: formData.policeStation,
+                    officerName: formData.ioName,
+                    accusedName: formData.accusedName,
+                    formData: formData,
+                    pdfFile: pdfBase64,
+                    wordFile: wordBase64,
+                    status: "Pending"
+                };
+
+                // Get existing records from localStorage
+                let records = JSON.parse(localStorage.getItem('iifRecords')) || [];
+
+                // Add the new record
+                records.push(record);
+
+                // Save back to localStorage
+                localStorage.setItem('iifRecords', JSON.stringify(records));
+
+                // Notify parent window (dashboard) that form was saved
+                if (window.parent !== window) {
+                    window.parent.postMessage({
+                        type: 'FORM_SAVED',
+                        formType: 'IIF-3',
+                        recordId: record.id
+                    }, '*');
+                }
+
+                alert('Form saved to records successfully!');
+            } catch (error) {
+                console.error("Error saving to records:", error);
+                alert("Error saving form to records: " + error.message);
+            }
+        }
+
+        async function generatePDFBlob() {
+            return new Promise((resolve, reject) => {
+                const element = document.getElementById('formPreview');
+                const opt = {
+                    margin: 10,
+                    filename: 'iif-3-form.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                html2pdf().set(opt).from(element).output('blob').then(resolve).catch(reject);
+            });
+        }
+
+        async function generateWordBlob() {
+            return new Promise((resolve) => {
+                // Create HTML content for Word
+                const htmlContent = `
+                                <html xmlns:o="urn:schemas-microsoft-com:office:office"
+                                      xmlns:w="urn:schemas-microsoft-com:office:word"
+                                      xmlns="http://www.w3.org/TR/REC-html40">
+                                <head>
+                                    <meta charset="utf-8">
+                                    <title>IIF-3 Form</title>
+                                    <style>
+                                        body {
+                                            font-family: 'Times New Roman', serif;
+                                            font-size: 12pt;
+                                            line-height: 1.5;
+                                        }
+                                        h1, h2, h3, h4 {
+                                            color: #1a2a6c;
+                                        }
+                                        h1 {
+                                            font-size: 16pt;
+                                            text-align: center;
+                                        }
+                                        h2 {
+                                            font-size: 14pt;
+                                            margin-top: 12pt;
+                                            margin-bottom: 6pt;
+                                        }
+                                        table {
+                                            width: 100%;
+                                            border-collapse: collapse;
+                                            margin: 6pt 0;
+                                        }
+                                        th, td {
+                                            border: 1px solid #000;
+                                            padding: 4pt;
+                                            text-align: left;
+                                        }
+                                        th {
+                                            background-color: #f3f6fb;
+                                            font-weight: bold;
+                                        }
+                                        .field-label {
+                                            font-weight: bold;
+                                            width: 220px;
+                                            display: inline-block;
+                                        }
+                                        .signature-area {
+                                            margin-top: 30pt;
+                                            display: flex;
+                                            justify-content: space-between;
+                                        }
+                                        .signature-box {
+                                            border-top: 1px solid #000;
+                                            width: 250px;
+                                            padding-top: 5px;
+                                            text-align: center;
+                                        }
+                                    </style>
+                                </head>
+                                <body>
+                                    <h1>IIF-3 Form</h1>
+                                    <p style="text-align: center; font-style: italic;">Arrest/Court Surrender Memo</p>
+                                    ${document.getElementById('formPreview').innerHTML}
+                                </body>
+                                </html>
+                            `;
+
+                const blob = new Blob([htmlContent], { type: 'application/msword' });
+                resolve(blob);
+            });
+        }
+
+        function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        function collectFormData() {
+            // Get arrest status
+            let arrestStatus = [];
+            if (document.getElementById('status1').checked) arrestStatus.push("Arrested and sent up");
+            if (document.getElementById('status2').checked) arrestStatus.push("Arrested and released on bail");
+            if (document.getElementById('status3').checked) arrestStatus.push("Surrendered in court and bailed out");
+            if (document.getElementById('status4').checked) arrestStatus.push("Surrendered in court and sent to judicial custody");
+            if (document.getElementById('status5').checked) arrestStatus.push("Surrendered in court and remanded to Police custody");
+
+            // Get income group
+            let incomeGroup = "";
+            const incomeRadios = document.getElementsByName('incomeGroup');
+            for (const radio of incomeRadios) {
+                if (radio.checked) {
+                    incomeGroup = radio.value;
+                    break;
+                }
+            }
+
+            // Get additional info
+            let additionalInfo = [];
+            if (document.getElementById('dangerous').checked) additionalInfo.push("Is dangerous");
+            if (document.getElementById('escapedBail').checked) additionalInfo.push("Previously escaped any bail");
+            if (document.getElementById('generallyArmed').checked) additionalInfo.push("Is generally armed");
+            if (document.getElementById('operatesWithAccomplices').checked) additionalInfo.push("Operates with accomplices");
+            if (document.getElementById('pastCriminalRecords').checked) additionalInfo.push("Has past criminal records");
+            if (document.getElementById('recidivist').checked) additionalInfo.push("Is recidivist");
+            if (document.getElementById('likelyEscapeBail').checked) additionalInfo.push("Is likely to escape bail");
+            if (document.getElementById('likelyCommitCrime').checked) additionalInfo.push("If released on bail, is likely to commit another crime Immediately or threaten the victims / witnesses");
+            if (document.getElementById('wantedOtherCase').checked) additionalInfo.push("Is wanted in any other case");
+
+            const data = {
+                district: document.getElementById('district').value,
+                policeStation: document.getElementById('policeStation').value,
+                year: document.getElementById('year').value,
+                firNo: document.getElementById('firNo').value,
+                firDate: document.getElementById('firDate').value,
+                accusedCode: document.getElementById('accusedCode').value,
+                arrestDate: document.getElementById('arrestDate').value,
+                arrestTime: document.getElementById('arrestTime').value,
+                gdNo: document.getElementById('gdNo').value,
+                courtName: document.getElementById('courtName').value,
+                actsSections: document.getElementById('actsSections').value,
+                arrestStatus: arrestStatus,
+                accusedName: document.getElementById('accusedName').value,
+                fatherHusbandName: document.getElementById('fatherHusbandName').value,
+                firstAlias: document.getElementById('firstAlias').value,
+                secondAlias: document.getElementById('secondAlias').value,
+                otherAliases: document.getElementById('otherAliases').value,
+                nationality: document.getElementById('nationality').value,
+                passportNo: document.getElementById('passportNo').value,
+                passportIssueDate: document.getElementById('passportIssueDate').value,
+                passportIssuePlace: document.getElementById('passportIssuePlace').value,
+                religion: document.getElementById('religion').value,
+                casteTribe: document.getElementById('casteTribe').value,
+                scst: document.getElementById('scst').value,
+                occupation: document.getElementById('occupation').value,
+                permanentAddress: document.getElementById('permanentAddress').value,
+                permanentDistrict: document.getElementById('permanentDistrict').value,
+                permanentPS: document.getElementById('permanentPS').value,
+                presentAddress: document.getElementById('presentAddress').value,
+                presentDistrict: document.getElementById('presentDistrict').value,
+                presentPS: document.getElementById('presentPS').value,
+                injuriesDetails: document.getElementById('injuriesDetails').value,
+                custodyDate: document.getElementById('custodyDate').value,
+                custodyTime: document.getElementById('custodyTime').value,
+                custodyPlace: document.getElementById('custodyPlace').value,
+                intimationRelationship: document.getElementById('intimationRelationship').value,
+                intimationName: document.getElementById('intimationName').value,
+                fingerprintStatus: document.getElementById('fingerprintStatus').value,
+                livingStatus: document.getElementById('livingStatus').value,
+                education: document.getElementById('education').value,
+                socioOccupation: document.getElementById('socioOccupation').value,
+                otherFeatures: document.getElementById('otherFeatures').value,
+                incomeGroup: incomeGroup,
+                additionalInfo: additionalInfo,
+                ioName: document.getElementById('ioName').value,
+                ioRank: document.getElementById('ioRank').value,
+                ioNumber: document.getElementById('ioNumber').value,
+                ioDate: document.getElementById('ioDate').value,
+                ioPlace: document.getElementById('ioPlace').value,
+
+                // Table data
+                articlesTable: getTableData('articlesTable'),
+                physicalFeaturesTable: getTableData('physicalFeaturesTable'),
+                physicalFeaturesTable2: getTableData('physicalFeaturesTable2'),
+                physicalFeaturesTable3: getTableData('physicalFeaturesTable3')
+            };
+
+            return data;
+        }
+
+        function getTableData(tableId) {
+            const table = document.getElementById(tableId);
+            const data = [];
+
+            for (let i = 0; i < table.rows.length; i++) {
+                const row = table.rows[i];
+                const rowData = {};
+
+                for (let j = 1; j < row.cells.length - 1; j++) {
+                    const input = row.cells[j].querySelector('input');
+                    if (input) {
+                        rowData[`col${j}`] = input.value;
+                    }
+                }
+
+                data.push(rowData);
+            }
+
+            return data;
+        }
+
+        function restoreTableData(tableId, tableData) {
+            const table = document.getElementById(tableId);
+
+            // Clear existing rows (except header)
+            while (table.rows.length > 1) {
+                table.deleteRow(1);
+            }
+
+            // Add rows with data
+            if (tableData && tableData.length > 0) {
+                for (let i = 0; i < tableData.length; i++) {
+                    addNewRow(tableId);
+                    const row = table.rows[table.rows.length - 1];
+
+                    for (let j = 1; j < row.cells.length - 1; j++) {
+                        const input = row.cells[j].querySelector('input');
+                        if (input && tableData[i][`col${j}`]) {
+                            input.value = tableData[i][`col${j}`];
+                        }
+                    }
+                }
+            }
+        }
+
+        // ==================== LOCAL STORAGE FUNCTIONS ====================
+        function loadFormLocal() {
+            const raw = localStorage.getItem('iif3Form');
+            if (!raw) {
+                alert('No saved form found.');
+                return;
+            }
+
+            try {
+                const data = JSON.parse(raw);
+
+                // Restore basic information
+                document.getElementById('district').value = data.district || '';
+                document.getElementById('policeStation').value = data.policeStation || '';
+                document.getElementById('year').value = data.year || '';
+                document.getElementById('firNo').value = data.firNo || '';
+                document.getElementById('firDate').value = data.firDate || '';
+                document.getElementById('accusedCode').value = data.accusedCode || '';
+                document.getElementById('arrestDate').value = data.arrestDate || '';
+                document.getElementById('arrestTime').value = data.arrestTime || '';
+                document.getElementById('gdNo').value = data.gdNo || '';
+                document.getElementById('courtName').value = data.courtName || '';
+                document.getElementById('actsSections').value = data.actsSections || '';
+                document.getElementById('accusedName').value = data.accusedName || '';
+                document.getElementById('fatherHusbandName').value = data.fatherHusbandName || '';
+                document.getElementById('firstAlias').value = data.firstAlias || '';
+                document.getElementById('secondAlias').value = data.secondAlias || '';
+                document.getElementById('otherAliases').value = data.otherAliases || '';
+                document.getElementById('nationality').value = data.nationality || '';
+                document.getElementById('passportNo').value = data.passportNo || '';
+                document.getElementById('passportIssueDate').value = data.passportIssueDate || '';
+                document.getElementById('passportIssuePlace').value = data.passportIssuePlace || '';
+                document.getElementById('religion').value = data.religion || '';
+                document.getElementById('casteTribe').value = data.casteTribe || '';
+                document.getElementById('scst').value = data.scst || '';
+                document.getElementById('occupation').value = data.occupation || '';
+                document.getElementById('permanentAddress').value = data.permanentAddress || '';
+                document.getElementById('permanentDistrict').value = data.permanentDistrict || '';
+                document.getElementById('permanentPS').value = data.permanentPS || '';
+                document.getElementById('presentAddress').value = data.presentAddress || '';
+                document.getElementById('presentDistrict').value = data.presentDistrict || '';
+                document.getElementById('presentPS').value = data.presentPS || '';
+                document.getElementById('injuriesDetails').value = data.injuriesDetails || '';
+                document.getElementById('custodyDate').value = data.custodyDate || '';
+                document.getElementById('custodyTime').value = data.custodyTime || '';
+                document.getElementById('custodyPlace').value = data.custodyPlace || '';
+                document.getElementById('intimationRelationship').value = data.intimationRelationship || '';
+                document.getElementById('intimationName').value = data.intimationName || '';
+                document.getElementById('fingerprintStatus').value = data.fingerprintStatus || '';
+                document.getElementById('livingStatus').value = data.livingStatus || '';
+                document.getElementById('education').value = data.education || '';
+                document.getElementById('socioOccupation').value = data.socioOccupation || '';
+                document.getElementById('otherFeatures').value = data.otherFeatures || '';
+                document.getElementById('ioName').value = data.ioName || '';
+                document.getElementById('ioRank').value = data.ioRank || '';
+                document.getElementById('ioNumber').value = data.ioNumber || '';
+                document.getElementById('ioDate').value = data.ioDate || '';
+                document.getElementById('ioPlace').value = data.ioPlace || '';
+
+                // Restore checkboxes and radio buttons
+                if (data.arrestStatus) {
+                    document.querySelectorAll('input[name="arrestStatus"]').forEach(checkbox => {
+                        checkbox.checked = data.arrestStatus.includes(checkbox.nextElementSibling.textContent);
+                    });
+                }
+
+                if (data.incomeGroup) {
+                    document.querySelector(`input[value="${data.incomeGroup}"]`).checked = true;
+                }
+
+                if (data.additionalInfo) {
+                    data.additionalInfo.forEach(info => {
+                        const checkbox = document.querySelector(`input[value="${info}"]`);
+                        if (checkbox) checkbox.checked = true;
+                    });
+                }
+
+                // Restore tables
+                restoreTableData('articlesTable', data.articlesTable);
+                restoreTableData('physicalFeaturesTable', data.physicalFeaturesTable);
+                restoreTableData('physicalFeaturesTable2', data.physicalFeaturesTable2);
+                restoreTableData('physicalFeaturesTable3', data.physicalFeaturesTable3);
+
+                generatePreview();
+                alert('Saved form loaded.');
+            } catch (error) {
+                console.error("Error loading form data:", error);
+                alert("Error loading saved form.");
+            }
+        }
+
+        function deleteFormLocal() {
+            if (!confirm('Delete locally saved form?')) return;
+            localStorage.removeItem('iif3Form');
+            alert('Saved form deleted.');
+        }
+
+        // ==================== UTILITY FUNCTIONS ====================
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.classList.toggle('active');
+        }
+
+        function addNewRow(tableId) {
+            const table = document.getElementById(tableId);
+            const rowCount = table.rows.length;
+            const row = table.insertRow(-1);
+
+            // Add serial number cell if it's the articles table
+            if (tableId === 'articlesTable') {
+                const serialCell = row.insertCell(0);
+                serialCell.innerHTML = rowCount;
+            }
+
+            // Add data cells based on table type
+            if (tableId === 'articlesTable') {
+                const cell1 = row.insertCell(1);
+                const cell2 = row.insertCell(2);
+
+                cell1.innerHTML = '<input type="text" placeholder="Article description">';
+                cell2.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+            } else if (tableId === 'physicalFeaturesTable') {
+                const cell0 = row.insertCell(0);
+                const cell1 = row.insertCell(1);
+                const cell2 = row.insertCell(2);
+                const cell3 = row.insertCell(3);
+                const cell4 = row.insertCell(4);
+                const cell5 = row.insertCell(5);
+
+                cell0.innerHTML = '<input type="text" placeholder="Sex">';
+                cell1.innerHTML = '<input type="text" placeholder="Date/Year">';
+                cell2.innerHTML = '<input type="text" placeholder="Build">';
+                cell3.innerHTML = '<input type="text" placeholder="Height">';
+                cell4.innerHTML = '<input type="text" placeholder="Complexion">';
+                cell5.innerHTML = '<input type="text" placeholder="Identification Marks">';
+            } else if (tableId === 'physicalFeaturesTable2') {
+                const cell0 = row.insertCell(0);
+                const cell1 = row.insertCell(1);
+                const cell2 = row.insertCell(2);
+                const cell3 = row.insertCell(3);
+                const cell4 = row.insertCell(4);
+                const cell5 = row.insertCell(5);
+
+                cell0.innerHTML = '<input type="text" placeholder="Deformities/peculiarities">';
+                cell1.innerHTML = '<input type="text" placeholder="Teeth">';
+                cell2.innerHTML = '<input type="text" placeholder="Hair">';
+                cell3.innerHTML = '<input type="text" placeholder="Eye">';
+                cell4.innerHTML = '<input type="text" placeholder="Habit(s)">';
+                cell5.innerHTML = '<input type="text" placeholder="Dress habits">';
+            } else if (tableId === 'physicalFeaturesTable3') {
+                const cell0 = row.insertCell(0);
+                const cell1 = row.insertCell(1);
+                const cell2 = row.insertCell(2);
+                const cell3 = row.insertCell(3);
+                const cell4 = row.insertCell(4);
+                const cell5 = row.insertCell(5);
+
+                cell0.innerHTML = '<input type="text" placeholder="Languages/Dialect">';
+                cell1.innerHTML = '<input type="text" placeholder="Burn Mark">';
+                cell2.innerHTML = '<input type="text" placeholder="Leucoderma">';
+                cell3.innerHTML = '<input type="text" placeholder="Mole">';
+                cell4.innerHTML = '<input type="text" placeholder="Scar">';
+                cell5.innerHTML = '<input type="text" placeholder="Tattoo">';
+            }
+        }
+
+        function removeRow(button) {
+            const row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+
+            // Update row numbers for articles table
+            const table = row.parentNode.parentNode;
+            if (table.id === 'articlesTable') {
+                for (let i = 1; i < table.rows.length; i++) {
+                    table.rows[i].cells[0].innerHTML = i;
+                }
+            }
+        }
+
+        // Make functions global for onclick attributes
+        window.removeRow = removeRow;
+        window.addNewRow = addNewRow;
+        window.toggleSection = toggleSection;
+    </script>
+</body>
+</html>

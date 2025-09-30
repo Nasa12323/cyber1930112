@@ -1,0 +1,41 @@
+{
+  "name": "ips-backend",
+  "version": "1.0.0",
+  "description": "IPS Charge Sheet System Backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "docx": "^9.5.1",
+    "docxtemplater": "^3.66.3",
+    "dotenv": "^16.3.1",
+    "express": "^4.21.2",
+    "get-port": "^7.1.0",
+    "glob": "^11.0.3",
+    "html-pdf-node": "^1.0.7",
+    "jsonwebtoken": "^9.0.2",
+    "libreoffice-convert": "^1.7.0",
+    "lodash.pick": "^3.1.0",
+    "mysql2": "^3.15.0",
+    "nodemailer": "^7.0.6",
+    "pdf-lib": "^1.17.1",
+    "pdfkit": "^0.17.2",
+    "pizzip": "^3.2.0",
+    "puppeteer": "^24.21.0",
+    "rimraf": "^6.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^9.35.0",
+    "nodemon": "^3.1.10"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
