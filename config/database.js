@@ -1,28 +1,34 @@
-﻿// backend/config/database.js
 const mysql = require('mysql2');
 
-// Create a connection pool
-const pool = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || 'Cyber@2263',
-    database: process.env.DB_NAME || 'ips_charge_system_db',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
+// Use the DATABASE_URL from environment variables
+const connection = mysql.createConnection(process.env.DATABASE_URL);
+
+console.log('Attempting to connect to database...');
+console.log('Host: caboose.proxy.rlwy.net');
+console.log('Port: 18928');
+console.log('Database: railway');
+
+connection.connect((error) => {
+  if (error) {
+    console.log('Database connection failed:', error.message);
+    console.log('Error details:', error);
+  } else {
+    console.log('✅ Database connected successfully!');
+    
+    // Test the connection with a simple query
+    connection.execute('SELECT 1 + 1 AS result', (err, results) => {
+      if (err) {
+        console.log('Query test failed:', err.message);
+      } else {
+        console.log('✅ Database query test successful:', results);
+      }
+    });
+  }
 });
 
-// Get a promise-based interface
-const promisePool = pool.promise();
+// Handle connection errors
+connection.on('error', (err) => {
+  console.log('Database error:', err);
+});
 
-// Test the connection
-promisePool.getConnection()
-    .then(connection => {
-        console.log('Connected to MySQL database successfully!');
-        connection.release();
-    })
-    .catch(err => {
-        console.error('Database connection failed:', err.message);
-    });
-
-module.exports = promisePool;
+module.exports = connection;
