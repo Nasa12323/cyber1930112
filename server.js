@@ -1,4 +1,4 @@
-﻿const express = require("express");
+const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
@@ -27,6 +27,91 @@ function readRecords() {
 function writeRecords(records) {
     fs.writeFileSync(recordsFile, JSON.stringify(records, null, 2));
 }
+
+// ========== DATABASE INITIALIZATION ==========
+async function initializeDatabase() {
+    try {
+        console.log("🔄 Initializing database tables...");
+        
+        // Test database connection first
+        const [testResult] = await promisePool.query("SELECT 1 + 1 AS result");
+        console.log("✅ Database connection test passed:", testResult[0].result);
+        
+        // Create users table
+        await promisePool.query(`
+            CREATE TABLE IF NOT EXISTS users (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                full_name VARCHAR(255) NOT NULL,
+                email VARCHAR(255) UNIQUE NOT NULL,
+                phone VARCHAR(20) UNIQUE NOT NULL,
+                password_hash VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+        console.log("✅ Users table created/verified");
+
+        // Create charge_sheets table
+        await promisePool.query(`
+            CREATE TABLE IF NOT EXISTS charge_sheets (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                form_type VARCHAR(100) NOT NULL,
+                form_data JSON NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            )
+        `);
+        console.log("✅ Charge sheets table created/verified");
+
+        // Create additional tables from your server-database.sql
+        await promisePool.query(`
+            CREATE TABLE IF NOT EXISTS fir_records (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                fir_number VARCHAR(100) UNIQUE NOT NULL,
+                police_station VARCHAR(255) NOT NULL,
+                complainant_name VARCHAR(255) NOT NULL,
+                accused_name VARCHAR(255),
+                incident_date DATE,
+                description TEXT,
+                status VARCHAR(50) DEFAULT 'Pending',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+        console.log("✅ FIR records table created/verified");
+
+        await promisePool.query(`
+            CREATE TABLE IF NOT case_hearings (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                case_id INT,
+                hearing_date DATE,
+                next_hearing_date DATE,
+                notes TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (case_id) REFERENCES fir_records(id)
+            )
+        `);
+        console.log("✅ Case hearings table created/verified");
+
+        // Create a test user if no users exist
+        const [users] = await promisePool.query("SELECT COUNT(*) as count FROM users");
+        if (users[0].count === 0) {
+            const testPassword = await bcrypt.hash("test123", 10);
+            await promisePool.query(
+                "INSERT INTO users (full_name, email, phone, password_hash) VALUES (?, ?, ?, ?)",
+                ["Test User", "test@example.com", "1234567890", testPassword]
+            );
+            console.log("✅ Test user created (email: test@example.com, password: test123)");
+        }
+
+        console.log("🎉 Database initialization completed successfully!");
+        
+    } catch (error) {
+        console.error("❌ Database initialization failed:", error.message);
+        console.error("Error details:", error);
+    }
+}
+
+// Initialize database when server starts
+initializeDatabase();
 
 // ========== DATABASE SETUP ENDPOINT ==========
 app.post("/api/setup-database", async (req, res) => {
@@ -216,6 +301,7 @@ app.post("/api/auth/register", async (req, res) => {
         });
     }
 });
+
 // ========== OTHER ROUTES ==========
 app.get("/api/records/:id", (req, res) => {
     try {
