@@ -33,12 +33,12 @@ async function initializeDatabase() {
     try {
         console.log("🔄 Initializing database tables...");
         
-        // Test database connection first using promise()
-        const [testResult] = await promisePool.promise().query("SELECT 1 + 1 AS result");
+        // Test database connection first using the pool
+        const [testResult] = await promisePool.query("SELECT 1 + 1 AS result");
         console.log("✅ Database connection test passed:", testResult[0].result);
         
         // Create users table
-        await promisePool.promise().query(`
+        await promisePool.query(`
             CREATE TABLE IF NOT EXISTS users (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 full_name VARCHAR(255) NOT NULL,
@@ -51,7 +51,7 @@ async function initializeDatabase() {
         console.log("✅ Users table created/verified");
 
         // Create charge_sheets table
-        await promisePool.promise().query(`
+        await promisePool.query(`
             CREATE TABLE IF NOT EXISTS charge_sheets (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 form_type VARCHAR(100) NOT NULL,
@@ -63,7 +63,7 @@ async function initializeDatabase() {
         console.log("✅ Charge sheets table created/verified");
 
         // Create additional tables
-        await promisePool.promise().query(`
+        await promisePool.query(`
             CREATE TABLE IF NOT EXISTS fir_records (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 fir_number VARCHAR(100) UNIQUE NOT NULL,
@@ -78,7 +78,7 @@ async function initializeDatabase() {
         `);
         console.log("✅ FIR records table created/verified");
 
-        await promisePool.promise().query(`
+        await promisePool.query(`
             CREATE TABLE IF NOT EXISTS case_hearings (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 case_id INT,
@@ -91,10 +91,10 @@ async function initializeDatabase() {
         console.log("✅ Case hearings table created/verified");
 
         // Create a test user if no users exist
-        const [users] = await promisePool.promise().query("SELECT COUNT(*) as count FROM users");
+        const [users] = await promisePool.query("SELECT COUNT(*) as count FROM users");
         if (users[0].count === 0) {
             const testPassword = await bcrypt.hash("test123", 10);
-            await promisePool.promise().query(
+            await promisePool.query(
                 "INSERT INTO users (full_name, email, phone, password_hash) VALUES (?, ?, ?, ?)",
                 ["Test User", "test@example.com", "1234567890", testPassword]
             );
