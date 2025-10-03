@@ -1,6 +1,6 @@
 const mysql = require('mysql2');
 
-// Create a connection pool instead of single connection
+// Create a connection pool
 const pool = mysql.createPool({
   host: process.env.DB_HOST || 'caboose.proxy.rlwy.net',
   user: process.env.DB_USER || 'root',
@@ -24,7 +24,7 @@ console.log('✅ Database connection pool created');
 promisePool.getConnection()
   .then(connection => {
     console.log('✅ Database connected successfully via pool');
-    connection.release(); // release the connection back to the pool
+    connection.release();
   })
   .catch(err => {
     console.log('❌ Database connection failed:', err.message);
