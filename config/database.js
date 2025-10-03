@@ -1,34 +1,38 @@
 const mysql = require('mysql2');
 
-// Use the DATABASE_URL from environment variables
-const connection = mysql.createConnection(process.env.DATABASE_URL);
-
-console.log('Attempting to connect to database...');
-console.log('Host: caboose.proxy.rlwy.net');
-console.log('Port: 18928');
-console.log('Database: railway');
-
-connection.connect((error) => {
-  if (error) {
-    console.log('Database connection failed:', error.message);
-    console.log('Error details:', error);
-  } else {
-    console.log('✅ Database connected successfully!');
-    
-    // Test the connection with a simple query
-    connection.execute('SELECT 1 + 1 AS result', (err, results) => {
-      if (err) {
-        console.log('Query test failed:', err.message);
-      } else {
-        console.log('✅ Database query test successful:', results);
-      }
-    });
-  }
+// Create a connection pool instead of single connection
+const pool = mysql.createPool({
+  host: process.env.DB_HOST || 'caboose.proxy.rlwy.net',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || 'KdWeKnVKYPpQEzKKscqLcJcwxvfKpLeN',
+  database: process.env.DB_NAME || 'railway',
+  port: process.env.DB_PORT || 18928,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+  acquireTimeout: 60000,
+  timeout: 60000,
+  reconnect: true
 });
 
-// Handle connection errors
-connection.on('error', (err) => {
-  console.log('Database error:', err);
+// Get promise-based version of the pool
+const promisePool = pool.promise();
+
+console.log('✅ Database connection pool created');
+
+// Test the connection
+promisePool.getConnection()
+  .then(connection => {
+    console.log('✅ Database connected successfully via pool');
+    connection.release(); // release the connection back to the pool
+  })
+  .catch(err => {
+    console.log('❌ Database connection failed:', err.message);
+  });
+
+// Handle pool errors
+pool.on('error', (err) => {
+  console.log('Database pool error:', err);
 });
 
-module.exports = connection;
+module.exports = promisePool;
