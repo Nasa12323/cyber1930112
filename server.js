@@ -216,7 +216,7 @@ app.post("/api/auth/login", async (req, res) => {
         }
 
         console.log("Searching for user:", email);
-        const [results] = await promisePool.promise().query("SELECT * FROM users WHERE email=?", [email]);
+        const [results] = await promisePool.query("SELECT * FROM users WHERE email=?", [email]);
         console.log("Query results length:", results.length);
 
         if (results.length === 0) {
@@ -265,10 +265,11 @@ app.post("/api/auth/register", async (req, res) => {
         }
 
         // Check if user already exists
-        const [existingUsers] = await promisePool.promise().query(
-            "SELECT id FROM users WHERE email = ? OR phone = ?",
-            [email, phone]
-        );
+        const [existingUsers] = await promisePool.query(
+  "SELECT id FROM users WHERE email = ? OR phone = ?",
+  [email, phone]
+);
+
 
         if (existingUsers.length > 0) {
             return res.status(400).json({
