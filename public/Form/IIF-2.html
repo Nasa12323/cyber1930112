@@ -1,10 +1,12 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CCTNS IIF-2 Form Generator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -283,6 +285,89 @@
             margin-bottom: 10px;
         }
 
+        .row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .col {
+            flex: 1;
+        }
+
+        /* VOICE-TO-TEXT STYLES */
+        .voice-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .voice-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background: #1a6c5c;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .voice-btn:hover {
+            background: #2a7c6c;
+            transform: scale(1.1);
+        }
+
+        .voice-btn.listening {
+            background: #c62828;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { 
+                box-shadow: 0 0 0 0 rgba(198, 40, 40, 0.7); 
+            }
+            70% { 
+                box-shadow: 0 0 0 10px rgba(198, 40, 40, 0); 
+            }
+            100% { 
+                box-shadow: 0 0 0 0 rgba(198, 40, 40, 0); 
+            }
+        }
+
+        .voice-status {
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            font-size: 0.8rem;
+            color: #1a6c5c;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .voice-status.show {
+            opacity: 1;
+        }
+
+        .voice-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .voice-command-hint {
+            font-size: 0.8rem;
+            color: #666;
+            font-style: italic;
+        }
+
         @media (max-width: 768px) {
             .content {
                 flex-direction: column;
@@ -308,6 +393,15 @@
             .signature-box {
                 width: 100%;
                 max-width: 250px;
+            }
+
+            .row {
+                flex-direction: column;
+            }
+
+            .voice-btn {
+                right: 5px;
+                top: 5px;
             }
         }
     </style>
@@ -574,7 +668,16 @@
                 <div id="victimDetails" class="section-content">
                     <div class="form-group">
                         <label for="victimInfo">Victim Details</label>
-                        <textarea id="victimInfo" placeholder="Enter victim details"></textarea>
+                        <div class="voice-input-wrapper">
+                            <textarea id="victimInfo" placeholder="Enter victim details"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('victimInfo')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-victimInfo"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "victim name", "age", "gender", "contact details"
+                        </div>
                     </div>
                 </div>
 
@@ -647,45 +750,37 @@
 
                 <div class="section-title" onclick="toggleSection('placeDescription')">9. Description of the Place of Occurrence</div>
                 <div id="placeDescription" class="section-content">
-                    <table id="descriptionTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Description of the Place of Occurrence</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Description"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <button onclick="addNewRow('descriptionTable')">Add New Row</button>
+                    <div class="form-group">
+                        <label for="placeDescriptionText">Description of the Place of Occurrence</label>
+                        <div class="voice-input-wrapper">
+                            <textarea id="placeDescriptionText" placeholder="Enter description of place of occurrence"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('placeDescriptionText')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-placeDescriptionText"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "building type", "room layout", "access points", "neighborhood"
+                        </div>
+                    </div>
                 </div>
 
                 <div class="section-title" onclick="toggleSection('physicalEvidence')">10. Description of Physical Evidence</div>
                 <div id="physicalEvidence" class="section-content">
                     <h4>Physical Evidence Details</h4>
-                    <table id="evidenceTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Details of Physical Evidence</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Physical Evidence"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <button onclick="addNewRow('evidenceTable')">Add New Row</button>
+                    <div class="form-group">
+                        <label for="physicalEvidenceText">Details of Physical Evidence</label>
+                        <div class="voice-input-wrapper">
+                            <textarea id="physicalEvidenceText" placeholder="Enter physical evidence details"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('physicalEvidenceText')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-physicalEvidenceText"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "fingerprints", "weapons", "clothing", "footprints", "DNA samples"
+                        </div>
+                    </div>
 
                     <h4>Witness Details</h4>
                     <table id="witnessTable">
@@ -713,7 +808,16 @@
                 <div id="sketch" class="section-content">
                     <div class="form-group">
                         <label for="sketchDetails">Sketch/Map Details</label>
-                        <textarea id="sketchDetails" placeholder="Enter sketch/map details"></textarea>
+                        <div class="voice-input-wrapper">
+                            <textarea id="sketchDetails" placeholder="Enter sketch/map details"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('sketchDetails')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-sketchDetails"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "north direction", "measurements", "landmarks", "entry exit points"
+                        </div>
                     </div>
 
                     <div class="checkbox-group">
@@ -724,23 +828,19 @@
 
                 <div class="section-title" onclick="toggleSection('gist')">12. Gist</div>
                 <div id="gist" class="section-content">
-                    <table id="gistTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Gist</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Gist"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <button onclick="addNewRow('gistTable')">Add New Row</button>
+                    <div class="form-group">
+                        <label for="gistText">Gist</label>
+                        <div class="voice-input-wrapper">
+                            <textarea id="gistText" placeholder="Enter gist of the investigation"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('gistText')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-gistText"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "summary", "key findings", "conclusions", "recommendations"
+                        </div>
+                    </div>
                 </div>
 
                 <div class="section-title" onclick="toggleSection('signature')">Signature Details</div>
@@ -1034,38 +1134,14 @@
 
                     <div class="preview-section">
                         <h4>9. Description of the Place of Occurrence</h4>
-                        <table id="previewDescriptionTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Description of the Place of Occurrence</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="2">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <p id="previewPlaceDescription">Not specified</p>
                     </div>
 
                     <div class="preview-section">
                         <h4>10. Description of Physical Evidence</h4>
 
                         <h4>Physical Evidence Details</h4>
-                        <table id="previewEvidenceTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Details of Physical Evidence</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="2">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <p id="previewPhysicalEvidence">Not specified</p>
 
                         <h4>Witness Details</h4>
                         <table id="previewWitnessTable">
@@ -1092,19 +1168,7 @@
 
                     <div class="preview-section">
                         <h4>12. Gist</h4>
-                        <table id="previewGistTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Gist</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="2">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <p id="previewGistText">Not specified</p>
                     </div>
 
                     <div class="preview-section">
@@ -1134,6 +1198,163 @@
     </div>
 
     <script>
+        // Voice Recognition System
+        class VoiceToTextSystem {
+            constructor() {
+                this.recognition = null;
+                this.isListening = false;
+                this.currentField = null;
+                this.finalTranscript = '';
+                this.initSpeechRecognition();
+            }
+
+            initSpeechRecognition() {
+                // Check browser support
+                if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                    this.showError('Voice recognition is not supported in this browser. Please use Chrome or Edge.');
+                    return;
+                }
+
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                this.recognition = new SpeechRecognition();
+                
+                this.recognition.continuous = true;
+                this.recognition.interimResults = true;
+                this.recognition.lang = 'en-IN';
+
+                this.recognition.onstart = () => {
+                    this.isListening = true;
+                    this.updateUI('listening', 'Listening... Speak now');
+                };
+
+                this.recognition.onresult = (event) => {
+                    let interimTranscript = '';
+                    
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        if (event.results[i].isFinal) {
+                            this.finalTranscript += this.formatPoliceText(event.results[i][0].transcript);
+                        } else {
+                            interimTranscript += event.results[i][0].transcript;
+                        }
+                    }
+                    
+                    this.updateTextArea(this.finalTranscript + interimTranscript);
+                };
+
+                this.recognition.onerror = (event) => {
+                    console.error('Speech recognition error:', event.error);
+                    this.updateUI('error', `Error: ${event.error}`);
+                    this.stopListening();
+                };
+
+                this.recognition.onend = () => {
+                    this.stopListening();
+                };
+            }
+
+            startListening(fieldId) {
+                if (this.isListening) {
+                    this.stopListening();
+                    return;
+                }
+
+                this.currentField = fieldId;
+                this.finalTranscript = document.getElementById(fieldId).value || '';
+                
+                try {
+                    this.recognition.start();
+                    this.updateUI('listening', 'Listening... Speak now');
+                } catch (error) {
+                    this.updateUI('error', 'Cannot start voice recognition');
+                }
+            }
+
+            stopListening() {
+                this.isListening = false;
+                this.updateUI('stopped', 'Click microphone to speak');
+                if (this.recognition) {
+                    this.recognition.stop();
+                }
+            }
+
+            updateTextArea(text) {
+                if (this.currentField) {
+                    const textarea = document.getElementById(this.currentField);
+                    if (textarea) {
+                        textarea.value = text;
+                        // Auto-scroll to bottom
+                        textarea.scrollTop = textarea.scrollHeight;
+                    }
+                }
+            }
+
+            formatPoliceText(text) {
+                // Enhanced formatting for police documentation
+                let formatted = text;
+                
+                // Voice commands for punctuation
+                formatted = formatted.replace(/\bfull stop\b/gi, '.');
+                formatted = formatted.replace(/\bcomma\b/gi, ',');
+                formatted = formatted.replace(/\bquestion mark\b/gi, '?');
+                formatted = formatted.replace(/\bexclamation mark\b/gi, '!');
+                formatted = formatted.replace(/\bnew paragraph\b/gi, '\n\n');
+                formatted = formatted.replace(/\bnew line\b/gi, '\n');
+                
+                // Auto-capitalize sentences
+                formatted = formatted.replace(/(^\s*|[.!?]\s+)([a-z])/g, (match, p1, p2) => p1 + p2.toUpperCase());
+                
+                // Police-specific formatting
+                formatted = formatted.replace(/\b(\d+)\s*(?:hours?|hrs?)\b/gi, '$1 hours');
+                formatted = formatted.replace(/\b(\d+)\s*(?:minutes?|mins?)\b/gi, '$1 minutes');
+                formatted = formatted.replace(/\b(\d+)\s*(?:meters?|mtrs?)\b/gi, '$1 meters');
+                
+                // Date and time patterns
+                formatted = formatted.replace(/\b(\d{1,2})\s*(?:slash|\/)\s*(\d{1,2})\s*(?:slash|\/)\s*(\d{4})\b/gi, '$1/$2/$3');
+                formatted = formatted.replace(/\b(\d{1,2})\s*(?:colon|:)\s*(\d{2})\s*(?:am|pm)\b/gi, (match, hour, minute) => {
+                    return `${hour}:${minute} ${match.includes('pm') ? 'PM' : 'AM'}`;
+                });
+                
+                return formatted;
+            }
+
+            updateUI(state, message) {
+                if (!this.currentField) return;
+
+                const button = document.querySelector(`[onclick="toggleVoiceInput('${this.currentField}")]`);
+                const status = document.getElementById(`status-${this.currentField}`);
+
+                if (button) {
+                    button.classList.remove('listening');
+                    if (state === 'listening') {
+                        button.classList.add('listening');
+                        button.innerHTML = '<i class="fas fa-circle"></i>';
+                    } else {
+                        button.innerHTML = '<i class="fas fa-microphone"></i>';
+                    }
+                }
+
+                if (status) {
+                    status.textContent = message;
+                    status.classList.remove('show');
+                    if (message) {
+                        setTimeout(() => status.classList.add('show'), 100);
+                    }
+                }
+            }
+
+            showError(message) {
+                alert(message);
+            }
+        }
+
+        // Initialize voice system
+        const voiceSystem = new VoiceToTextSystem();
+
+        // Toggle function for buttons
+        function toggleVoiceInput(fieldId) {
+            voiceSystem.startListening(fieldId);
+        }
+
         // ==================== AUTHENTICATION & SECURITY ====================
         document.addEventListener('DOMContentLoaded', function () {
             // Check if user is authenticated
@@ -1207,7 +1428,10 @@
             const firNo = document.getElementById('firNo').value || 'Not specified';
             const firDate = document.getElementById('firDate').value;
             const victimInfo = document.getElementById('victimInfo').value || 'Not specified';
+            const placeDescriptionText = document.getElementById('placeDescriptionText').value || 'Not specified';
+            const physicalEvidenceText = document.getElementById('physicalEvidenceText').value || 'Not specified';
             const sketchDetails = document.getElementById('sketchDetails').value || 'Not specified';
+            const gistText = document.getElementById('gistText').value || 'Not specified';
             const draftsmanPrepared = document.getElementById('draftsmanPrepared').checked;
             const investigationOfficer = document.getElementById('investigationOfficer').value || 'Not specified';
             const officerName = document.getElementById('officerName').value || 'Not specified';
@@ -1225,7 +1449,10 @@
             document.getElementById('previewFirNo').textContent = firNo;
             document.getElementById('previewFirDate').textContent = formattedFirDate;
             document.getElementById('previewVictimInfo').textContent = victimInfo;
+            document.getElementById('previewPlaceDescription').textContent = placeDescriptionText;
+            document.getElementById('previewPhysicalEvidence').textContent = physicalEvidenceText;
             document.getElementById('previewSketchDetails').textContent = sketchDetails;
+            document.getElementById('previewGistText').textContent = gistText;
             document.getElementById('previewDraftsman').textContent = draftsmanPrepared ? 'Yes' : 'No';
             document.getElementById('previewInvestigationOfficer').textContent = investigationOfficer;
             document.getElementById('previewOfficerName').textContent = officerName;
@@ -1248,10 +1475,7 @@
             updatePreviewTable('motiveTable', 'previewMotiveTable');
             updatePreviewTable('stolenPropertyTable', 'previewStolenPropertyTable');
             updatePreviewTable('visitTable', 'previewVisitTable');
-            updatePreviewTable('descriptionTable', 'previewDescriptionTable');
-            updatePreviewTable('evidenceTable', 'previewEvidenceTable');
             updatePreviewTable('witnessTable', 'previewWitnessTable');
-            updatePreviewTable('gistTable', 'previewGistTable');
 
             // Update generation date
             document.getElementById('generationDate').textContent = new Date().toLocaleString();
@@ -1572,7 +1796,10 @@
                 firNo: document.getElementById('firNo').value,
                 firDate: document.getElementById('firDate').value,
                 victimInfo: document.getElementById('victimInfo').value,
+                placeDescriptionText: document.getElementById('placeDescriptionText').value,
+                physicalEvidenceText: document.getElementById('physicalEvidenceText').value,
                 sketchDetails: document.getElementById('sketchDetails').value,
+                gistText: document.getElementById('gistText').value,
                 draftsmanPrepared: document.getElementById('draftsmanPrepared').checked,
                 investigationOfficer: document.getElementById('investigationOfficer').value,
                 officerName: document.getElementById('officerName').value,
@@ -1595,10 +1822,7 @@
                 motiveTable: getTableData('motiveTable'),
                 stolenPropertyTable: getTableData('stolenPropertyTable'),
                 visitTable: getTableData('visitTable'),
-                descriptionTable: getTableData('descriptionTable'),
-                evidenceTable: getTableData('evidenceTable'),
-                witnessTable: getTableData('witnessTable'),
-                gistTable: getTableData('gistTable')
+                witnessTable: getTableData('witnessTable')
             };
 
             return data;
@@ -1672,7 +1896,10 @@
                 document.getElementById('firNo').value = data.firNo || '';
                 document.getElementById('firDate').value = data.firDate || '';
                 document.getElementById('victimInfo').value = data.victimInfo || '';
+                document.getElementById('placeDescriptionText').value = data.placeDescriptionText || '';
+                document.getElementById('physicalEvidenceText').value = data.physicalEvidenceText || '';
                 document.getElementById('sketchDetails').value = data.sketchDetails || '';
+                document.getElementById('gistText').value = data.gistText || '';
                 document.getElementById('draftsmanPrepared').checked = data.draftsmanPrepared || false;
                 document.getElementById('investigationOfficer').value = data.investigationOfficer || '';
                 document.getElementById('officerName').value = data.officerName || '';
@@ -1695,10 +1922,7 @@
                 restoreTableData('motiveTable', data.motiveTable);
                 restoreTableData('stolenPropertyTable', data.stolenPropertyTable);
                 restoreTableData('visitTable', data.visitTable);
-                restoreTableData('descriptionTable', data.descriptionTable);
-                restoreTableData('evidenceTable', data.evidenceTable);
                 restoreTableData('witnessTable', data.witnessTable);
-                restoreTableData('gistTable', data.gistTable);
 
                 generatePreview();
                 alert('Saved form loaded.');
@@ -1799,6 +2023,7 @@
         window.removeRow = removeRow;
         window.addNewRow = addNewRow;
         window.toggleSection = toggleSection;
+        window.toggleVoiceInput = toggleVoiceInput;
     </script>
 </body>
 </html>
