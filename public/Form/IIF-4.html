@@ -1,10 +1,12 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CCTNS IIF-4 Form Generator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -292,6 +294,86 @@
                 flex: 1;
             }
 
+        /* VOICE-TO-TEXT STYLES */
+        .voice-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .voice-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background: #1a6c5c;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .voice-btn:hover {
+            background: #2a7c6c;
+            transform: scale(1.1);
+        }
+
+        .voice-btn.listening {
+            background: #c62828;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { 
+                box-shadow: 0 0 0 0 rgba(198, 40, 40, 0.7); 
+            }
+            70% { 
+                box-shadow: 0 0 0 10px rgba(198, 40, 40, 0); 
+            }
+            100% { 
+                box-shadow: 0 0 0 0 rgba(198, 40, 40, 0); 
+            }
+        }
+
+        .voice-status {
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            font-size: 0.8rem;
+            color: #1a6c5c;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .voice-status.show {
+            opacity: 1;
+        }
+
+        .voice-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .voice-command-hint {
+            font-size: 0.8rem;
+            color: #666;
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        .required::after {
+            content: "*";
+            color: red;
+            margin-left: 4px;
+        }
+
         @media (max-width: 768px) {
             .content {
                 flex-direction: column;
@@ -323,12 +405,11 @@
                 flex-direction: column;
                 gap: 0;
             }
-        }
 
-        .required::after {
-            content: "*";
-            color: red;
-            margin-left: 4px;
+            .voice-btn {
+                right: 5px;
+                top: 5px;
+            }
         }
     </style>
 </head>
@@ -336,7 +417,7 @@
     <div class="container">
         <header>
             <h1>CCTNS IIF-4 Form Generator</h1>
-            <p>Property Seizure/Recovery Form - Complete with All Required Tables</p>
+            <p>Property Seizure/Recovery Form - Complete with Voice-to-Text Features</p>
         </header>
 
         <div class="content">
@@ -345,29 +426,38 @@
 
                 <div class="section-title" onclick="toggleSection('basicInfo')">1. Basic Information</div>
                 <div id="basicInfo" class="section-content active">
-                    <div class="form-group">
-                        <label for="district" class="required">District</label>
-                        <input type="text" id="district" placeholder="Enter district">
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="district" class="required">District</label>
+                            <input type="text" id="district" placeholder="Enter district">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="policeStation" class="required">Police Station</label>
+                            <input type="text" id="policeStation" placeholder="Enter police station">
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="policeStation" class="required">Police Station</label>
-                        <input type="text" id="policeStation" placeholder="Enter police station">
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="year" class="required">Year</label>
+                            <input type="text" id="year" placeholder="Enter year">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="firNo" class="required">FIR/GD No.</label>
+                            <input type="text" id="firNo" placeholder="Enter FIR/GD number">
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="year" class="required">Year</label>
-                        <input type="text" id="year" placeholder="Enter year">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="firNo" class="required">FIR/GD No.</label>
-                        <input type="text" id="firNo" placeholder="Enter FIR/GD number">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="firDate" class="required">Date</label>
-                        <input type="date" id="firDate">
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="firDate" class="required">Date</label>
+                            <input type="date" id="firDate">
+                        </div>
+                        <div class="form-group">
+                            <!-- Empty column for alignment -->
+                        </div>
                     </div>
                 </div>
 
@@ -396,14 +486,16 @@
 
                 <div class="section-title" onclick="toggleSection('propertySeized')">3. Property Seized/Recovered</div>
                 <div id="propertySeized" class="section-content">
-                    <div class="form-group">
-                        <label for="seizureDate" class="required">Date</label>
-                        <input type="date" id="seizureDate">
-                    </div>
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="seizureDate" class="required">Date</label>
+                            <input type="date" id="seizureDate">
+                        </div>
 
-                    <div class="form-group">
-                        <label for="seizureTime" class="required">Time</label>
-                        <input type="time" id="seizureTime">
+                        <div class="form-group">
+                            <label for="seizureTime" class="required">Time</label>
+                            <input type="time" id="seizureTime">
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -413,7 +505,16 @@
 
                     <div class="form-group">
                         <label for="placeDescription" class="required">Description of the place</label>
-                        <textarea id="placeDescription" placeholder="Enter description of the place"></textarea>
+                        <div class="voice-input-wrapper">
+                            <textarea id="placeDescription" placeholder="Enter description of the place"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('placeDescription')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-placeDescription"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "building description", "location details", "access points", "surrounding area"
+                        </div>
                     </div>
                 </div>
 
@@ -442,24 +543,28 @@
 
                 <div class="section-title" onclick="toggleSection('personRecovered')">5. Person from whom recovered</div>
                 <div id="personRecovered" class="section-content">
-                    <div class="form-group">
-                        <label for="personName" class="required">Name</label>
-                        <input type="text" id="personName" placeholder="Enter name">
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="personName" class="required">Name</label>
+                            <input type="text" id="personName" placeholder="Enter name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="husbandName" class="required">Husband's Name</label>
+                            <input type="text" id="husbandName" placeholder="Enter husband's name">
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="husbandName" class="required">Husband's Name</label>
-                        <input type="text" id="husbandName" placeholder="Enter husband's name">
-                    </div>
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="personAge" class="required">Age</label>
+                            <input type="number" id="personAge" placeholder="Enter age">
+                        </div>
 
-                    <div class="form-group">
-                        <label for="personAge" class="required">Age</label>
-                        <input type="number" id="personAge" placeholder="Enter age">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="personOccupation" class="required">Occupation</label>
-                        <input type="text" id="personOccupation" placeholder="Enter occupation">
+                        <div class="form-group">
+                            <label for="personOccupation" class="required">Occupation</label>
+                            <input type="text" id="personOccupation" placeholder="Enter occupation">
+                        </div>
                     </div>
 
                     <h4>Address</h4>
@@ -521,14 +626,16 @@
                 <div class="section-title" onclick="toggleSection('witnesses')">6. Witnesses</div>
                 <div id="witnesses" class="section-content">
                     <h4>Witness 1</h4>
-                    <div class="form-group">
-                        <label for="witness1Name" class="required">Name</label>
-                        <input type="text" id="witness1Name" placeholder="Enter name">
-                    </div>
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="witness1Name" class="required">Name</label>
+                            <input type="text" id="witness1Name" placeholder="Enter name">
+                        </div>
 
-                    <div class="form-group">
-                        <label for="witness1Father" class="required">Father Name</label>
-                        <input type="text" id="witness1Father" placeholder="Enter father's name">
+                        <div class="form-group">
+                            <label for="witness1Father" class="required">Father Name</label>
+                            <input type="text" id="witness1Father" placeholder="Enter father's name">
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -558,14 +665,16 @@
                     <button onclick="addNewRow('witness1AddressTable')">Add New Row</button>
 
                     <h4>Witness 2</h4>
-                    <div class="form-group">
-                        <label for="witness2Name" class="required">Name</label>
-                        <input type="text" id="witness2Name" placeholder="Enter name">
-                    </div>
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="witness2Name" class="required">Name</label>
+                            <input type="text" id="witness2Name" placeholder="Enter name">
+                        </div>
 
-                    <div class="form-group">
-                        <label for="witness2Father" class="required">Father Name</label>
-                        <input type="text" id="witness2Father" placeholder="Enter father's name">
+                        <div class="form-group">
+                            <label for="witness2Father" class="required">Father Name</label>
+                            <input type="text" id="witness2Father" placeholder="Enter father's name">
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -657,7 +766,16 @@
                 <div id="circumstances" class="section-content">
                     <div class="form-group">
                         <label for="seizureGrounds" class="required">Circumstances / Grounds for Seizure</label>
-                        <textarea id="seizureGrounds" placeholder="Enter circumstances/grounds for seizure"></textarea>
+                        <div class="voice-input-wrapper">
+                            <textarea id="seizureGrounds" placeholder="Enter circumstances/grounds for seizure"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('seizureGrounds')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-seizureGrounds"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "suspicious activity", "information received", "search conducted", "evidence found"
+                        </div>
                     </div>
                 </div>
 
@@ -698,7 +816,16 @@
 
                     <div class="form-group">
                         <label for="sealSpecimen" class="required">Specimen of the seal</label>
-                        <textarea id="sealSpecimen" placeholder="Enter specimen of the seal"></textarea>
+                        <div class="voice-input-wrapper">
+                            <textarea id="sealSpecimen" placeholder="Enter specimen of the seal"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('sealSpecimen')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-sealSpecimen"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "seal description", "markings", "identification details", "security features"
+                        </div>
                     </div>
                 </div>
 
@@ -710,56 +837,66 @@
                     </div>
 
                     <h4>Witness 1</h4>
-                    <div class="form-group">
-                        <label for="witness1Signature" class="required">Signature</label>
-                        <input type="text" id="witness1Signature" placeholder="Enter witness 1 signature">
-                    </div>
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="witness1Signature" class="required">Signature</label>
+                            <input type="text" id="witness1Signature" placeholder="Enter witness 1 signature">
+                        </div>
 
-                    <div class="form-group">
-                        <label for="witness1NameFinal" class="required">Name</label>
-                        <input type="text" id="witness1NameFinal" placeholder="Enter witness 1 name">
+                        <div class="form-group">
+                            <label for="witness1NameFinal" class="required">Name</label>
+                            <input type="text" id="witness1NameFinal" placeholder="Enter witness 1 name">
+                        </div>
                     </div>
 
                     <h4>Witness 2</h4>
-                    <div class="form-group">
-                        <label for="witness2Signature" class="required">Signature</label>
-                        <input type="text" id="witness2Signature" placeholder="Enter witness 2 signature">
-                    </div>
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="witness2Signature" class="required">Signature</label>
+                            <input type="text" id="witness2Signature" placeholder="Enter witness 2 signature">
+                        </div>
 
-                    <div class="form-group">
-                        <label for="witness2NameFinal" class="required">Name</label>
-                        <input type="text" id="witness2NameFinal" placeholder="Enter witness 2 name">
+                        <div class="form-group">
+                            <label for="witness2NameFinal" class="required">Name</label>
+                            <input type="text" id="witness2NameFinal" placeholder="Enter witness 2 name">
+                        </div>
                     </div>
 
                     <h4>Investigating Officer</h4>
-                    <div class="form-group">
-                        <label for="ioSignature" class="required">Signature of Investigating officer</label>
-                        <input type="text" id="ioSignature" placeholder="Enter IO signature">
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="ioSignature" class="required">Signature of Investigating officer</label>
+                            <input type="text" id="ioSignature" placeholder="Enter IO signature">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ioName" class="required">Name</label>
+                            <input type="text" id="ioName" placeholder="Enter IO name">
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="ioName" class="required">Name</label>
-                        <input type="text" id="ioName" placeholder="Enter IO name">
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="ioRank" class="required">Rank</label>
+                            <input type="text" id="ioRank" placeholder="Enter IO rank">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ioNo" class="required">No.</label>
+                            <input type="text" id="ioNo" placeholder="Enter IO number">
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="ioRank" class="required">Rank</label>
-                        <input type="text" id="ioRank" placeholder="Enter IO rank">
-                    </div>
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="ioPlace" class="required">Place</label>
+                            <input type="text" id="ioPlace" placeholder="Enter place">
+                        </div>
 
-                    <div class="form-group">
-                        <label for="ioNo" class="required">No.</label>
-                        <input type="text" id="ioNo" placeholder="Enter IO number">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="ioPlace" class="required">Place</label>
-                        <input type="text" id="ioPlace" placeholder="Enter place">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="ioDate" class="required">Date</label>
-                        <input type="date" id="ioDate">
+                        <div class="form-group">
+                            <label for="ioDate" class="required">Date</label>
+                            <input type="date" id="ioDate">
+                        </div>
                     </div>
                 </div>
 
@@ -778,7 +915,7 @@
                 <div id="formPreview" class="form-preview">
                     <div class="preview-header">
                         <h3>CCTNS IIF-4 Form</h3>
-                        <p>Property Seizure/Recovery Report</p>
+                        <p>Property Seizure/Recovery Report with Voice-to-Text</p>
                     </div>
 
                     <div class="preview-section">
@@ -1037,42 +1174,165 @@
     </div>
 
     <script>
-        // ==================== AUTHENTICATION & SECURITY ====================
+        // Voice Recognition System
+        class VoiceToTextSystem {
+            constructor() {
+                this.recognition = null;
+                this.isListening = false;
+                this.currentField = null;
+                this.finalTranscript = '';
+                this.initSpeechRecognition();
+            }
+
+            initSpeechRecognition() {
+                // Check browser support
+                if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                    this.showError('Voice recognition is not supported in this browser. Please use Chrome or Edge.');
+                    return;
+                }
+
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                this.recognition = new SpeechRecognition();
+                
+                this.recognition.continuous = true;
+                this.recognition.interimResults = true;
+                this.recognition.lang = 'en-IN';
+
+                this.recognition.onstart = () => {
+                    this.isListening = true;
+                    this.updateUI('listening', 'Listening... Speak now');
+                };
+
+                this.recognition.onresult = (event) => {
+                    let interimTranscript = '';
+                    
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        if (event.results[i].isFinal) {
+                            this.finalTranscript += this.formatPoliceText(event.results[i][0].transcript);
+                        } else {
+                            interimTranscript += event.results[i][0].transcript;
+                        }
+                    }
+                    
+                    this.updateTextArea(this.finalTranscript + interimTranscript);
+                };
+
+                this.recognition.onerror = (event) => {
+                    console.error('Speech recognition error:', event.error);
+                    this.updateUI('error', `Error: ${event.error}`);
+                    this.stopListening();
+                };
+
+                this.recognition.onend = () => {
+                    this.stopListening();
+                };
+            }
+
+            startListening(fieldId) {
+                if (this.isListening) {
+                    this.stopListening();
+                    return;
+                }
+
+                this.currentField = fieldId;
+                this.finalTranscript = document.getElementById(fieldId).value || '';
+                
+                try {
+                    this.recognition.start();
+                    this.updateUI('listening', 'Listening... Speak now');
+                } catch (error) {
+                    this.updateUI('error', 'Cannot start voice recognition');
+                }
+            }
+
+            stopListening() {
+                this.isListening = false;
+                this.updateUI('stopped', 'Click microphone to speak');
+                if (this.recognition) {
+                    this.recognition.stop();
+                }
+            }
+
+            updateTextArea(text) {
+                if (this.currentField) {
+                    const textarea = document.getElementById(this.currentField);
+                    if (textarea) {
+                        textarea.value = text;
+                        // Auto-scroll to bottom
+                        textarea.scrollTop = textarea.scrollHeight;
+                    }
+                }
+            }
+
+            formatPoliceText(text) {
+                // Enhanced formatting for police documentation
+                let formatted = text;
+                
+                // Voice commands for punctuation
+                formatted = formatted.replace(/\bfull stop\b/gi, '.');
+                formatted = formatted.replace(/\bcomma\b/gi, ',');
+                formatted = formatted.replace(/\bquestion mark\b/gi, '?');
+                formatted = formatted.replace(/\bexclamation mark\b/gi, '!');
+                formatted = formatted.replace(/\bnew paragraph\b/gi, '\n\n');
+                formatted = formatted.replace(/\bnew line\b/gi, '\n');
+                
+                // Auto-capitalize sentences
+                formatted = formatted.replace(/(^\s*|[.!?]\s+)([a-z])/g, (match, p1, p2) => p1 + p2.toUpperCase());
+                
+                // Police-specific formatting
+                formatted = formatted.replace(/\b(\d+)\s*(?:hours?|hrs?)\b/gi, '$1 hours');
+                formatted = formatted.replace(/\b(\d+)\s*(?:minutes?|mins?)\b/gi, '$1 minutes');
+                formatted = formatted.replace(/\b(\d+)\s*(?:meters?|mtrs?)\b/gi, '$1 meters');
+                
+                // Date and time patterns
+                formatted = formatted.replace(/\b(\d{1,2})\s*(?:slash|\/)\s*(\d{1,2})\s*(?:slash|\/)\s*(\d{4})\b/gi, '$1/$2/$3');
+                formatted = formatted.replace(/\b(\d{1,2})\s*(?:colon|:)\s*(\d{2})\s*(?:am|pm)\b/gi, (match, hour, minute) => {
+                    return `${hour}:${minute} ${match.includes('pm') ? 'PM' : 'AM'}`;
+                });
+                
+                return formatted;
+            }
+
+            updateUI(state, message) {
+                if (!this.currentField) return;
+
+                const button = document.querySelector(`[onclick="toggleVoiceInput('${this.currentField}")]`);
+                const status = document.getElementById(`status-${this.currentField}`);
+
+                if (button) {
+                    button.classList.remove('listening');
+                    if (state === 'listening') {
+                        button.classList.add('listening');
+                        button.innerHTML = '<i class="fas fa-circle"></i>';
+                    } else {
+                        button.innerHTML = '<i class="fas fa-microphone"></i>';
+                    }
+                }
+
+                if (status) {
+                    status.textContent = message;
+                    status.classList.remove('show');
+                    if (message) {
+                        setTimeout(() => status.classList.add('show'), 100);
+                    }
+                }
+            }
+
+            showError(message) {
+                alert(message);
+            }
+        }
+
+        // Initialize voice system
+        const voiceSystem = new VoiceToTextSystem();
+
+        // Toggle function for buttons
+        function toggleVoiceInput(fieldId) {
+            voiceSystem.startListening(fieldId);
+        }
+
+        // ==================== FORM FUNCTIONS ====================
         document.addEventListener('DOMContentLoaded', function () {
-            // Check if user is authenticated
-            const token = localStorage.getItem('token');
-            const user = localStorage.getItem('user');
-
-            if (!token || !user) {
-                alert('Authentication required. Please login first.');
-                if (window.parent !== window) {
-                    window.parent.postMessage({ type: 'AUTH_REQUIRED' }, '*');
-                } else {
-                    window.location.href = '../index.html';
-                }
-                return;
-            }
-
-            // Set officer name from logged in user
-            try {
-                const userData = JSON.parse(user);
-                document.getElementById('ioName').value = userData.fullName || 'Investigation Officer';
-            } catch (e) {
-                console.error('Error parsing user data:', e);
-            }
-
-            // Listen for authentication token from parent
-            window.addEventListener('message', function (event) {
-                if (event.data.type === 'AUTH_TOKEN' && event.data.token) {
-                    localStorage.setItem('token', event.data.token);
-                }
-            });
-
-            // Notify parent that form is loaded
-            if (window.parent !== window) {
-                window.parent.postMessage({ type: 'FORM_LOADED', formType: 'IIF-4' }, '*');
-            }
-
             // Set current date
             const now = new Date();
             document.getElementById('generationDate').textContent = now.toLocaleString();
@@ -1102,7 +1362,6 @@
             generatePreview();
         });
 
-        // ==================== FORM FUNCTIONS ====================
         function generatePreview() {
             // Get form values
             const district = document.getElementById('district').value || 'Not specified';
@@ -1360,156 +1619,85 @@
             }
         }
 
-        // ==================== RECORD MANAGEMENT ====================
-        async function saveToRecords() {
+        // ==================== LOCAL STORAGE FUNCTIONS ====================
+        function saveToRecords() {
             generatePreview();
+            const formData = collectFormData();
+            localStorage.setItem('iif4Form', JSON.stringify(formData));
+            alert('Form saved to records successfully!');
+        }
+
+        function loadFormLocal() {
+            const raw = localStorage.getItem('iif4Form');
+            if (!raw) {
+                alert('No saved form found.');
+                return;
+            }
 
             try {
-                // Generate PDF and Word files
-                const pdfData = await generatePDFBlob();
-                const wordData = await generateWordBlob();
+                const data = JSON.parse(raw);
 
-                // Convert Blobs to base64 for storage
-                const pdfBase64 = await blobToBase64(pdfData);
-                const wordBase64 = await blobToBase64(wordData);
+                // Restore basic information
+                document.getElementById('district').value = data.district || '';
+                document.getElementById('policeStation').value = data.policeStation || '';
+                document.getElementById('year').value = data.year || '';
+                document.getElementById('firNo').value = data.firNo || '';
+                document.getElementById('firDate').value = data.firDate || '';
+                document.getElementById('seizureDate').value = data.seizureDate || '';
+                document.getElementById('seizureTime').value = data.seizureTime || '';
+                document.getElementById('seizurePlace').value = data.seizurePlace || '';
+                document.getElementById('placeDescription').value = data.placeDescription || '';
+                document.getElementById('personName').value = data.personName || '';
+                document.getElementById('husbandName').value = data.husbandName || '';
+                document.getElementById('personAge').value = data.personAge || '';
+                document.getElementById('personOccupation').value = data.personOccupation || '';
+                document.getElementById('professionalReceiver').value = data.professionalReceiver || '';
+                document.getElementById('witness1Name').value = data.witness1Name || '';
+                document.getElementById('witness1Father').value = data.witness1Father || '';
+                document.getElementById('witness1Age').value = data.witness1Age || '';
+                document.getElementById('witness2Name').value = data.witness2Name || '';
+                document.getElementById('witness2Father').value = data.witness2Father || '';
+                document.getElementById('witness2Age').value = data.witness2Age || '';
+                document.getElementById('identificationRequired').value = data.identificationRequired || '';
+                document.getElementById('seizureGrounds').value = data.seizureGrounds || '';
+                document.getElementById('seizureStatementCheck').checked = data.seizureStatementCheck || false;
+                document.getElementById('packingSealingCheck').checked = data.packingSealingCheck || false;
+                document.getElementById('sealSpecimen').value = data.sealSpecimen || '';
+                document.getElementById('personSignature').value = data.personSignature || '';
+                document.getElementById('witness1Signature').value = data.witness1Signature || '';
+                document.getElementById('witness1NameFinal').value = data.witness1NameFinal || '';
+                document.getElementById('witness2Signature').value = data.witness2Signature || '';
+                document.getElementById('witness2NameFinal').value = data.witness2NameFinal || '';
+                document.getElementById('ioSignature').value = data.ioSignature || '';
+                document.getElementById('ioName').value = data.ioName || '';
+                document.getElementById('ioRank').value = data.ioRank || '';
+                document.getElementById('ioNo').value = data.ioNo || '';
+                document.getElementById('ioPlace').value = data.ioPlace || '';
+                document.getElementById('ioDate').value = data.ioDate || '';
 
-                // Collect form data
-                const formData = collectFormData();
+                // Restore tables
+                restoreTableData('actsTable', data.actsTable);
+                restoreTableData('naturePropertyTable', data.naturePropertyTable);
+                restoreTableData('addressTable', data.addressTable);
+                restoreTableData('propertiesTable', data.propertiesTable);
+                restoreTableData('witness1AddressTable', data.witness1AddressTable);
+                restoreTableData('witness2AddressTable', data.witness2AddressTable);
+                restoreTableData('perishableTable', data.perishableTable);
+                restoreTableData('valuableTable', data.valuableTable);
+                restoreTableData('packingTable', data.packingTable);
 
-                // Create record object
-                const record = {
-                    id: Date.now(),
-                    type: "IIF-4",
-                    date: new Date().toISOString().split('T')[0],
-                    policeStation: formData.policeStation,
-                    officerName: formData.ioName,
-                    propertySeized: formData.personName || 'Property Seizure',
-                    formData: formData,
-                    pdfFile: pdfBase64,
-                    wordFile: wordBase64,
-                    status: "Pending"
-                };
-
-                // Get existing records from localStorage
-                let records = JSON.parse(localStorage.getItem('iifRecords')) || [];
-
-                // Add the new record
-                records.push(record);
-
-                // Save back to localStorage
-                localStorage.setItem('iifRecords', JSON.stringify(records));
-
-                // Notify parent window (dashboard) that form was saved
-                if (window.parent !== window) {
-                    window.parent.postMessage({
-                        type: 'FORM_SAVED',
-                        formType: 'IIF-4',
-                        recordId: record.id
-                    }, '*');
-                }
-
-                alert('Form saved to records successfully!');
+                generatePreview();
+                alert('Saved form loaded.');
             } catch (error) {
-                console.error("Error saving to records:", error);
-                alert("Error saving form to records: " + error.message);
+                console.error("Error loading form data:", error);
+                alert("Error loading saved form.");
             }
         }
 
-        async function generatePDFBlob() {
-            return new Promise((resolve, reject) => {
-                const element = document.getElementById('formPreview');
-                const opt = {
-                    margin: 10,
-                    filename: 'iif-4-form.pdf',
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { scale: 2 },
-                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-                };
-
-                html2pdf().set(opt).from(element).output('blob').then(resolve).catch(reject);
-            });
-        }
-
-        async function generateWordBlob() {
-            return new Promise((resolve) => {
-                // Create HTML content for Word
-                const htmlContent = `
-                            <html xmlns:o="urn:schemas-microsoft-com:office:office"
-                                  xmlns:w="urn:schemas-microsoft-com:office:word"
-                                  xmlns="http://www.w3.org/TR/REC-html40">
-                            <head>
-                                <meta charset="utf-8">
-                                <title>IIF-4 Form</title>
-                                <style>
-                                    body {
-                                        font-family: 'Times New Roman', serif;
-                                        font-size: 12pt;
-                                        line-height: 1.5;
-                                    }
-                                    h1, h2, h3, h4 {
-                                        color: #1a2a6c;
-                                    }
-                                    h1 {
-                                        font-size: 16pt;
-                                        text-align: center;
-                                    }
-                                    h2 {
-                                        font-size: 14pt;
-                                        margin-top: 12pt;
-                                        margin-bottom: 6pt;
-                                    }
-                                    table {
-                                        width: 100%;
-                                        border-collapse: collapse;
-                                        margin: 6pt 0;
-                                    }
-                                    th, td {
-                                        border: 1px solid #000;
-                                        padding: 4pt;
-                                        text-align: left;
-                                    }
-                                    th {
-                                        background-color: #f3f6fb;
-                                        font-weight: bold;
-                                    }
-                                    .field-label {
-                                        font-weight: bold;
-                                        width: 220px;
-                                        display: inline-block;
-                                    }
-                                    .signature-area {
-                                        margin-top: 30pt;
-                                        display: flex;
-                                        justify-content: space-between;
-                                    }
-                                    .signature-box {
-                                        border-top: 1px solid #000;
-                                        width: 250px;
-                                        padding-top: 5px;
-                                        text-align: center;
-                                    }
-                                </style>
-                            </head>
-                            <body>
-                                <h1>IIF-4 Form</h1>
-                                <p style="text-align: center; font-style: italic;">Property Seizure/Recovery Report</p>
-                                ${document.getElementById('formPreview').innerHTML}
-                            </body>
-                            </html>
-                        `;
-
-                const blob = new Blob([htmlContent], { type: 'application/msword' });
-                resolve(blob);
-            });
-        }
-
-        function blobToBase64(blob) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onloadend = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(blob);
-            });
+        function deleteFormLocal() {
+            if (!confirm('Delete locally saved form?')) return;
+            localStorage.removeItem('iif4Form');
+            alert('Saved form deleted.');
         }
 
         function collectFormData() {
@@ -1611,80 +1799,6 @@
             }
         }
 
-        // ==================== LOCAL STORAGE FUNCTIONS ====================
-        function loadFormLocal() {
-            const raw = localStorage.getItem('iif4Form');
-            if (!raw) {
-                alert('No saved form found.');
-                return;
-            }
-
-            try {
-                const data = JSON.parse(raw);
-
-                // Restore basic information
-                document.getElementById('district').value = data.district || '';
-                document.getElementById('policeStation').value = data.policeStation || '';
-                document.getElementById('year').value = data.year || '';
-                document.getElementById('firNo').value = data.firNo || '';
-                document.getElementById('firDate').value = data.firDate || '';
-                document.getElementById('seizureDate').value = data.seizureDate || '';
-                document.getElementById('seizureTime').value = data.seizureTime || '';
-                document.getElementById('seizurePlace').value = data.seizurePlace || '';
-                document.getElementById('placeDescription').value = data.placeDescription || '';
-                document.getElementById('personName').value = data.personName || '';
-                document.getElementById('husbandName').value = data.husbandName || '';
-                document.getElementById('personAge').value = data.personAge || '';
-                document.getElementById('personOccupation').value = data.personOccupation || '';
-                document.getElementById('professionalReceiver').value = data.professionalReceiver || '';
-                document.getElementById('witness1Name').value = data.witness1Name || '';
-                document.getElementById('witness1Father').value = data.witness1Father || '';
-                document.getElementById('witness1Age').value = data.witness1Age || '';
-                document.getElementById('witness2Name').value = data.witness2Name || '';
-                document.getElementById('witness2Father').value = data.witness2Father || '';
-                document.getElementById('witness2Age').value = data.witness2Age || '';
-                document.getElementById('identificationRequired').value = data.identificationRequired || '';
-                document.getElementById('seizureGrounds').value = data.seizureGrounds || '';
-                document.getElementById('seizureStatementCheck').checked = data.seizureStatementCheck || false;
-                document.getElementById('packingSealingCheck').checked = data.packingSealingCheck || false;
-                document.getElementById('sealSpecimen').value = data.sealSpecimen || '';
-                document.getElementById('personSignature').value = data.personSignature || '';
-                document.getElementById('witness1Signature').value = data.witness1Signature || '';
-                document.getElementById('witness1NameFinal').value = data.witness1NameFinal || '';
-                document.getElementById('witness2Signature').value = data.witness2Signature || '';
-                document.getElementById('witness2NameFinal').value = data.witness2NameFinal || '';
-                document.getElementById('ioSignature').value = data.ioSignature || '';
-                document.getElementById('ioName').value = data.ioName || '';
-                document.getElementById('ioRank').value = data.ioRank || '';
-                document.getElementById('ioNo').value = data.ioNo || '';
-                document.getElementById('ioPlace').value = data.ioPlace || '';
-                document.getElementById('ioDate').value = data.ioDate || '';
-
-                // Restore tables
-                restoreTableData('actsTable', data.actsTable);
-                restoreTableData('naturePropertyTable', data.naturePropertyTable);
-                restoreTableData('addressTable', data.addressTable);
-                restoreTableData('propertiesTable', data.propertiesTable);
-                restoreTableData('witness1AddressTable', data.witness1AddressTable);
-                restoreTableData('witness2AddressTable', data.witness2AddressTable);
-                restoreTableData('perishableTable', data.perishableTable);
-                restoreTableData('valuableTable', data.valuableTable);
-                restoreTableData('packingTable', data.packingTable);
-
-                generatePreview();
-                alert('Saved form loaded.');
-            } catch (error) {
-                console.error("Error loading form data:", error);
-                alert("Error loading saved form.");
-            }
-        }
-
-        function deleteFormLocal() {
-            if (!confirm('Delete locally saved form?')) return;
-            localStorage.removeItem('iif4Form');
-            alert('Saved form deleted.');
-        }
-
         // ==================== UTILITY FUNCTIONS ====================
         function toggleSection(sectionId) {
             const section = document.getElementById(sectionId);
@@ -1776,6 +1890,7 @@
         window.removeRow = removeRow;
         window.addNewRow = addNewRow;
         window.toggleSection = toggleSection;
+        window.toggleVoiceInput = toggleVoiceInput;
     </script>
 </body>
 </html>
