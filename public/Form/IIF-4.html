@@ -417,7 +417,7 @@
     <div class="container">
         <header>
             <h1>CCTNS IIF-4 Form Generator</h1>
-            <p>Property Seizure/Recovery Form - Complete with Voice-to-Text Features</p>
+            <p>Property Seizure/Recovery Form - Complete with Enhanced Features</p>
         </header>
 
         <div class="content">
@@ -455,8 +455,16 @@
                             <label for="firDate" class="required">Date</label>
                             <input type="date" id="firDate">
                         </div>
+                        
                         <div class="form-group">
-                            <!-- Empty column for alignment -->
+                            <label for="caseType" class="required">Case Type</label>
+                            <select id="caseType">
+                                <option value="">Select Case Type</option>
+                                <option value="Theft">Theft</option>
+                                <option value="Robbery">Robbery</option>
+                                <option value="Burglary">Burglary</option>
+                                <option value="Other">Other</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -469,6 +477,7 @@
                                 <th>S.No.</th>
                                 <th>Acts</th>
                                 <th>Sections</th>
+                                <th>Description</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -477,6 +486,7 @@
                                 <td>1</td>
                                 <td><input type="text" placeholder="Enter Act"></td>
                                 <td><input type="text" placeholder="Enter Section"></td>
+                                <td><input type="text" placeholder="Description"></td>
                                 <td><button onclick="removeRow(this)">Remove</button></td>
                             </tr>
                         </tbody>
@@ -526,6 +536,8 @@
                                 <th>S.No.</th>
                                 <th>Nature of property seized</th>
                                 <th>Property Category</th>
+                                <th>Quantity</th>
+                                <th>Condition</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -534,6 +546,8 @@
                                 <td>1</td>
                                 <td><input type="text" placeholder="Nature of property"></td>
                                 <td><input type="text" placeholder="Property Category"></td>
+                                <td><input type="text" placeholder="Quantity"></td>
+                                <td><input type="text" placeholder="Condition"></td>
                                 <td><button onclick="removeRow(this)">Remove</button></td>
                             </tr>
                         </tbody>
@@ -567,6 +581,18 @@
                         </div>
                     </div>
 
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="personContact" class="required">Contact Number</label>
+                            <input type="text" id="personContact" placeholder="Enter contact number">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="personID" class="required">ID Proof Details</label>
+                            <input type="text" id="personID" placeholder="Enter ID proof details">
+                        </div>
+                    </div>
+
                     <h4>Address</h4>
                     <table id="addressTable">
                         <thead>
@@ -574,6 +600,8 @@
                                 <th>S.No.</th>
                                 <th>Address Type</th>
                                 <th>Address</th>
+                                <th>District</th>
+                                <th>Pincode</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -582,6 +610,8 @@
                                 <td>1</td>
                                 <td><input type="text" placeholder="Address Type"></td>
                                 <td><input type="text" placeholder="Address"></td>
+                                <td><input type="text" placeholder="District"></td>
+                                <td><input type="text" placeholder="Pincode"></td>
                                 <td><button onclick="removeRow(this)">Remove</button></td>
                             </tr>
                         </tbody>
@@ -607,6 +637,8 @@
                                 <th>Property Category</th>
                                 <th>Property Belongs to</th>
                                 <th>Value (In Rs/-)</th>
+                                <th>Recovery Status</th>
+                                <th>Storage Location</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -616,6 +648,15 @@
                                 <td><input type="text" placeholder="Property Category"></td>
                                 <td><input type="text" placeholder="Property Belongs to"></td>
                                 <td><input type="number" placeholder="Value"></td>
+                                <td>
+                                    <select>
+                                        <option value="">Select Status</option>
+                                        <option value="Recovered">Recovered</option>
+                                        <option value="Partially Recovered">Partially Recovered</option>
+                                        <option value="Not Recovered">Not Recovered</option>
+                                    </select>
+                                </td>
+                                <td><input type="text" placeholder="Storage Location"></td>
                                 <td><button onclick="removeRow(this)">Remove</button></td>
                             </tr>
                         </tbody>
@@ -638,9 +679,16 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="witness1Age" class="required">Age</label>
-                        <input type="number" id="witness1Age" placeholder="Enter age">
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="witness1Age" class="required">Age</label>
+                            <input type="number" id="witness1Age" placeholder="Enter age">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="witness1Contact" class="required">Contact Number</label>
+                            <input type="text" id="witness1Contact" placeholder="Enter contact number">
+                        </div>
                     </div>
 
                     <h4>Witness 1 Address</h4>
@@ -650,6 +698,8 @@
                                 <th>S.No.</th>
                                 <th>Address Type</th>
                                 <th>Address</th>
+                                <th>District</th>
+                                <th>Pincode</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -658,6 +708,8 @@
                                 <td>1</td>
                                 <td><input type="text" placeholder="Address Type"></td>
                                 <td><input type="text" placeholder="Address"></td>
+                                <td><input type="text" placeholder="District"></td>
+                                <td><input type="text" placeholder="Pincode"></td>
                                 <td><button onclick="removeRow(this)">Remove</button></td>
                             </tr>
                         </tbody>
@@ -677,9 +729,16 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="witness2Age" class="required">Age</label>
-                        <input type="number" id="witness2Age" placeholder="Enter age">
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="witness2Age" class="required">Age</label>
+                            <input type="number" id="witness2Age" placeholder="Enter age">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="witness2Contact" class="required">Contact Number</label>
+                            <input type="text" id="witness2Contact" placeholder="Enter contact number">
+                        </div>
                     </div>
 
                     <h4>Witness 2 Address</h4>
@@ -689,6 +748,8 @@
                                 <th>S.No.</th>
                                 <th>Address Type</th>
                                 <th>Address</th>
+                                <th>District</th>
+                                <th>Pincode</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -697,6 +758,8 @@
                                 <td>1</td>
                                 <td><input type="text" placeholder="Address Type"></td>
                                 <td><input type="text" placeholder="Address"></td>
+                                <td><input type="text" placeholder="District"></td>
+                                <td><input type="text" placeholder="Pincode"></td>
                                 <td><button onclick="removeRow(this)">Remove</button></td>
                             </tr>
                         </tbody>
@@ -711,7 +774,9 @@
                             <tr>
                                 <th>S.No.</th>
                                 <th>Property Category</th>
+                                <th>Property Description</th>
                                 <th>Action Taken</th>
+                                <th>Disposal Date</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -719,7 +784,9 @@
                             <tr>
                                 <td>1</td>
                                 <td><input type="text" placeholder="Property Category"></td>
+                                <td><input type="text" placeholder="Property Description"></td>
                                 <td><input type="text" placeholder="Action Taken"></td>
+                                <td><input type="date"></td>
                                 <td><button onclick="removeRow(this)">Remove</button></td>
                             </tr>
                         </tbody>
@@ -734,7 +801,9 @@
                             <tr>
                                 <th>S.No.</th>
                                 <th>Property Category</th>
+                                <th>Property Description</th>
                                 <th>Action Taken</th>
+                                <th>Storage Location</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -742,7 +811,9 @@
                             <tr>
                                 <td>1</td>
                                 <td><input type="text" placeholder="Property Category"></td>
+                                <td><input type="text" placeholder="Property Description"></td>
                                 <td><input type="text" placeholder="Action Taken"></td>
+                                <td><input type="text" placeholder="Storage Location"></td>
                                 <td><button onclick="removeRow(this)">Remove</button></td>
                             </tr>
                         </tbody>
@@ -759,6 +830,20 @@
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="identificationDetails">Identification Details</label>
+                        <div class="voice-input-wrapper">
+                            <textarea id="identificationDetails" placeholder="Enter identification details if required"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('identificationDetails')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-identificationDetails"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "identification method", "witness confirmation", "owner verification"
+                        </div>
                     </div>
                 </div>
 
@@ -799,7 +884,9 @@
                             <tr>
                                 <th>S.No.</th>
                                 <th>Property</th>
-                                <th>Indicate whether signature obtained on the packet or on the body of the property</th>
+                                <th>Packing Method</th>
+                                <th>Seal Details</th>
+                                <th>Signature Location</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -807,7 +894,9 @@
                             <tr>
                                 <td>1</td>
                                 <td><input type="text" placeholder="Property"></td>
-                                <td><input type="text" placeholder="Signature Details"></td>
+                                <td><input type="text" placeholder="Packing Method"></td>
+                                <td><input type="text" placeholder="Seal Details"></td>
+                                <td><input type="text" placeholder="Signature Location"></td>
                                 <td><button onclick="removeRow(this)">Remove</button></td>
                             </tr>
                         </tbody>
@@ -898,6 +987,11 @@
                             <input type="date" id="ioDate">
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <label for="supervisingOfficer" class="required">Supervising Officer Name</label>
+                        <input type="text" id="supervisingOfficer" placeholder="Enter supervising officer name">
+                    </div>
                 </div>
 
                 <div class="action-buttons">
@@ -915,7 +1009,7 @@
                 <div id="formPreview" class="form-preview">
                     <div class="preview-header">
                         <h3>CCTNS IIF-4 Form</h3>
-                        <p>Property Seizure/Recovery Report with Voice-to-Text</p>
+                        <p>Property Seizure/Recovery Report with Enhanced Features</p>
                     </div>
 
                     <div class="preview-section">
@@ -925,6 +1019,7 @@
                         <p><strong>Year:</strong> <span id="previewYear">Not specified</span></p>
                         <p><strong>FIR/GD No.:</strong> <span id="previewFirNo">Not specified</span></p>
                         <p><strong>Date:</strong> <span id="previewFirDate">Not specified</span></p>
+                        <p><strong>Case Type:</strong> <span id="previewCaseType">Not specified</span></p>
                     </div>
 
                     <div class="preview-section">
@@ -935,11 +1030,12 @@
                                     <th>S.No.</th>
                                     <th>Acts</th>
                                     <th>Sections</th>
+                                    <th>Description</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="3">No data available</td>
+                                    <td colspan="4">No data available</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -961,11 +1057,13 @@
                                     <th>S.No.</th>
                                     <th>Nature of property seized</th>
                                     <th>Property Category</th>
+                                    <th>Quantity</th>
+                                    <th>Condition</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="3">No data available</td>
+                                    <td colspan="5">No data available</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -977,6 +1075,8 @@
                         <p><strong>Husband's Name:</strong> <span id="previewHusbandName">Not specified</span></p>
                         <p><strong>Age:</strong> <span id="previewPersonAge">Not specified</span></p>
                         <p><strong>Occupation:</strong> <span id="previewPersonOccupation">Not specified</span></p>
+                        <p><strong>Contact Number:</strong> <span id="previewPersonContact">Not specified</span></p>
+                        <p><strong>ID Proof Details:</strong> <span id="previewPersonID">Not specified</span></p>
 
                         <h4>Address</h4>
                         <table id="previewAddressTable">
@@ -985,11 +1085,13 @@
                                     <th>S.No.</th>
                                     <th>Address Type</th>
                                     <th>Address</th>
+                                    <th>District</th>
+                                    <th>Pincode</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="3">No data available</td>
+                                    <td colspan="5">No data available</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1006,11 +1108,13 @@
                                     <th>Property Category</th>
                                     <th>Property Belongs to</th>
                                     <th>Value (In Rs/-)</th>
+                                    <th>Recovery Status</th>
+                                    <th>Storage Location</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="4">No data available</td>
+                                    <td colspan="6">No data available</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1023,6 +1127,7 @@
                         <p><strong>Name:</strong> <span id="previewWitness1Name">Not specified</span></p>
                         <p><strong>Father Name:</strong> <span id="previewWitness1Father">Not specified</span></p>
                         <p><strong>Age:</strong> <span id="previewWitness1Age">Not specified</span></p>
+                        <p><strong>Contact Number:</strong> <span id="previewWitness1Contact">Not specified</span></p>
 
                         <h4>Witness 1 Address</h4>
                         <table id="previewWitness1AddressTable">
@@ -1031,11 +1136,13 @@
                                     <th>S.No.</th>
                                     <th>Address Type</th>
                                     <th>Address</th>
+                                    <th>District</th>
+                                    <th>Pincode</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="3">No data available</td>
+                                    <td colspan="5">No data available</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1044,6 +1151,7 @@
                         <p><strong>Name:</strong> <span id="previewWitness2Name">Not specified</span></p>
                         <p><strong>Father Name:</strong> <span id="previewWitness2Father">Not specified</span></p>
                         <p><strong>Age:</strong> <span id="previewWitness2Age">Not specified</span></p>
+                        <p><strong>Contact Number:</strong> <span id="previewWitness2Contact">Not specified</span></p>
 
                         <h4>Witness 2 Address</h4>
                         <table id="previewWitness2AddressTable">
@@ -1052,11 +1160,13 @@
                                     <th>S.No.</th>
                                     <th>Address Type</th>
                                     <th>Address</th>
+                                    <th>District</th>
+                                    <th>Pincode</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="3">No data available</td>
+                                    <td colspan="5">No data available</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1069,12 +1179,14 @@
                                 <tr>
                                     <th>S.No.</th>
                                     <th>Property Category</th>
+                                    <th>Property Description</th>
                                     <th>Action Taken</th>
+                                    <th>Disposal Date</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="3">No data available</td>
+                                    <td colspan="5">No data available</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1087,12 +1199,14 @@
                                 <tr>
                                     <th>S.No.</th>
                                     <th>Property Category</th>
+                                    <th>Property Description</th>
                                     <th>Action Taken</th>
+                                    <th>Storage Location</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="3">No data available</td>
+                                    <td colspan="5">No data available</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1101,6 +1215,7 @@
                     <div class="preview-section">
                         <h4>9. Identification required</h4>
                         <p><strong>Identification required:</strong> <span id="previewIdentificationRequired">Not specified</span></p>
+                        <p><strong>Identification Details:</strong> <span id="previewIdentificationDetails">Not specified</span></p>
                     </div>
 
                     <div class="preview-section">
@@ -1122,12 +1237,14 @@
                                 <tr>
                                     <th>S.No.</th>
                                     <th>Property</th>
-                                    <th>Indicate whether signature obtained on the packet or on the body of the property</th>
+                                    <th>Packing Method</th>
+                                    <th>Seal Details</th>
+                                    <th>Signature Location</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="3">No data available</td>
+                                    <td colspan="5">No data available</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1154,6 +1271,7 @@
                         <p><strong>No.:</strong> <span id="previewIoNo">Not specified</span></p>
                         <p><strong>Place:</strong> <span id="previewIoPlace">Not specified</span></p>
                         <p><strong>Date:</strong> <span id="previewIoDate">Not specified</span></p>
+                        <p><strong>Supervising Officer:</strong> <span id="previewSupervisingOfficer">Not specified</span></p>
                     </div>
 
                     <div class="signature-area">
@@ -1369,6 +1487,7 @@
             const year = document.getElementById('year').value || 'Not specified';
             const firNo = document.getElementById('firNo').value || 'Not specified';
             const firDate = document.getElementById('firDate').value;
+            const caseType = document.getElementById('caseType').value || 'Not specified';
             const seizureDate = document.getElementById('seizureDate').value;
             const seizureTime = document.getElementById('seizureTime').value;
             const seizurePlace = document.getElementById('seizurePlace').value || 'Not specified';
@@ -1377,14 +1496,19 @@
             const husbandName = document.getElementById('husbandName').value || 'Not specified';
             const personAge = document.getElementById('personAge').value || 'Not specified';
             const personOccupation = document.getElementById('personOccupation').value || 'Not specified';
+            const personContact = document.getElementById('personContact').value || 'Not specified';
+            const personID = document.getElementById('personID').value || 'Not specified';
             const professionalReceiver = document.getElementById('professionalReceiver').value || 'Not specified';
             const witness1Name = document.getElementById('witness1Name').value || 'Not specified';
             const witness1Father = document.getElementById('witness1Father').value || 'Not specified';
             const witness1Age = document.getElementById('witness1Age').value || 'Not specified';
+            const witness1Contact = document.getElementById('witness1Contact').value || 'Not specified';
             const witness2Name = document.getElementById('witness2Name').value || 'Not specified';
             const witness2Father = document.getElementById('witness2Father').value || 'Not specified';
             const witness2Age = document.getElementById('witness2Age').value || 'Not specified';
+            const witness2Contact = document.getElementById('witness2Contact').value || 'Not specified';
             const identificationRequired = document.getElementById('identificationRequired').value || 'Not specified';
+            const identificationDetails = document.getElementById('identificationDetails').value || 'Not specified';
             const seizureGrounds = document.getElementById('seizureGrounds').value || 'Not specified';
             const seizureStatementCheck = document.getElementById('seizureStatementCheck').checked;
             const packingSealingCheck = document.getElementById('packingSealingCheck').checked;
@@ -1400,6 +1524,7 @@
             const ioNo = document.getElementById('ioNo').value || 'Not specified';
             const ioPlace = document.getElementById('ioPlace').value || 'Not specified';
             const ioDate = document.getElementById('ioDate').value;
+            const supervisingOfficer = document.getElementById('supervisingOfficer').value || 'Not specified';
 
             // Format date and time
             const formatDate = (dateStr) => dateStr ? new Date(dateStr).toLocaleDateString('en-GB') : 'Not specified';
@@ -1411,6 +1536,7 @@
             document.getElementById('previewYear').textContent = year;
             document.getElementById('previewFirNo').textContent = firNo;
             document.getElementById('previewFirDate').textContent = formatDate(firDate);
+            document.getElementById('previewCaseType').textContent = caseType;
             document.getElementById('previewSeizureDate').textContent = formatDate(seizureDate);
             document.getElementById('previewSeizureTime').textContent = formatTime(seizureTime);
             document.getElementById('previewSeizurePlace').textContent = seizurePlace;
@@ -1419,14 +1545,19 @@
             document.getElementById('previewHusbandName').textContent = husbandName;
             document.getElementById('previewPersonAge').textContent = personAge;
             document.getElementById('previewPersonOccupation').textContent = personOccupation;
+            document.getElementById('previewPersonContact').textContent = personContact;
+            document.getElementById('previewPersonID').textContent = personID;
             document.getElementById('previewProfessionalReceiver').textContent = professionalReceiver;
             document.getElementById('previewWitness1Name').textContent = witness1Name;
             document.getElementById('previewWitness1Father').textContent = witness1Father;
             document.getElementById('previewWitness1Age').textContent = witness1Age;
+            document.getElementById('previewWitness1Contact').textContent = witness1Contact;
             document.getElementById('previewWitness2Name').textContent = witness2Name;
             document.getElementById('previewWitness2Father').textContent = witness2Father;
             document.getElementById('previewWitness2Age').textContent = witness2Age;
+            document.getElementById('previewWitness2Contact').textContent = witness2Contact;
             document.getElementById('previewIdentificationRequired').textContent = identificationRequired;
+            document.getElementById('previewIdentificationDetails').textContent = identificationDetails;
             document.getElementById('previewSeizureGrounds').textContent = seizureGrounds;
             document.getElementById('previewSeizureStatement').textContent = seizureStatementCheck ?
                 'The above mentioned properties were seized in accordance with the provisions of law in the presence of the above said witnesses and a copy of the seizure form was given to the person/ the occupant of the place from whom seized' :
@@ -1446,6 +1577,7 @@
             document.getElementById('previewIoNo').textContent = ioNo;
             document.getElementById('previewIoPlace').textContent = ioPlace;
             document.getElementById('previewIoDate').textContent = formatDate(ioDate);
+            document.getElementById('previewSupervisingOfficer').textContent = supervisingOfficer;
 
             // Update tables
             updatePreviewTable('actsTable', 'previewActsTable');
@@ -1480,7 +1612,8 @@
 
                 for (let j = 1; j < row.cells.length - 1; j++) {
                     const input = row.cells[j].querySelector('input');
-                    if (input && input.value) {
+                    const select = row.cells[j].querySelector('select');
+                    if ((input && input.value) || (select && select.value)) {
                         rowHasData = true;
                         break;
                     }
@@ -1497,8 +1630,17 @@
                     // Add data cells
                     for (let j = 1; j < row.cells.length - 1; j++) {
                         const input = row.cells[j].querySelector('input');
+                        const select = row.cells[j].querySelector('select');
                         const cell = document.createElement('td');
-                        cell.textContent = input ? input.value : '';
+                        
+                        if (input) {
+                            cell.textContent = input.value;
+                        } else if (select) {
+                            cell.textContent = select.value;
+                        } else {
+                            cell.textContent = '';
+                        }
+                        
                         newRow.appendChild(cell);
                     }
 
@@ -1643,6 +1785,7 @@
                 document.getElementById('year').value = data.year || '';
                 document.getElementById('firNo').value = data.firNo || '';
                 document.getElementById('firDate').value = data.firDate || '';
+                document.getElementById('caseType').value = data.caseType || '';
                 document.getElementById('seizureDate').value = data.seizureDate || '';
                 document.getElementById('seizureTime').value = data.seizureTime || '';
                 document.getElementById('seizurePlace').value = data.seizurePlace || '';
@@ -1651,14 +1794,19 @@
                 document.getElementById('husbandName').value = data.husbandName || '';
                 document.getElementById('personAge').value = data.personAge || '';
                 document.getElementById('personOccupation').value = data.personOccupation || '';
+                document.getElementById('personContact').value = data.personContact || '';
+                document.getElementById('personID').value = data.personID || '';
                 document.getElementById('professionalReceiver').value = data.professionalReceiver || '';
                 document.getElementById('witness1Name').value = data.witness1Name || '';
                 document.getElementById('witness1Father').value = data.witness1Father || '';
                 document.getElementById('witness1Age').value = data.witness1Age || '';
+                document.getElementById('witness1Contact').value = data.witness1Contact || '';
                 document.getElementById('witness2Name').value = data.witness2Name || '';
                 document.getElementById('witness2Father').value = data.witness2Father || '';
                 document.getElementById('witness2Age').value = data.witness2Age || '';
+                document.getElementById('witness2Contact').value = data.witness2Contact || '';
                 document.getElementById('identificationRequired').value = data.identificationRequired || '';
+                document.getElementById('identificationDetails').value = data.identificationDetails || '';
                 document.getElementById('seizureGrounds').value = data.seizureGrounds || '';
                 document.getElementById('seizureStatementCheck').checked = data.seizureStatementCheck || false;
                 document.getElementById('packingSealingCheck').checked = data.packingSealingCheck || false;
@@ -1674,6 +1822,7 @@
                 document.getElementById('ioNo').value = data.ioNo || '';
                 document.getElementById('ioPlace').value = data.ioPlace || '';
                 document.getElementById('ioDate').value = data.ioDate || '';
+                document.getElementById('supervisingOfficer').value = data.supervisingOfficer || '';
 
                 // Restore tables
                 restoreTableData('actsTable', data.actsTable);
@@ -1707,6 +1856,7 @@
                 year: document.getElementById('year').value,
                 firNo: document.getElementById('firNo').value,
                 firDate: document.getElementById('firDate').value,
+                caseType: document.getElementById('caseType').value,
                 seizureDate: document.getElementById('seizureDate').value,
                 seizureTime: document.getElementById('seizureTime').value,
                 seizurePlace: document.getElementById('seizurePlace').value,
@@ -1715,14 +1865,19 @@
                 husbandName: document.getElementById('husbandName').value,
                 personAge: document.getElementById('personAge').value,
                 personOccupation: document.getElementById('personOccupation').value,
+                personContact: document.getElementById('personContact').value,
+                personID: document.getElementById('personID').value,
                 professionalReceiver: document.getElementById('professionalReceiver').value,
                 witness1Name: document.getElementById('witness1Name').value,
                 witness1Father: document.getElementById('witness1Father').value,
                 witness1Age: document.getElementById('witness1Age').value,
+                witness1Contact: document.getElementById('witness1Contact').value,
                 witness2Name: document.getElementById('witness2Name').value,
                 witness2Father: document.getElementById('witness2Father').value,
                 witness2Age: document.getElementById('witness2Age').value,
+                witness2Contact: document.getElementById('witness2Contact').value,
                 identificationRequired: document.getElementById('identificationRequired').value,
+                identificationDetails: document.getElementById('identificationDetails').value,
                 seizureGrounds: document.getElementById('seizureGrounds').value,
                 seizureStatementCheck: document.getElementById('seizureStatementCheck').checked,
                 packingSealingCheck: document.getElementById('packingSealingCheck').checked,
@@ -1738,6 +1893,7 @@
                 ioNo: document.getElementById('ioNo').value,
                 ioPlace: document.getElementById('ioPlace').value,
                 ioDate: document.getElementById('ioDate').value,
+                supervisingOfficer: document.getElementById('supervisingOfficer').value,
 
                 // Table data
                 actsTable: getTableData('actsTable'),
@@ -1764,8 +1920,11 @@
 
                 for (let j = 1; j < row.cells.length - 1; j++) {
                     const input = row.cells[j].querySelector('input');
+                    const select = row.cells[j].querySelector('select');
                     if (input) {
                         rowData[`col${j}`] = input.value;
+                    } else if (select) {
+                        rowData[`col${j}`] = select.value;
                     }
                 }
 
@@ -1791,8 +1950,11 @@
 
                     for (let j = 1; j < row.cells.length - 1; j++) {
                         const input = row.cells[j].querySelector('input');
+                        const select = row.cells[j].querySelector('select');
                         if (input && tableData[i][`col${j}`]) {
                             input.value = tableData[i][`col${j}`];
+                        } else if (select && tableData[i][`col${j}`]) {
+                            select.value = tableData[i][`col${j}`];
                         }
                     }
                 }
@@ -1819,52 +1981,93 @@
                 const cell1 = row.insertCell(1);
                 const cell2 = row.insertCell(2);
                 const cell3 = row.insertCell(3);
+                const cell4 = row.insertCell(4);
 
                 cell1.innerHTML = '<input type="text" placeholder="Enter Act">';
                 cell2.innerHTML = '<input type="text" placeholder="Enter Section">';
-                cell3.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+                cell3.innerHTML = '<input type="text" placeholder="Description">';
+                cell4.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
             } else if (tableId === 'naturePropertyTable') {
                 const cell1 = row.insertCell(1);
                 const cell2 = row.insertCell(2);
                 const cell3 = row.insertCell(3);
+                const cell4 = row.insertCell(4);
+                const cell5 = row.insertCell(5);
 
                 cell1.innerHTML = '<input type="text" placeholder="Nature of property">';
                 cell2.innerHTML = '<input type="text" placeholder="Property Category">';
-                cell3.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+                cell3.innerHTML = '<input type="text" placeholder="Quantity">';
+                cell4.innerHTML = '<input type="text" placeholder="Condition">';
+                cell5.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
             } else if (tableId === 'addressTable' || tableId === 'witness1AddressTable' || tableId === 'witness2AddressTable') {
                 const cell1 = row.insertCell(1);
                 const cell2 = row.insertCell(2);
                 const cell3 = row.insertCell(3);
+                const cell4 = row.insertCell(4);
+                const cell5 = row.insertCell(5);
 
                 cell1.innerHTML = '<input type="text" placeholder="Address Type">';
                 cell2.innerHTML = '<input type="text" placeholder="Address">';
-                cell3.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+                cell3.innerHTML = '<input type="text" placeholder="District">';
+                cell4.innerHTML = '<input type="text" placeholder="Pincode">';
+                cell5.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
             } else if (tableId === 'propertiesTable') {
                 const cell1 = row.insertCell(1);
                 const cell2 = row.insertCell(2);
                 const cell3 = row.insertCell(3);
                 const cell4 = row.insertCell(4);
+                const cell5 = row.insertCell(5);
+                const cell6 = row.insertCell(6);
 
                 cell1.innerHTML = '<input type="text" placeholder="Property Category">';
                 cell2.innerHTML = '<input type="text" placeholder="Property Belongs to">';
                 cell3.innerHTML = '<input type="number" placeholder="Value">';
-                cell4.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
-            } else if (tableId === 'perishableTable' || tableId === 'valuableTable') {
+                cell4.innerHTML = `
+                    <select>
+                        <option value="">Select Status</option>
+                        <option value="Recovered">Recovered</option>
+                        <option value="Partially Recovered">Partially Recovered</option>
+                        <option value="Not Recovered">Not Recovered</option>
+                    </select>
+                `;
+                cell5.innerHTML = '<input type="text" placeholder="Storage Location">';
+                cell6.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+            } else if (tableId === 'perishableTable') {
                 const cell1 = row.insertCell(1);
                 const cell2 = row.insertCell(2);
                 const cell3 = row.insertCell(3);
+                const cell4 = row.insertCell(4);
+                const cell5 = row.insertCell(5);
 
                 cell1.innerHTML = '<input type="text" placeholder="Property Category">';
-                cell2.innerHTML = '<input type="text" placeholder="Action Taken">';
-                cell3.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+                cell2.innerHTML = '<input type="text" placeholder="Property Description">';
+                cell3.innerHTML = '<input type="text" placeholder="Action Taken">';
+                cell4.innerHTML = '<input type="date">';
+                cell5.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+            } else if (tableId === 'valuableTable') {
+                const cell1 = row.insertCell(1);
+                const cell2 = row.insertCell(2);
+                const cell3 = row.insertCell(3);
+                const cell4 = row.insertCell(4);
+                const cell5 = row.insertCell(5);
+
+                cell1.innerHTML = '<input type="text" placeholder="Property Category">';
+                cell2.innerHTML = '<input type="text" placeholder="Property Description">';
+                cell3.innerHTML = '<input type="text" placeholder="Action Taken">';
+                cell4.innerHTML = '<input type="text" placeholder="Storage Location">';
+                cell5.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
             } else if (tableId === 'packingTable') {
                 const cell1 = row.insertCell(1);
                 const cell2 = row.insertCell(2);
                 const cell3 = row.insertCell(3);
+                const cell4 = row.insertCell(4);
+                const cell5 = row.insertCell(5);
 
                 cell1.innerHTML = '<input type="text" placeholder="Property">';
-                cell2.innerHTML = '<input type="text" placeholder="Signature Details">';
-                cell3.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+                cell2.innerHTML = '<input type="text" placeholder="Packing Method">';
+                cell3.innerHTML = '<input type="text" placeholder="Seal Details">';
+                cell4.innerHTML = '<input type="text" placeholder="Signature Location">';
+                cell5.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
             } else {
                 // Default for single column tables
                 const cell1 = row.insertCell(1);
