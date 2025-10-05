@@ -366,6 +366,7 @@
             font-size: 0.8rem;
             color: #666;
             font-style: italic;
+            margin-top: 5px;
         }
 
         @media (max-width: 768px) {
@@ -410,7 +411,7 @@
     <div class="container">
         <header>
             <h1>CCTNS IIF-2 Form Generator</h1>
-            <p>Crime Investigation Form - Complete with All Required Tables</p>
+            <p>Crime Investigation Form - Complete with Voice-to-Text Features</p>
         </header>
 
         <div class="content">
@@ -463,8 +464,22 @@
                     <button onclick="addNewRow('actsTable')">Add New Row</button>
                 </div>
 
-                <div class="section-title" onclick="toggleSection('placeOfOccurrence')">3. Place of Occurrence Shown By</div>
+                <div class="section-title" onclick="toggleSection('placeOfOccurrence')">3. Place of Occurrence</div>
                 <div id="placeOfOccurrence" class="section-content">
+                    <div class="form-group">
+                        <label for="occurrenceAddress">Address of Occurrence</label>
+                        <div class="voice-input-wrapper">
+                            <textarea id="occurrenceAddress" placeholder="Enter complete address of occurrence location"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('occurrenceAddress')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-occurrenceAddress"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "house number", "street", "landmark", "city", "pin code"
+                        </div>
+                    </div>
+
                     <table id="occurrenceTable">
                         <thead>
                             <tr>
@@ -669,63 +684,121 @@
                     <div class="form-group">
                         <label for="victimInfo">Victim Details</label>
                         <div class="voice-input-wrapper">
-                            <textarea id="victimInfo" placeholder="Enter victim details"></textarea>
+                            <textarea id="victimInfo" placeholder="Enter complete victim details including name, age, address, contact information"></textarea>
                             <button class="voice-btn" onclick="toggleVoiceInput('victimInfo')">
                                 <i class="fas fa-microphone"></i>
                             </button>
                             <div class="voice-status" id="status-victimInfo"></div>
                         </div>
                         <div class="voice-command-hint">
-                            Try saying: "victim name", "age", "gender", "contact details"
+                            Try saying: "victim name", "age", "gender", "contact details", "injuries sustained"
                         </div>
                     </div>
                 </div>
 
-                <div class="section-title" onclick="toggleSection('motive')">6. Motive of Crime</div>
+                <div class="section-title" onclick="toggleSection('complainantInfo')">6. Complainant / Informant Details</div>
+                <div id="complainantInfo" class="section-content">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="complainantName">Name</label>
+                                <input type="text" id="complainantName" placeholder="Enter name">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="complainantFather">Father's / Husband's Name</label>
+                                <input type="text" id="complainantFather" placeholder="Enter father's/husband's name">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="complainantAddress">Address</label>
+                        <div class="voice-input-wrapper">
+                            <textarea id="complainantAddress" placeholder="Enter complete complainant address"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('complainantAddress')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-complainantAddress"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "house number", "street name", "area", "city", "pin code"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('accusedDetails')">7. Accused & Other Details</div>
+                <div id="accusedDetails" class="section-content">
+                    <div class="form-group">
+                        <label for="accusedDetailsText">Details of Accused Persons</label>
+                        <div class="voice-input-wrapper">
+                            <textarea id="accusedDetailsText" placeholder="Enter complete accused details including names, descriptions, roles in crime"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('accusedDetailsText')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-accusedDetailsText"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "suspect name", "age", "description", "clothing", "weapons used"
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="delayDetails">Reasons for Delay in Reporting</label>
+                        <div class="voice-input-wrapper">
+                            <textarea id="delayDetails" placeholder="Enter reasons for any delay in reporting the crime"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('delayDetails')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-delayDetails"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "fear", "threats", "unaware", "hospitalization", "witness unavailable"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('motive')">8. Motive of Crime</div>
                 <div id="motive" class="section-content">
-                    <table id="motiveTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Motive of Crime</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Motive of Crime"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <button onclick="addNewRow('motiveTable')">Add New Row</button>
+                    <div class="form-group">
+                        <label for="motiveText">Motive Details</label>
+                        <div class="voice-input-wrapper">
+                            <textarea id="motiveText" placeholder="Enter detailed motive behind the crime"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('motiveText')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-motiveText"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "revenge", "financial gain", "personal dispute", "property dispute"
+                        </div>
+                    </div>
                 </div>
 
-                <div class="section-title" onclick="toggleSection('stolenProperties')">7. Details of Properties Stolen</div>
+                <div class="section-title" onclick="toggleSection('stolenProperties')">9. Details of Properties Stolen</div>
                 <div id="stolenProperties" class="section-content">
-                    <table id="stolenPropertyTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Property Type</th>
-                                <th>Property Name</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Property Type"></td>
-                                <td><input type="text" placeholder="Property Name"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <button onclick="addNewRow('stolenPropertyTable')">Add New Row</button>
+                    <div class="form-group">
+                        <label for="propertyInfo">Property Particulars</label>
+                        <div class="voice-input-wrapper">
+                            <textarea id="propertyInfo" placeholder="Enter detailed description of stolen properties"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('propertyInfo')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-propertyInfo"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "cash amount", "jewelry description", "electronic devices", "vehicle details"
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="propertyValue">Estimated Value</label>
+                        <input type="text" id="propertyValue" placeholder="Enter estimated value">
+                    </div>
                 </div>
 
-                <div class="section-title" onclick="toggleSection('visitDetails')">8. Date and Time of Visit to the Place of Occurrence</div>
+                <div class="section-title" onclick="toggleSection('visitDetails')">10. Date and Time of Visit to the Place of Occurrence</div>
                 <div id="visitDetails" class="section-content">
                     <table id="visitTable">
                         <thead>
@@ -748,37 +821,37 @@
                     <button onclick="addNewRow('visitTable')">Add New Row</button>
                 </div>
 
-                <div class="section-title" onclick="toggleSection('placeDescription')">9. Description of the Place of Occurrence</div>
+                <div class="section-title" onclick="toggleSection('placeDescription')">11. Description of the Place of Occurrence</div>
                 <div id="placeDescription" class="section-content">
                     <div class="form-group">
-                        <label for="placeDescriptionText">Description of the Place of Occurrence</label>
+                        <label for="placeDescriptionText">Detailed Description</label>
                         <div class="voice-input-wrapper">
-                            <textarea id="placeDescriptionText" placeholder="Enter description of place of occurrence"></textarea>
+                            <textarea id="placeDescriptionText" placeholder="Enter detailed description of place of occurrence"></textarea>
                             <button class="voice-btn" onclick="toggleVoiceInput('placeDescriptionText')">
                                 <i class="fas fa-microphone"></i>
                             </button>
                             <div class="voice-status" id="status-placeDescriptionText"></div>
                         </div>
                         <div class="voice-command-hint">
-                            Try saying: "building type", "room layout", "access points", "neighborhood"
+                            Try saying: "building type", "room layout", "access points", "neighborhood description"
                         </div>
                     </div>
                 </div>
 
-                <div class="section-title" onclick="toggleSection('physicalEvidence')">10. Description of Physical Evidence</div>
+                <div class="section-title" onclick="toggleSection('physicalEvidence')">12. Description of Physical Evidence</div>
                 <div id="physicalEvidence" class="section-content">
                     <h4>Physical Evidence Details</h4>
                     <div class="form-group">
-                        <label for="physicalEvidenceText">Details of Physical Evidence</label>
+                        <label for="physicalEvidenceText">Evidence Collected</label>
                         <div class="voice-input-wrapper">
-                            <textarea id="physicalEvidenceText" placeholder="Enter physical evidence details"></textarea>
+                            <textarea id="physicalEvidenceText" placeholder="Enter detailed description of physical evidence collected"></textarea>
                             <button class="voice-btn" onclick="toggleVoiceInput('physicalEvidenceText')">
                                 <i class="fas fa-microphone"></i>
                             </button>
                             <div class="voice-status" id="status-physicalEvidenceText"></div>
                         </div>
                         <div class="voice-command-hint">
-                            Try saying: "fingerprints", "weapons", "clothing", "footprints", "DNA samples"
+                            Try saying: "fingerprints location", "weapons found", "clothing items", "footprints", "DNA samples"
                         </div>
                     </div>
 
@@ -804,19 +877,19 @@
                     <button onclick="addNewRow('witnessTable')">Add New Row</button>
                 </div>
 
-                <div class="section-title" onclick="toggleSection('sketch')">11. Sketch / Map of the Place of Occurrence</div>
+                <div class="section-title" onclick="toggleSection('sketch')">13. Sketch / Map of the Place of Occurrence</div>
                 <div id="sketch" class="section-content">
                     <div class="form-group">
-                        <label for="sketchDetails">Sketch/Map Details</label>
+                        <label for="sketchDetails">Sketch/Map Description</label>
                         <div class="voice-input-wrapper">
-                            <textarea id="sketchDetails" placeholder="Enter sketch/map details"></textarea>
+                            <textarea id="sketchDetails" placeholder="Enter detailed description of sketch/map"></textarea>
                             <button class="voice-btn" onclick="toggleVoiceInput('sketchDetails')">
                                 <i class="fas fa-microphone"></i>
                             </button>
                             <div class="voice-status" id="status-sketchDetails"></div>
                         </div>
                         <div class="voice-command-hint">
-                            Try saying: "north direction", "measurements", "landmarks", "entry exit points"
+                            Try saying: "north direction", "measurements", "landmarks", "entry exit points", "scale"
                         </div>
                     </div>
 
@@ -826,19 +899,53 @@
                     </div>
                 </div>
 
-                <div class="section-title" onclick="toggleSection('gist')">12. Gist</div>
+                <div class="section-title" onclick="toggleSection('firContents')">14. FIR Contents</div>
+                <div id="firContents" class="section-content">
+                    <div class="form-group">
+                        <label for="firText">FIR Detailed Contents</label>
+                        <div class="voice-input-wrapper">
+                            <textarea id="firText" placeholder="Enter complete FIR contents and narrative"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('firText')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-firText"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "incident description", "sequence of events", "witness statements", "evidence details"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('actionTaken')">15. Action Taken Details</div>
+                <div id="actionTaken" class="section-content">
+                    <div class="form-group">
+                        <label for="actionDetails">Investigation Actions</label>
+                        <div class="voice-input-wrapper">
+                            <textarea id="actionDetails" placeholder="Enter detailed actions taken during investigation"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('actionDetails')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-actionDetails"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "investigation started", "suspect detained", "evidence secured", "witness interviewed"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('gist')">16. Gist of Investigation</div>
                 <div id="gist" class="section-content">
                     <div class="form-group">
-                        <label for="gistText">Gist</label>
+                        <label for="gistText">Investigation Summary</label>
                         <div class="voice-input-wrapper">
-                            <textarea id="gistText" placeholder="Enter gist of the investigation"></textarea>
+                            <textarea id="gistText" placeholder="Enter comprehensive gist of the investigation"></textarea>
                             <button class="voice-btn" onclick="toggleVoiceInput('gistText')">
                                 <i class="fas fa-microphone"></i>
                             </button>
                             <div class="voice-status" id="status-gistText"></div>
                         </div>
                         <div class="voice-command-hint">
-                            Try saying: "summary", "key findings", "conclusions", "recommendations"
+                            Try saying: "summary of findings", "key evidence", "suspect identification", "case status"
                         </div>
                     </div>
                 </div>
@@ -886,9 +993,10 @@
                 <div id="formPreview" class="form-preview">
                     <div class="preview-header">
                         <h3>CCTNS IIF-2 Form</h3>
-                        <p>Crime Investigation Report</p>
+                        <p>Crime Investigation Report with Voice-to-Text</p>
                     </div>
 
+                    <!-- Preview content will be generated here -->
                     <div class="preview-section">
                         <h4>1. Basic Information</h4>
                         <p><strong>District:</strong> <span id="previewDistrict">Not specified</span></p>
@@ -898,180 +1006,8 @@
                     </div>
 
                     <div class="preview-section">
-                        <h4>2. Acts & Sections</h4>
-                        <table id="previewActsTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Acts</th>
-                                    <th>Sections</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="3">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="preview-section">
-                        <h4>3. Place of Occurrence Shown By</h4>
-                        <table id="previewOccurrenceTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Name</th>
-                                    <th>Relative Type</th>
-                                    <th>Relative Name</th>
-                                    <th>Address</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="5">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="preview-section">
-                        <h4>4. Type of Crime</h4>
-
-                        <h4>I. Major Head</h4>
-                        <table id="previewMajorHeadTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Major Head</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="2">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <h4>II. Minor Head</h4>
-                        <table id="previewMinorHeadTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Minor Head</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="2">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <h4>III. Modus Operandi</h4>
-                        <table id="previewModusOperandiTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Modus Operandi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="2">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <h4>IV. Conveyance(s) Used</h4>
-                        <table id="previewConveyanceTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Conveyance(s) Used</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="2">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <h4>V. Character Assumed</h4>
-                        <table id="previewCharacterTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Character Assumed</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="2">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <h4>VI. Language/Dialect Used</h4>
-                        <table id="previewLanguageTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Language/Dialect Used</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="2">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <h4>VII. Special Feature</h4>
-                        <table id="previewSpecialFeatureTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Special Feature</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="2">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <h4>VIII. Type of Place of Occurrence</h4>
-                        <table id="previewPlaceTypeTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Type of Place of Occurrence</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="2">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <h4>IX. Type of Property Stolen</h4>
-                        <table id="previewPropertyTypeTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Type of Property Stolen</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="2">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <h4>3. Place of Occurrence</h4>
+                        <p><strong>Address:</strong> <span id="previewOccurrenceAddress">Not specified</span></p>
                     </div>
 
                     <div class="preview-section">
@@ -1080,94 +1016,57 @@
                     </div>
 
                     <div class="preview-section">
-                        <h4>6. Motive of Crime</h4>
-                        <table id="previewMotiveTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Motive of Crime</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="2">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <h4>6. Complainant / Informant Details</h4>
+                        <p><strong>Name:</strong> <span id="previewComplainantName">Not specified</span></p>
+                        <p><strong>Father's/Husband's Name:</strong> <span id="previewComplainantFather">Not specified</span></p>
+                        <p><strong>Address:</strong> <span id="previewComplainantAddress">Not specified</span></p>
                     </div>
 
                     <div class="preview-section">
-                        <h4>7. Details of Properties Stolen</h4>
-                        <table id="previewStolenPropertyTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Property Type</th>
-                                    <th>Property Name</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="3">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <h4>7. Accused & Other Details</h4>
+                        <p><strong>Accused Details:</strong> <span id="previewAccusedDetails">Not specified</span></p>
+                        <p><strong>Delay Reasons:</strong> <span id="previewDelayDetails">Not specified</span></p>
                     </div>
 
                     <div class="preview-section">
-                        <h4>8. Date and Time of Visit to the Place of Occurrence</h4>
-                        <table id="previewVisitTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Date</th>
-                                    <th>Time</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="3">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <h4>8. Motive of Crime</h4>
+                        <p id="previewMotiveText">Not specified</p>
                     </div>
 
                     <div class="preview-section">
-                        <h4>9. Description of the Place of Occurrence</h4>
+                        <h4>9. Details of Properties Stolen</h4>
+                        <p><strong>Property Particulars:</strong> <span id="previewPropertyInfo">Not specified</span></p>
+                        <p><strong>Estimated Value:</strong> <span id="previewPropertyValue">Not specified</span></p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>11. Description of the Place of Occurrence</h4>
                         <p id="previewPlaceDescription">Not specified</p>
                     </div>
 
                     <div class="preview-section">
-                        <h4>10. Description of Physical Evidence</h4>
-
-                        <h4>Physical Evidence Details</h4>
+                        <h4>12. Description of Physical Evidence</h4>
                         <p id="previewPhysicalEvidence">Not specified</p>
-
-                        <h4>Witness Details</h4>
-                        <table id="previewWitnessTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Witness Name</th>
-                                    <th>Address</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="3">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
 
                     <div class="preview-section">
-                        <h4>11. Sketch / Map of the Place of Occurrence</h4>
+                        <h4>13. Sketch / Map of the Place of Occurrence</h4>
                         <p id="previewSketchDetails">Not specified</p>
                         <p><strong>Prepared by draftsman:</strong> <span id="previewDraftsman">No</span></p>
                     </div>
 
                     <div class="preview-section">
-                        <h4>12. Gist</h4>
+                        <h4>14. FIR Contents</h4>
+                        <p id="previewFirText">Not specified</p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>15. Action Taken Details</h4>
+                        <p id="previewActionDetails">Not specified</p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h4>16. Gist of Investigation</h4>
                         <p id="previewGistText">Not specified</p>
                     </div>
 
@@ -1355,43 +1254,8 @@
             voiceSystem.startListening(fieldId);
         }
 
-        // ==================== AUTHENTICATION & SECURITY ====================
+        // ==================== FORM FUNCTIONS ====================
         document.addEventListener('DOMContentLoaded', function () {
-            // Check if user is authenticated
-            const token = localStorage.getItem('token');
-            const user = localStorage.getItem('user');
-
-            if (!token || !user) {
-                alert('Authentication required. Please login first.');
-                if (window.parent !== window) {
-                    window.parent.postMessage({ type: 'AUTH_REQUIRED' }, '*');
-                } else {
-                    window.location.href = '../index.html';
-                }
-                return;
-            }
-
-            // Set officer name from logged in user
-            try {
-                const userData = JSON.parse(user);
-                document.getElementById('officerName').value = userData.fullName || 'Officer';
-                document.getElementById('investigationOfficer').value = userData.fullName || 'Officer';
-            } catch (e) {
-                console.error('Error parsing user data:', e);
-            }
-
-            // Listen for authentication token from parent
-            window.addEventListener('message', function (event) {
-                if (event.data.type === 'AUTH_TOKEN' && event.data.token) {
-                    localStorage.setItem('token', event.data.token);
-                }
-            });
-
-            // Notify parent that form is loaded
-            if (window.parent !== window) {
-                window.parent.postMessage({ type: 'FORM_LOADED', formType: 'IIF-2' }, '*');
-            }
-
             // Set current date
             const now = new Date();
             document.getElementById('generationDate').textContent = now.toLocaleString();
@@ -1420,17 +1284,27 @@
             generatePreview();
         });
 
-        // ==================== FORM FUNCTIONS ====================
         function generatePreview() {
-            // Get form values
+            // Get all form values
             const district = document.getElementById('district').value || 'Not specified';
             const policeStation = document.getElementById('policeStation').value || 'Not specified';
             const firNo = document.getElementById('firNo').value || 'Not specified';
             const firDate = document.getElementById('firDate').value;
+            const occurrenceAddress = document.getElementById('occurrenceAddress').value || 'Not specified';
             const victimInfo = document.getElementById('victimInfo').value || 'Not specified';
+            const complainantName = document.getElementById('complainantName').value || 'Not specified';
+            const complainantFather = document.getElementById('complainantFather').value || 'Not specified';
+            const complainantAddress = document.getElementById('complainantAddress').value || 'Not specified';
+            const accusedDetails = document.getElementById('accusedDetailsText').value || 'Not specified';
+            const delayDetails = document.getElementById('delayDetails').value || 'Not specified';
+            const motiveText = document.getElementById('motiveText').value || 'Not specified';
+            const propertyInfo = document.getElementById('propertyInfo').value || 'Not specified';
+            const propertyValue = document.getElementById('propertyValue').value || 'Not specified';
             const placeDescriptionText = document.getElementById('placeDescriptionText').value || 'Not specified';
             const physicalEvidenceText = document.getElementById('physicalEvidenceText').value || 'Not specified';
             const sketchDetails = document.getElementById('sketchDetails').value || 'Not specified';
+            const firText = document.getElementById('firText').value || 'Not specified';
+            const actionDetails = document.getElementById('actionDetails').value || 'Not specified';
             const gistText = document.getElementById('gistText').value || 'Not specified';
             const draftsmanPrepared = document.getElementById('draftsmanPrepared').checked;
             const investigationOfficer = document.getElementById('investigationOfficer').value || 'Not specified';
@@ -1439,19 +1313,30 @@
             const officerNo = document.getElementById('officerNo').value || 'Not specified';
             const completionDate = document.getElementById('completionDate').value;
 
-            // Format date and time
+            // Format dates
             const formattedFirDate = firDate ? new Date(firDate).toLocaleDateString('en-GB') : 'Not specified';
             const formattedCompletionDate = completionDate ? new Date(completionDate).toLocaleDateString('en-GB') : 'Not specified';
 
-            // Update preview
+            // Update all preview elements
             document.getElementById('previewDistrict').textContent = district;
             document.getElementById('previewPoliceStation').textContent = policeStation;
             document.getElementById('previewFirNo').textContent = firNo;
             document.getElementById('previewFirDate').textContent = formattedFirDate;
+            document.getElementById('previewOccurrenceAddress').textContent = occurrenceAddress;
             document.getElementById('previewVictimInfo').textContent = victimInfo;
+            document.getElementById('previewComplainantName').textContent = complainantName;
+            document.getElementById('previewComplainantFather').textContent = complainantFather;
+            document.getElementById('previewComplainantAddress').textContent = complainantAddress;
+            document.getElementById('previewAccusedDetails').textContent = accusedDetails;
+            document.getElementById('previewDelayDetails').textContent = delayDetails;
+            document.getElementById('previewMotiveText').textContent = motiveText;
+            document.getElementById('previewPropertyInfo').textContent = propertyInfo;
+            document.getElementById('previewPropertyValue').textContent = propertyValue;
             document.getElementById('previewPlaceDescription').textContent = placeDescriptionText;
             document.getElementById('previewPhysicalEvidence').textContent = physicalEvidenceText;
             document.getElementById('previewSketchDetails').textContent = sketchDetails;
+            document.getElementById('previewFirText').textContent = firText;
+            document.getElementById('previewActionDetails').textContent = actionDetails;
             document.getElementById('previewGistText').textContent = gistText;
             document.getElementById('previewDraftsman').textContent = draftsmanPrepared ? 'Yes' : 'No';
             document.getElementById('previewInvestigationOfficer').textContent = investigationOfficer;
@@ -1460,84 +1345,12 @@
             document.getElementById('previewOfficerNo').textContent = officerNo;
             document.getElementById('previewCompletionDate').textContent = formattedCompletionDate;
 
-            // Update tables
-            updatePreviewTable('actsTable', 'previewActsTable');
-            updatePreviewTable('occurrenceTable', 'previewOccurrenceTable');
-            updatePreviewTable('majorHeadTable', 'previewMajorHeadTable');
-            updatePreviewTable('minorHeadTable', 'previewMinorHeadTable');
-            updatePreviewTable('modusOperandiTable', 'previewModusOperandiTable');
-            updatePreviewTable('conveyanceTable', 'previewConveyanceTable');
-            updatePreviewTable('characterTable', 'previewCharacterTable');
-            updatePreviewTable('languageTable', 'previewLanguageTable');
-            updatePreviewTable('specialFeatureTable', 'previewSpecialFeatureTable');
-            updatePreviewTable('placeTypeTable', 'previewPlaceTypeTable');
-            updatePreviewTable('propertyTypeTable', 'previewPropertyTypeTable');
-            updatePreviewTable('motiveTable', 'previewMotiveTable');
-            updatePreviewTable('stolenPropertyTable', 'previewStolenPropertyTable');
-            updatePreviewTable('visitTable', 'previewVisitTable');
-            updatePreviewTable('witnessTable', 'previewWitnessTable');
-
             // Update generation date
             document.getElementById('generationDate').textContent = new Date().toLocaleString();
         }
 
-        function updatePreviewTable(sourceTableId, targetTableId) {
-            const sourceTable = document.getElementById(sourceTableId);
-            const targetTable = document.getElementById(targetTableId);
-
-            // Clear existing rows
-            targetTable.querySelector('tbody').innerHTML = '';
-
-            let hasData = false;
-
-            for (let i = 1; i < sourceTable.rows.length; i++) {
-                const row = sourceTable.rows[i];
-                const newRow = document.createElement('tr');
-
-                // Check if the row has any data
-                let rowHasData = false;
-
-                for (let j = 1; j < row.cells.length - 1; j++) {
-                    const input = row.cells[j].querySelector('input');
-                    if (input && input.value) {
-                        rowHasData = true;
-                        break;
-                    }
-                }
-
-                if (rowHasData) {
-                    hasData = true;
-
-                    // Add serial number
-                    const serialCell = document.createElement('td');
-                    serialCell.textContent = i;
-                    newRow.appendChild(serialCell);
-
-                    // Add data cells
-                    for (let j = 1; j < row.cells.length - 1; j++) {
-                        const input = row.cells[j].querySelector('input');
-                        const cell = document.createElement('td');
-                        cell.textContent = input ? input.value : '';
-                        newRow.appendChild(cell);
-                    }
-
-                    targetTable.querySelector('tbody').appendChild(newRow);
-                }
-            }
-
-            if (!hasData) {
-                const newRow = document.createElement('tr');
-                const cell = document.createElement('td');
-                cell.colSpan = targetTable.rows[0].cells.length;
-                cell.textContent = 'No data available';
-                newRow.appendChild(cell);
-                targetTable.querySelector('tbody').appendChild(newRow);
-            }
-        }
-
         function exportAsPDF() {
             generatePreview();
-
             const element = document.getElementById('formPreview');
             const opt = {
                 margin: 10,
@@ -1546,396 +1359,46 @@
                 html2canvas: { scale: 2 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
-
             html2pdf().set(opt).from(element).save();
         }
 
         function exportAsWord() {
-            try {
-                generatePreview();
-
-                // Create HTML content for Word
-                const htmlContent = `
-                                <html xmlns:o="urn:schemas-microsoft-com:office:office"
-                                      xmlns:w="urn:schemas-microsoft-com:office:word"
-                                      xmlns="http://www.w3.org/TR/REC-html40">
-                                <head>
-                                    <meta charset="utf-8">
-                                    <title>IIF-2 Form</title>
-                                    <style>
-                                        body {
-                                            font-family: 'Times New Roman', serif;
-                                            font-size: 12pt;
-                                            line-height: 1.5;
-                                        }
-                                        h1, h2, h3, h4 {
-                                            color: #1a2a6c;
-                                        }
-                                        h1 {
-                                            font-size: 16pt;
-                                            text-align: center;
-                                        }
-                                        h2 {
-                                            font-size: 14pt;
-                                            margin-top: 12pt;
-                                            margin-bottom: 6pt;
-                                        }
-                                        table {
-                                            width: 100%;
-                                            border-collapse: collapse;
-                                            margin: 6pt 0;
-                                        }
-                                        th, td {
-                                            border: 1px solid #000;
-                                            padding: 4pt;
-                                            text-align: left;
-                                        }
-                                        th {
-                                            background-color: #f3f6fb;
-                                            font-weight: bold;
-                                        }
-                                        .field-label {
-                                            font-weight: bold;
-                                            width: 220px;
-                                            display: inline-block;
-                                        }
-                                        .signature-area {
-                                            margin-top: 30pt;
-                                            display: flex;
-                                            justify-content: space-between;
-                                        }
-                                        .signature-box {
-                                            border-top: 1px solid #000;
-                                            width: 250px;
-                                            padding-top: 5px;
-                                            text-align: center;
-                                        }
-                                    </style>
-                                </head>
-                                <body>
-                                    <h1>IIF-2 Form</h1>
-                                    <p style="text-align: center; font-style: italic;">Crime Investigation Report</p>
-                                    ${document.getElementById('formPreview').innerHTML}
-                                </body>
-                                </html>
-                            `;
-
-                // Create download link
-                const blob = new Blob([htmlContent], { type: 'application/msword' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `IIF2_Form_${document.getElementById('firNo').value || 'report'}.doc`;
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-
-                // Clean up
-                setTimeout(() => URL.revokeObjectURL(url), 100);
-            } catch (error) {
-                console.error("Error generating Word document:", error);
-                alert("Error generating Word document: " + error.message);
-            }
-        }
-
-        // ==================== RECORD MANAGEMENT ====================
-        async function saveToRecords() {
             generatePreview();
-
-            try {
-                // Generate PDF and Word files
-                const pdfData = await generatePDFBlob();
-                const wordData = await generateWordBlob();
-
-                // Convert Blobs to base64 for storage
-                const pdfBase64 = await blobToBase64(pdfData);
-                const wordBase64 = await blobToBase64(wordData);
-
-                // Collect form data
-                const formData = collectFormData();
-
-                // Create record object
-                const record = {
-                    id: Date.now(),
-                    type: "IIF-2",
-                    date: new Date().toISOString().split('T')[0],
-                    policeStation: formData.policeStation,
-                    officerName: formData.officerName,
-                    formData: formData,
-                    pdfFile: pdfBase64,
-                    wordFile: wordBase64,
-                    status: "Pending"
-                };
-
-                // Get existing records from localStorage
-                let records = JSON.parse(localStorage.getItem('iifRecords')) || [];
-
-                // Add the new record
-                records.push(record);
-
-                // Save back to localStorage
-                localStorage.setItem('iifRecords', JSON.stringify(records));
-
-                // Notify parent window (dashboard) that form was saved
-                if (window.parent !== window) {
-                    window.parent.postMessage({
-                        type: 'FORM_SAVED',
-                        formType: 'IIF-2',
-                        recordId: record.id
-                    }, '*');
-                }
-
-                alert('Form saved to records successfully!');
-            } catch (error) {
-                console.error("Error saving to records:", error);
-                alert("Error saving form to records: " + error.message);
-            }
-        }
-
-        async function generatePDFBlob() {
-            return new Promise((resolve, reject) => {
-                const element = document.getElementById('formPreview');
-                const opt = {
-                    margin: 10,
-                    filename: 'iif-2-form.pdf',
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { scale: 2 },
-                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-                };
-
-                html2pdf().set(opt).from(element).output('blob').then(resolve).catch(reject);
-            });
-        }
-
-        async function generateWordBlob() {
-            return new Promise((resolve) => {
-                // Create HTML content for Word
-                const htmlContent = `
-                            <html xmlns:o="urn:schemas-microsoft-com:office:office"
-                                  xmlns:w="urn:schemas-microsoft-com:office:word"
-                                  xmlns="http://www.w3.org/TR/REC-html40">
-                            <head>
-                                <meta charset="utf-8">
-                                <title>IIF-2 Form</title>
-                                <style>
-                                    body {
-                                        font-family: 'Times New Roman', serif;
-                                        font-size: 12pt;
-                                        line-height: 1.5;
-                                    }
-                                    h1, h2, h3, h4 {
-                                        color: #1a2a6c;
-                                    }
-                                    h1 {
-                                        font-size: 16pt;
-                                        text-align: center;
-                                    }
-                                    h2 {
-                                        font-size: 14pt;
-                                        margin-top: 12pt;
-                                        margin-bottom: 6pt;
-                                    }
-                                    table {
-                                        width: 100%;
-                                        border-collapse: collapse;
-                                        margin: 6pt 0;
-                                    }
-                                    th, td {
-                                        border: 1px solid #000;
-                                        padding: 4pt;
-                                        text-align: left;
-                                    }
-                                    th {
-                                        background-color: #f3f6fb;
-                                        font-weight: bold;
-                                    }
-                                    .field-label {
-                                        font-weight: bold;
-                                        width: 220px;
-                                        display: inline-block;
-                                    }
-                                    .signature-area {
-                                        margin-top: 30pt;
-                                        display: flex;
-                                        justify-content: space-between;
-                                    }
-                                    .signature-box {
-                                        border-top: 1px solid #000;
-                                        width: 250px;
-                                        padding-top: 5px;
-                                        text-align: center;
-                                    }
-                                </style>
-                            </head>
-                            <body>
-                                <h1>IIF-2 Form</h1>
-                                <p style="text-align: center; font-style: italic;">Crime Investigation Report</p>
-                                ${document.getElementById('formPreview').innerHTML}
-                            </body>
-                            </html>
-                        `;
-
-                const blob = new Blob([htmlContent], { type: 'application/msword' });
-                resolve(blob);
-            });
-        }
-
-        function blobToBase64(blob) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onloadend = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(blob);
-            });
-        }
-
-        function collectFormData() {
-            const data = {
-                district: document.getElementById('district').value,
-                policeStation: document.getElementById('policeStation').value,
-                firNo: document.getElementById('firNo').value,
-                firDate: document.getElementById('firDate').value,
-                victimInfo: document.getElementById('victimInfo').value,
-                placeDescriptionText: document.getElementById('placeDescriptionText').value,
-                physicalEvidenceText: document.getElementById('physicalEvidenceText').value,
-                sketchDetails: document.getElementById('sketchDetails').value,
-                gistText: document.getElementById('gistText').value,
-                draftsmanPrepared: document.getElementById('draftsmanPrepared').checked,
-                investigationOfficer: document.getElementById('investigationOfficer').value,
-                officerName: document.getElementById('officerName').value,
-                officerRank: document.getElementById('officerRank').value,
-                officerNo: document.getElementById('officerNo').value,
-                completionDate: document.getElementById('completionDate').value,
-
-                // Table data
-                actsTable: getTableData('actsTable'),
-                occurrenceTable: getTableData('occurrenceTable'),
-                majorHeadTable: getTableData('majorHeadTable'),
-                minorHeadTable: getTableData('minorHeadTable'),
-                modusOperandiTable: getTableData('modusOperandiTable'),
-                conveyanceTable: getTableData('conveyanceTable'),
-                characterTable: getTableData('characterTable'),
-                languageTable: getTableData('languageTable'),
-                specialFeatureTable: getTableData('specialFeatureTable'),
-                placeTypeTable: getTableData('placeTypeTable'),
-                propertyTypeTable: getTableData('propertyTypeTable'),
-                motiveTable: getTableData('motiveTable'),
-                stolenPropertyTable: getTableData('stolenPropertyTable'),
-                visitTable: getTableData('visitTable'),
-                witnessTable: getTableData('witnessTable')
-            };
-
-            return data;
-        }
-
-        function getTableData(tableId) {
-            const table = document.getElementById(tableId);
-            const data = [];
-
-            for (let i = 1; i < table.rows.length; i++) {
-                const row = table.rows[i];
-                const rowData = {};
-
-                for (let j = 1; j < row.cells.length - 1; j++) {
-                    const input = row.cells[j].querySelector('input');
-                    if (input) {
-                        rowData[`col${j}`] = input.value;
-                    }
-                }
-
-                data.push(rowData);
-            }
-
-            return data;
-        }
-
-        function restoreTableData(tableId, tableData) {
-            const table = document.getElementById(tableId);
-
-            // Clear existing rows (except header)
-            while (table.rows.length > 1) {
-                table.deleteRow(1);
-            }
-
-            // Add rows with data
-            if (tableData && tableData.length > 0) {
-                for (let i = 0; i < tableData.length; i++) {
-                    addNewRow(tableId);
-                    const row = table.rows[table.rows.length - 1];
-
-                    for (let j = 1; j < row.cells.length - 1; j++) {
-                        const input = row.cells[j].querySelector('input');
-                        if (input && tableData[i][`col${j}`]) {
-                            input.value = tableData[i][`col${j}`];
-                        }
-                    }
-                }
-            }
-        }
-
-        // ==================== LOCAL STORAGE FUNCTIONS ====================
-        function saveFormLocal() {
-            const formData = collectFormData();
-            localStorage.setItem('iif2Form', JSON.stringify(formData));
-            alert('Form saved locally.');
-        }
-
-        function loadFormLocal() {
-            const raw = localStorage.getItem('iif2Form');
-            if (!raw) {
-                alert('No saved form found.');
-                return;
-            }
-
-            try {
-                const data = JSON.parse(raw);
-
-                // Restore basic information
-                document.getElementById('district').value = data.district || '';
-                document.getElementById('policeStation').value = data.policeStation || '';
-                document.getElementById('firNo').value = data.firNo || '';
-                document.getElementById('firDate').value = data.firDate || '';
-                document.getElementById('victimInfo').value = data.victimInfo || '';
-                document.getElementById('placeDescriptionText').value = data.placeDescriptionText || '';
-                document.getElementById('physicalEvidenceText').value = data.physicalEvidenceText || '';
-                document.getElementById('sketchDetails').value = data.sketchDetails || '';
-                document.getElementById('gistText').value = data.gistText || '';
-                document.getElementById('draftsmanPrepared').checked = data.draftsmanPrepared || false;
-                document.getElementById('investigationOfficer').value = data.investigationOfficer || '';
-                document.getElementById('officerName').value = data.officerName || '';
-                document.getElementById('officerRank').value = data.officerRank || '';
-                document.getElementById('officerNo').value = data.officerNo || '';
-                document.getElementById('completionDate').value = data.completionDate || '';
-
-                // Restore tables
-                restoreTableData('actsTable', data.actsTable);
-                restoreTableData('occurrenceTable', data.occurrenceTable);
-                restoreTableData('majorHeadTable', data.majorHeadTable);
-                restoreTableData('minorHeadTable', data.minorHeadTable);
-                restoreTableData('modusOperandiTable', data.modusOperandiTable);
-                restoreTableData('conveyanceTable', data.conveyanceTable);
-                restoreTableData('characterTable', data.characterTable);
-                restoreTableData('languageTable', data.languageTable);
-                restoreTableData('specialFeatureTable', data.specialFeatureTable);
-                restoreTableData('placeTypeTable', data.placeTypeTable);
-                restoreTableData('propertyTypeTable', data.propertyTypeTable);
-                restoreTableData('motiveTable', data.motiveTable);
-                restoreTableData('stolenPropertyTable', data.stolenPropertyTable);
-                restoreTableData('visitTable', data.visitTable);
-                restoreTableData('witnessTable', data.witnessTable);
-
-                generatePreview();
-                alert('Saved form loaded.');
-            } catch (error) {
-                console.error("Error loading form data:", error);
-                alert("Error loading saved form.");
-            }
-        }
-
-        function deleteFormLocal() {
-            if (!confirm('Delete locally saved form?')) return;
-            localStorage.removeItem('iif2Form');
-            alert('Saved form deleted.');
+            const htmlContent = `
+                <html xmlns:o="urn:schemas-microsoft-com:office:office"
+                      xmlns:w="urn:schemas-microsoft-com:office:word"
+                      xmlns="http://www.w3.org/TR/REC-html40">
+                <head>
+                    <meta charset="utf-8">
+                    <title>IIF-2 Form</title>
+                    <style>
+                        body { font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.5; }
+                        h1, h2, h3, h4 { color: #1a2a6c; }
+                        h1 { font-size: 16pt; text-align: center; }
+                        h2 { font-size: 14pt; margin-top: 12pt; margin-bottom: 6pt; }
+                        table { width: 100%; border-collapse: collapse; margin: 6pt 0; }
+                        th, td { border: 1px solid #000; padding: 4pt; text-align: left; }
+                        th { background-color: #f3f6fb; font-weight: bold; }
+                        .signature-area { margin-top: 30pt; display: flex; justify-content: space-between; }
+                        .signature-box { border-top: 1px solid #000; width: 250px; padding-top: 5px; text-align: center; }
+                    </style>
+                </head>
+                <body>
+                    <h1>IIF-2 Form</h1>
+                    <p style="text-align: center; font-style: italic;">Crime Investigation Report</p>
+                    ${document.getElementById('formPreview').innerHTML}
+                </body>
+                </html>
+            `;
+            const blob = new Blob([htmlContent], { type: 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `IIF2_Form_${document.getElementById('firNo').value || 'report'}.doc`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 100);
         }
 
         // ==================== UTILITY FUNCTIONS ====================
@@ -1948,17 +1411,13 @@
             const table = document.getElementById(tableId);
             const rowCount = table.rows.length;
             const row = table.insertRow(-1);
-
-            // Add serial number cell
             const serialCell = row.insertCell(0);
             serialCell.innerHTML = rowCount;
 
-            // Add data cells based on table type
             if (tableId === 'actsTable') {
                 const cell1 = row.insertCell(1);
                 const cell2 = row.insertCell(2);
                 const cell3 = row.insertCell(3);
-
                 cell1.innerHTML = '<input type="text" placeholder="Enter Act">';
                 cell2.innerHTML = '<input type="text" placeholder="Enter Section">';
                 cell3.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
@@ -1968,7 +1427,6 @@
                 const cell3 = row.insertCell(3);
                 const cell4 = row.insertCell(4);
                 const cell5 = row.insertCell(5);
-
                 cell1.innerHTML = '<input type="text" placeholder="Name">';
                 cell2.innerHTML = '<input type="text" placeholder="Relative Type">';
                 cell3.innerHTML = '<input type="text" placeholder="Relative Name">';
@@ -1978,7 +1436,6 @@
                 const cell1 = row.insertCell(1);
                 const cell2 = row.insertCell(2);
                 const cell3 = row.insertCell(3);
-
                 cell1.innerHTML = '<input type="text" placeholder="Property Type">';
                 cell2.innerHTML = '<input type="text" placeholder="Property Name">';
                 cell3.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
@@ -1986,7 +1443,6 @@
                 const cell1 = row.insertCell(1);
                 const cell2 = row.insertCell(2);
                 const cell3 = row.insertCell(3);
-
                 cell1.innerHTML = '<input type="date">';
                 cell2.innerHTML = '<input type="time">';
                 cell3.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
@@ -1994,15 +1450,12 @@
                 const cell1 = row.insertCell(1);
                 const cell2 = row.insertCell(2);
                 const cell3 = row.insertCell(3);
-
                 cell1.innerHTML = '<input type="text" placeholder="Witness Name">';
                 cell2.innerHTML = '<input type="text" placeholder="Address">';
                 cell3.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
             } else {
-                // Default for single column tables
                 const cell1 = row.insertCell(1);
                 const cell2 = row.insertCell(2);
-
                 cell1.innerHTML = '<input type="text">';
                 cell2.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
             }
@@ -2011,15 +1464,100 @@
         function removeRow(button) {
             const row = button.parentNode.parentNode;
             row.parentNode.removeChild(row);
-
-            // Update row numbers
             const table = row.parentNode.parentNode;
             for (let i = 1; i < table.rows.length; i++) {
                 table.rows[i].cells[0].innerHTML = i;
             }
         }
 
-        // Make functions global for onclick attributes
+        // Local storage functions
+        function saveToRecords() {
+            generatePreview();
+            const formData = collectFormData();
+            localStorage.setItem('iif2Form', JSON.stringify(formData));
+            alert('Form saved to records successfully!');
+        }
+
+        function loadFormLocal() {
+            const raw = localStorage.getItem('iif2Form');
+            if (!raw) {
+                alert('No saved form found.');
+                return;
+            }
+            try {
+                const data = JSON.parse(raw);
+                // Restore all form fields
+                document.getElementById('district').value = data.district || '';
+                document.getElementById('policeStation').value = data.policeStation || '';
+                document.getElementById('firNo').value = data.firNo || '';
+                document.getElementById('firDate').value = data.firDate || '';
+                document.getElementById('occurrenceAddress').value = data.occurrenceAddress || '';
+                document.getElementById('victimInfo').value = data.victimInfo || '';
+                document.getElementById('complainantName').value = data.complainantName || '';
+                document.getElementById('complainantFather').value = data.complainantFather || '';
+                document.getElementById('complainantAddress').value = data.complainantAddress || '';
+                document.getElementById('accusedDetailsText').value = data.accusedDetails || '';
+                document.getElementById('delayDetails').value = data.delayDetails || '';
+                document.getElementById('motiveText').value = data.motiveText || '';
+                document.getElementById('propertyInfo').value = data.propertyInfo || '';
+                document.getElementById('propertyValue').value = data.propertyValue || '';
+                document.getElementById('placeDescriptionText').value = data.placeDescriptionText || '';
+                document.getElementById('physicalEvidenceText').value = data.physicalEvidenceText || '';
+                document.getElementById('sketchDetails').value = data.sketchDetails || '';
+                document.getElementById('firText').value = data.firText || '';
+                document.getElementById('actionDetails').value = data.actionDetails || '';
+                document.getElementById('gistText').value = data.gistText || '';
+                document.getElementById('draftsmanPrepared').checked = data.draftsmanPrepared || false;
+                document.getElementById('investigationOfficer').value = data.investigationOfficer || '';
+                document.getElementById('officerName').value = data.officerName || '';
+                document.getElementById('officerRank').value = data.officerRank || '';
+                document.getElementById('officerNo').value = data.officerNo || '';
+                document.getElementById('completionDate').value = data.completionDate || '';
+                generatePreview();
+                alert('Saved form loaded.');
+            } catch (error) {
+                alert("Error loading saved form.");
+            }
+        }
+
+        function deleteFormLocal() {
+            if (!confirm('Delete locally saved form?')) return;
+            localStorage.removeItem('iif2Form');
+            alert('Saved form deleted.');
+        }
+
+        function collectFormData() {
+            return {
+                district: document.getElementById('district').value,
+                policeStation: document.getElementById('policeStation').value,
+                firNo: document.getElementById('firNo').value,
+                firDate: document.getElementById('firDate').value,
+                occurrenceAddress: document.getElementById('occurrenceAddress').value,
+                victimInfo: document.getElementById('victimInfo').value,
+                complainantName: document.getElementById('complainantName').value,
+                complainantFather: document.getElementById('complainantFather').value,
+                complainantAddress: document.getElementById('complainantAddress').value,
+                accusedDetails: document.getElementById('accusedDetailsText').value,
+                delayDetails: document.getElementById('delayDetails').value,
+                motiveText: document.getElementById('motiveText').value,
+                propertyInfo: document.getElementById('propertyInfo').value,
+                propertyValue: document.getElementById('propertyValue').value,
+                placeDescriptionText: document.getElementById('placeDescriptionText').value,
+                physicalEvidenceText: document.getElementById('physicalEvidenceText').value,
+                sketchDetails: document.getElementById('sketchDetails').value,
+                firText: document.getElementById('firText').value,
+                actionDetails: document.getElementById('actionDetails').value,
+                gistText: document.getElementById('gistText').value,
+                draftsmanPrepared: document.getElementById('draftsmanPrepared').checked,
+                investigationOfficer: document.getElementById('investigationOfficer').value,
+                officerName: document.getElementById('officerName').value,
+                officerRank: document.getElementById('officerRank').value,
+                officerNo: document.getElementById('officerNo').value,
+                completionDate: document.getElementById('completionDate').value
+            };
+        }
+
+        // Make functions global
         window.removeRow = removeRow;
         window.addNewRow = addNewRow;
         window.toggleSection = toggleSection;
