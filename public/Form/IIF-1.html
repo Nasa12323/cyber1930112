@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,6 +6,7 @@
     <title>CCTNS IIF-1 Form Generator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -294,6 +295,79 @@
             flex: 1;
         }
 
+        /* VOICE-TO-TEXT STYLES */
+        .voice-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .voice-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background: #1a6c5c;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .voice-btn:hover {
+            background: #2a7c6c;
+            transform: scale(1.1);
+        }
+
+        .voice-btn.listening {
+            background: #c62828;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { 
+                box-shadow: 0 0 0 0 rgba(198, 40, 40, 0.7); 
+            }
+            70% { 
+                box-shadow: 0 0 0 10px rgba(198, 40, 40, 0); 
+            }
+            100% { 
+                box-shadow: 0 0 0 0 rgba(198, 40, 40, 0); 
+            }
+        }
+
+        .voice-status {
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            font-size: 0.8rem;
+            color: #1a6c5c;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .voice-status.show {
+            opacity: 1;
+        }
+
+        .voice-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .voice-command-hint {
+            font-size: 0.8rem;
+            color: #666;
+            font-style: italic;
+        }
+
         @media (max-width: 768px) {
             .content {
                 flex-direction: column;
@@ -323,6 +397,11 @@
 
             .row {
                 flex-direction: column;
+            }
+
+            .voice-btn {
+                right: 5px;
+                top: 5px;
             }
         }
     </style>
@@ -470,7 +549,16 @@
 
                     <div class="form-group">
                         <label for="address">Address</label>
-                        <textarea id="address" placeholder="Enter address"></textarea>
+                        <div class="voice-input-wrapper">
+                            <textarea id="address" placeholder="Enter address"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('address')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-address"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "comma", "period", "new paragraph"
+                        </div>
                     </div>
 
                     <div class="row">
@@ -549,20 +637,47 @@
 
                     <div class="form-group">
                         <label for="complainantAddress">Address</label>
-                        <textarea id="complainantAddress" placeholder="Enter address"></textarea>
+                        <div class="voice-input-wrapper">
+                            <textarea id="complainantAddress" placeholder="Enter address"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('complainantAddress')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-complainantAddress"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "house number", "street name", "city", "pin code"
+                        </div>
                     </div>
                 </div>
 
                 <div class="section-title" onclick="toggleSection('accusedDetails')">7. Accused & Other Details</div>
                 <div id="accusedDetails" class="section-content">
                     <div class="form-group">
-                        <label for="accusedDetails">Details of accused</label>
-                        <textarea id="accusedDetails" placeholder="Enter accused details"></textarea>
+                        <label for="accusedDetailsText">Details of accused</label>
+                        <div class="voice-input-wrapper">
+                            <textarea id="accusedDetailsText" placeholder="Enter accused details"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('accusedDetailsText')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-accusedDetailsText"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "suspect name", "age", "description", "clothing"
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="delayDetails">Reasons for delay (if any)</label>
-                        <textarea id="delayDetails" placeholder="Enter reasons for delay"></textarea>
+                        <div class="voice-input-wrapper">
+                            <textarea id="delayDetails" placeholder="Enter reasons for delay"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('delayDetails')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-delayDetails"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "traffic", "weather", "witness unavailable"
+                        </div>
                     </div>
                 </div>
 
@@ -570,7 +685,16 @@
                 <div id="propertyDetails" class="section-content">
                     <div class="form-group">
                         <label for="propertyInfo">Particulars</label>
-                        <textarea id="propertyInfo" placeholder="Enter property particulars"></textarea>
+                        <div class="voice-input-wrapper">
+                            <textarea id="propertyInfo" placeholder="Enter property particulars"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('propertyInfo')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-propertyInfo"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "cash amount", "jewelry", "electronic devices", "vehicle"
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -588,12 +712,30 @@
 
                     <div class="form-group">
                         <label for="firText">FIR Contents</label>
-                        <textarea id="firText" placeholder="Enter FIR contents"></textarea>
+                        <div class="voice-input-wrapper">
+                            <textarea id="firText" placeholder="Enter FIR contents"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('firText')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-firText"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "incident description", "witness statements", "evidence collected"
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="actionDetails">Action Taken</label>
-                        <textarea id="actionDetails" placeholder="Enter action taken details"></textarea>
+                        <div class="voice-input-wrapper">
+                            <textarea id="actionDetails" placeholder="Enter action taken details"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('actionDetails')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-actionDetails"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "investigation started", "suspect detained", "evidence secured"
+                        </div>
                     </div>
 
                     <div class="checkbox-group">
@@ -764,6 +906,163 @@
     </div>
 
     <script>
+        // Voice Recognition System
+        class VoiceToTextSystem {
+            constructor() {
+                this.recognition = null;
+                this.isListening = false;
+                this.currentField = null;
+                this.finalTranscript = '';
+                this.initSpeechRecognition();
+            }
+
+            initSpeechRecognition() {
+                // Check browser support
+                if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                    this.showError('Voice recognition is not supported in this browser. Please use Chrome or Edge.');
+                    return;
+                }
+
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                this.recognition = new SpeechRecognition();
+                
+                this.recognition.continuous = true;
+                this.recognition.interimResults = true;
+                this.recognition.lang = 'en-IN';
+
+                this.recognition.onstart = () => {
+                    this.isListening = true;
+                    this.updateUI('listening', 'Listening... Speak now');
+                };
+
+                this.recognition.onresult = (event) => {
+                    let interimTranscript = '';
+                    
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        if (event.results[i].isFinal) {
+                            this.finalTranscript += this.formatPoliceText(event.results[i][0].transcript);
+                        } else {
+                            interimTranscript += event.results[i][0].transcript;
+                        }
+                    }
+                    
+                    this.updateTextArea(this.finalTranscript + interimTranscript);
+                };
+
+                this.recognition.onerror = (event) => {
+                    console.error('Speech recognition error:', event.error);
+                    this.updateUI('error', `Error: ${event.error}`);
+                    this.stopListening();
+                };
+
+                this.recognition.onend = () => {
+                    this.stopListening();
+                };
+            }
+
+            startListening(fieldId) {
+                if (this.isListening) {
+                    this.stopListening();
+                    return;
+                }
+
+                this.currentField = fieldId;
+                this.finalTranscript = document.getElementById(fieldId).value || '';
+                
+                try {
+                    this.recognition.start();
+                    this.updateUI('listening', 'Listening... Speak now');
+                } catch (error) {
+                    this.updateUI('error', 'Cannot start voice recognition');
+                }
+            }
+
+            stopListening() {
+                this.isListening = false;
+                this.updateUI('stopped', 'Click microphone to speak');
+                if (this.recognition) {
+                    this.recognition.stop();
+                }
+            }
+
+            updateTextArea(text) {
+                if (this.currentField) {
+                    const textarea = document.getElementById(this.currentField);
+                    if (textarea) {
+                        textarea.value = text;
+                        // Auto-scroll to bottom
+                        textarea.scrollTop = textarea.scrollHeight;
+                    }
+                }
+            }
+
+            formatPoliceText(text) {
+                // Enhanced formatting for police documentation
+                let formatted = text;
+                
+                // Voice commands for punctuation
+                formatted = formatted.replace(/\bfull stop\b/gi, '.');
+                formatted = formatted.replace(/\bcomma\b/gi, ',');
+                formatted = formatted.replace(/\bquestion mark\b/gi, '?');
+                formatted = formatted.replace(/\bexclamation mark\b/gi, '!');
+                formatted = formatted.replace(/\bnew paragraph\b/gi, '\n\n');
+                formatted = formatted.replace(/\bnew line\b/gi, '\n');
+                
+                // Auto-capitalize sentences
+                formatted = formatted.replace(/(^\s*|[.!?]\s+)([a-z])/g, (match, p1, p2) => p1 + p2.toUpperCase());
+                
+                // Police-specific formatting
+                formatted = formatted.replace(/\b(\d+)\s*(?:hours?|hrs?)\b/gi, '$1 hours');
+                formatted = formatted.replace(/\b(\d+)\s*(?:minutes?|mins?)\b/gi, '$1 minutes');
+                formatted = formatted.replace(/\b(\d+)\s*(?:meters?|mtrs?)\b/gi, '$1 meters');
+                
+                // Date and time patterns
+                formatted = formatted.replace(/\b(\d{1,2})\s*(?:slash|\/)\s*(\d{1,2})\s*(?:slash|\/)\s*(\d{4})\b/gi, '$1/$2/$3');
+                formatted = formatted.replace(/\b(\d{1,2})\s*(?:colon|:)\s*(\d{2})\s*(?:am|pm)\b/gi, (match, hour, minute) => {
+                    return `${hour}:${minute} ${match.includes('pm') ? 'PM' : 'AM'}`;
+                });
+                
+                return formatted;
+            }
+
+            updateUI(state, message) {
+                if (!this.currentField) return;
+
+                const button = document.querySelector(`[onclick="toggleVoiceInput('${this.currentField}")]`);
+                const status = document.getElementById(`status-${this.currentField}`);
+
+                if (button) {
+                    button.classList.remove('listening');
+                    if (state === 'listening') {
+                        button.classList.add('listening');
+                        button.innerHTML = '<i class="fas fa-circle"></i>';
+                    } else {
+                        button.innerHTML = '<i class="fas fa-microphone"></i>';
+                    }
+                }
+
+                if (status) {
+                    status.textContent = message;
+                    status.classList.remove('show');
+                    if (message) {
+                        setTimeout(() => status.classList.add('show'), 100);
+                    }
+                }
+            }
+
+            showError(message) {
+                alert(message);
+            }
+        }
+
+        // Initialize voice system
+        const voiceSystem = new VoiceToTextSystem();
+
+        // Toggle function for buttons
+        function toggleVoiceInput(fieldId) {
+            voiceSystem.startListening(fieldId);
+        }
+
         // Add this at the very top of each form's JavaScript
         document.addEventListener('DOMContentLoaded', function () {
             // Check if user is authenticated
@@ -836,7 +1135,7 @@
                 const passportPlace = document.getElementById('passportPlace').value || 'Not specified';
                 const complainantOccupation = document.getElementById('complainantOccupation').value || 'Not specified';
                 const complainantAddress = document.getElementById('complainantAddress').value || 'Not specified';
-                const accusedDetails = document.getElementById('accusedDetails').value || 'Not specified';
+                const accusedDetails = document.getElementById('accusedDetailsText').value || 'Not specified';
                 const delayDetails = document.getElementById('delayDetails').value || 'Not specified';
                 const propertyInfo = document.getElementById('propertyInfo').value || 'Not specified';
                 const propertyValue = document.getElementById('propertyValue').value || 'Not specified';
@@ -1235,7 +1534,7 @@
                     passportPlace: document.getElementById('passportPlace').value,
                     complainantOccupation: document.getElementById('complainantOccupation').value,
                     complainantAddress: document.getElementById('complainantAddress').value,
-                    accusedDetails: document.getElementById('accusedDetails').value,
+                    accusedDetails: document.getElementById('accusedDetailsText').value,
                     delayDetails: document.getElementById('delayDetails').value,
                     propertyInfo: document.getElementById('propertyInfo').value,
                     propertyValue: document.getElementById('propertyValue').value,
@@ -1347,7 +1646,7 @@
                     document.getElementById('passportPlace').value = data.passportPlace || '';
                     document.getElementById('complainantOccupation').value = data.complainantOccupation || '';
                     document.getElementById('complainantAddress').value = data.complainantAddress || '';
-                    document.getElementById('accusedDetails').value = data.accusedDetails || '';
+                    document.getElementById('accusedDetailsText').value = data.accusedDetails || '';
                     document.getElementById('delayDetails').value = data.delayDetails || '';
                     document.getElementById('propertyInfo').value = data.propertyInfo || '';
                     document.getElementById('propertyValue').value = data.propertyValue || '';
@@ -1430,6 +1729,7 @@
             window.removeRow = removeRow;
             window.addNewRow = addNewRow;
             window.toggleSection = toggleSection;
+            window.toggleVoiceInput = toggleVoiceInput;
 
             // Generate initial preview
             generatePreview();
