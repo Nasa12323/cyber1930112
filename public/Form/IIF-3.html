@@ -1,10 +1,12 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CCTNS IIF-3 Form Generator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -292,6 +294,80 @@
                 flex: 1;
             }
 
+        /* VOICE-TO-TEXT STYLES */
+        .voice-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .voice-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background: #1a6c5c;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .voice-btn:hover {
+            background: #2a7c6c;
+            transform: scale(1.1);
+        }
+
+        .voice-btn.listening {
+            background: #c62828;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { 
+                box-shadow: 0 0 0 0 rgba(198, 40, 40, 0.7); 
+            }
+            70% { 
+                box-shadow: 0 0 0 10px rgba(198, 40, 40, 0); 
+            }
+            100% { 
+                box-shadow: 0 0 0 0 rgba(198, 40, 40, 0); 
+            }
+        }
+
+        .voice-status {
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            font-size: 0.8rem;
+            color: #1a6c5c;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .voice-status.show {
+            opacity: 1;
+        }
+
+        .voice-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .voice-command-hint {
+            font-size: 0.8rem;
+            color: #666;
+            font-style: italic;
+            margin-top: 5px;
+        }
+
         @media (max-width: 768px) {
             .content {
                 flex-direction: column;
@@ -323,6 +399,11 @@
                 flex-direction: column;
                 gap: 0;
             }
+
+            .voice-btn {
+                right: 5px;
+                top: 5px;
+            }
         }
     </style>
 </head>
@@ -330,7 +411,7 @@
     <div class="container">
         <header>
             <h1>CCTNS IIF-3 Form Generator</h1>
-            <p>Arrest/Court Surrender Memo - Complete with All Required Details</p>
+            <p>Arrest/Court Surrender Memo - Complete with Voice-to-Text Features</p>
         </header>
 
         <div class="content">
@@ -402,7 +483,16 @@
 
                     <div class="form-group">
                         <label for="actsSections">Acts and Sections</label>
-                        <input type="text" id="actsSections" placeholder="Enter acts and sections">
+                        <div class="voice-input-wrapper">
+                            <textarea id="actsSections" placeholder="Enter detailed acts and sections"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('actsSections')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-actsSections"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "Indian Penal Code", "section 302", "murder", "robbery"
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -503,7 +593,16 @@
 
                     <div class="form-group">
                         <label for="permanentAddress">(xii) Permanent address</label>
-                        <textarea id="permanentAddress" placeholder="Enter permanent address"></textarea>
+                        <div class="voice-input-wrapper">
+                            <textarea id="permanentAddress" placeholder="Enter complete permanent address"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('permanentAddress')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-permanentAddress"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "house number", "street", "village", "district", "state"
+                        </div>
                     </div>
 
                     <div class="two-column">
@@ -520,7 +619,16 @@
 
                     <div class="form-group">
                         <label for="presentAddress">(xiii) Present Address</label>
-                        <textarea id="presentAddress" placeholder="Enter present address"></textarea>
+                        <div class="voice-input-wrapper">
+                            <textarea id="presentAddress" placeholder="Enter complete present address"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('presentAddress')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-presentAddress"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "building name", "floor", "area", "landmark", "city"
+                        </div>
                     </div>
 
                     <div class="two-column">
@@ -540,7 +648,16 @@
                 <div id="injuries" class="section-content">
                     <div class="form-group">
                         <label for="injuriesDetails">Injuries, cause of injuries and physical condition of the accused person (Indicate if medically examined)</label>
-                        <textarea id="injuriesDetails" placeholder="Enter details of injuries and physical condition"></textarea>
+                        <div class="voice-input-wrapper">
+                            <textarea id="injuriesDetails" placeholder="Enter detailed injuries and physical condition"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('injuriesDetails')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-injuriesDetails"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "bruise on left arm", "cut on forehead", "medically examined", "no visible injuries"
+                        </div>
                     </div>
                 </div>
 
@@ -580,6 +697,20 @@
                         <label for="intimation">Intimation given to</label>
                         <input type="text" id="intimationRelationship" placeholder="Relationship" style="margin-bottom: 10px;">
                         <input type="text" id="intimationName" placeholder="Name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="arrestNarrative">Arrest Procedure Narrative</label>
+                        <div class="voice-input-wrapper">
+                            <textarea id="arrestNarrative" placeholder="Enter detailed narrative of arrest procedure"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('arrestNarrative')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-arrestNarrative"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "informed of rights", "grounds of arrest", "search conducted", "receipt provided"
+                        </div>
                     </div>
                 </div>
 
@@ -660,7 +791,16 @@
 
                     <div class="form-group">
                         <label for="otherFeatures">*Other features</label>
-                        <input type="text" id="otherFeatures" placeholder="Enter other features">
+                        <div class="voice-input-wrapper">
+                            <textarea id="otherFeatures" placeholder="Enter other physical features"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('otherFeatures')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-otherFeatures"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "distinctive walk", "speech patterns", "posture", "mannerisms"
+                        </div>
                     </div>
                 </div>
 
@@ -669,6 +809,20 @@
                     <div class="form-group">
                         <label for="fingerprintStatus">Whether finger-print taken or not?</label>
                         <input type="text" id="fingerprintStatus" placeholder="Enter fingerprint status">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fingerprintDetails">Fingerprint Details</label>
+                        <div class="voice-input-wrapper">
+                            <textarea id="fingerprintDetails" placeholder="Enter fingerprint collection details"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('fingerprintDetails')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-fingerprintDetails"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "all ten fingers", "rolled prints", "plain impressions", "quality good"
+                        </div>
                     </div>
                 </div>
 
@@ -691,7 +845,16 @@
 
                     <div class="form-group">
                         <label for="education">(b) Educational qualification(s)</label>
-                        <input type="text" id="education" placeholder="Enter educational qualifications">
+                        <div class="voice-input-wrapper">
+                            <textarea id="education" placeholder="Enter educational qualifications"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('education')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-education"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "tenth standard", "graduate", "diploma", "illiterate"
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -767,6 +930,20 @@
                             <label for="wantedOtherCase">(i) Is wanted in any other case</label>
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <label for="criminalHistory">Criminal History Details</label>
+                        <div class="voice-input-wrapper">
+                            <textarea id="criminalHistory" placeholder="Enter detailed criminal history"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('criminalHistory')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-criminalHistory"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "previous convictions", "cases pending", "gang affiliations", "modus operandi"
+                        </div>
+                    </div>
                 </div>
 
                 <div class="section-title" onclick="toggleSection('signature')">10. Signature of the Investigating officer</div>
@@ -799,6 +976,20 @@
                         <label for="ioPlace">Place</label>
                         <input type="text" id="ioPlace" placeholder="Enter place">
                     </div>
+
+                    <div class="form-group">
+                        <label for="officerRemarks">Investigation Officer's Remarks</label>
+                        <div class="voice-input-wrapper">
+                            <textarea id="officerRemarks" placeholder="Enter officer's remarks and observations"></textarea>
+                            <button class="voice-btn" onclick="toggleVoiceInput('officerRemarks')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <div class="voice-status" id="status-officerRemarks"></div>
+                        </div>
+                        <div class="voice-command-hint">
+                            Try saying: "cooperative during investigation", "attempted to escape", "violent behavior", "confession recorded"
+                        </div>
+                    </div>
                 </div>
 
                 <div class="action-buttons">
@@ -816,7 +1007,7 @@
                 <div id="formPreview" class="form-preview">
                     <div class="preview-header">
                         <h3>CCTNS IIF-3 Form</h3>
-                        <p>Arrest/Court Surrender Memo - Separate Memo for each accused</p>
+                        <p>Arrest/Court Surrender Memo - Complete with Voice-to-Text</p>
                     </div>
 
                     <div class="preview-section">
@@ -885,6 +1076,7 @@
                             </tbody>
                         </table>
                         <p><strong>Intimation given to:</strong> <span id="previewIntimationName">Not specified</span> (<span id="previewIntimationRelationship">Not specified</span>)</p>
+                        <p><strong>Arrest Procedure Narrative:</strong> <span id="previewArrestNarrative">Not specified</span></p>
                     </div>
 
                     <div class="preview-section">
@@ -948,6 +1140,7 @@
                     <div class="preview-section">
                         <h4>7. Fingerprint Information</h4>
                         <p><strong>Fingerprint status:</strong> <span id="previewFingerprintStatus">Not specified</span></p>
+                        <p><strong>Fingerprint Details:</strong> <span id="previewFingerprintDetails">Not specified</span></p>
                     </div>
 
                     <div class="preview-section">
@@ -960,7 +1153,8 @@
 
                     <div class="preview-section">
                         <h4>9. Additional Information</h4>
-                        <p><span id="previewAdditionalInfo">Not specified</span></p>
+                        <p><strong>Criminal History:</strong> <span id="previewCriminalHistory">Not specified</span></p>
+                        <p><strong>Additional Observations:</strong> <span id="previewAdditionalInfo">Not specified</span></p>
                     </div>
 
                     <div class="preview-section">
@@ -970,6 +1164,7 @@
                         <p><strong>Number:</strong> <span id="previewIoNumber">Not specified</span></p>
                         <p><strong>Date:</strong> <span id="previewIoDate">Not specified</span></p>
                         <p><strong>Place:</strong> <span id="previewIoPlace">Not specified</span></p>
+                        <p><strong>Officer's Remarks:</strong> <span id="previewOfficerRemarks">Not specified</span></p>
                     </div>
 
                     <div class="signature-area">
@@ -990,42 +1185,165 @@
     </div>
 
     <script>
-        // ==================== AUTHENTICATION & SECURITY ====================
+        // Voice Recognition System
+        class VoiceToTextSystem {
+            constructor() {
+                this.recognition = null;
+                this.isListening = false;
+                this.currentField = null;
+                this.finalTranscript = '';
+                this.initSpeechRecognition();
+            }
+
+            initSpeechRecognition() {
+                // Check browser support
+                if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                    this.showError('Voice recognition is not supported in this browser. Please use Chrome or Edge.');
+                    return;
+                }
+
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                this.recognition = new SpeechRecognition();
+                
+                this.recognition.continuous = true;
+                this.recognition.interimResults = true;
+                this.recognition.lang = 'en-IN';
+
+                this.recognition.onstart = () => {
+                    this.isListening = true;
+                    this.updateUI('listening', 'Listening... Speak now');
+                };
+
+                this.recognition.onresult = (event) => {
+                    let interimTranscript = '';
+                    
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        if (event.results[i].isFinal) {
+                            this.finalTranscript += this.formatPoliceText(event.results[i][0].transcript);
+                        } else {
+                            interimTranscript += event.results[i][0].transcript;
+                        }
+                    }
+                    
+                    this.updateTextArea(this.finalTranscript + interimTranscript);
+                };
+
+                this.recognition.onerror = (event) => {
+                    console.error('Speech recognition error:', event.error);
+                    this.updateUI('error', `Error: ${event.error}`);
+                    this.stopListening();
+                };
+
+                this.recognition.onend = () => {
+                    this.stopListening();
+                };
+            }
+
+            startListening(fieldId) {
+                if (this.isListening) {
+                    this.stopListening();
+                    return;
+                }
+
+                this.currentField = fieldId;
+                this.finalTranscript = document.getElementById(fieldId).value || '';
+                
+                try {
+                    this.recognition.start();
+                    this.updateUI('listening', 'Listening... Speak now');
+                } catch (error) {
+                    this.updateUI('error', 'Cannot start voice recognition');
+                }
+            }
+
+            stopListening() {
+                this.isListening = false;
+                this.updateUI('stopped', 'Click microphone to speak');
+                if (this.recognition) {
+                    this.recognition.stop();
+                }
+            }
+
+            updateTextArea(text) {
+                if (this.currentField) {
+                    const textarea = document.getElementById(this.currentField);
+                    if (textarea) {
+                        textarea.value = text;
+                        // Auto-scroll to bottom
+                        textarea.scrollTop = textarea.scrollHeight;
+                    }
+                }
+            }
+
+            formatPoliceText(text) {
+                // Enhanced formatting for police documentation
+                let formatted = text;
+                
+                // Voice commands for punctuation
+                formatted = formatted.replace(/\bfull stop\b/gi, '.');
+                formatted = formatted.replace(/\bcomma\b/gi, ',');
+                formatted = formatted.replace(/\bquestion mark\b/gi, '?');
+                formatted = formatted.replace(/\bexclamation mark\b/gi, '!');
+                formatted = formatted.replace(/\bnew paragraph\b/gi, '\n\n');
+                formatted = formatted.replace(/\bnew line\b/gi, '\n');
+                
+                // Auto-capitalize sentences
+                formatted = formatted.replace(/(^\s*|[.!?]\s+)([a-z])/g, (match, p1, p2) => p1 + p2.toUpperCase());
+                
+                // Police-specific formatting
+                formatted = formatted.replace(/\b(\d+)\s*(?:hours?|hrs?)\b/gi, '$1 hours');
+                formatted = formatted.replace(/\b(\d+)\s*(?:minutes?|mins?)\b/gi, '$1 minutes');
+                formatted = formatted.replace(/\b(\d+)\s*(?:meters?|mtrs?)\b/gi, '$1 meters');
+                
+                // Date and time patterns
+                formatted = formatted.replace(/\b(\d{1,2})\s*(?:slash|\/)\s*(\d{1,2})\s*(?:slash|\/)\s*(\d{4})\b/gi, '$1/$2/$3');
+                formatted = formatted.replace(/\b(\d{1,2})\s*(?:colon|:)\s*(\d{2})\s*(?:am|pm)\b/gi, (match, hour, minute) => {
+                    return `${hour}:${minute} ${match.includes('pm') ? 'PM' : 'AM'}`;
+                });
+                
+                return formatted;
+            }
+
+            updateUI(state, message) {
+                if (!this.currentField) return;
+
+                const button = document.querySelector(`[onclick="toggleVoiceInput('${this.currentField}")]`);
+                const status = document.getElementById(`status-${this.currentField}`);
+
+                if (button) {
+                    button.classList.remove('listening');
+                    if (state === 'listening') {
+                        button.classList.add('listening');
+                        button.innerHTML = '<i class="fas fa-circle"></i>';
+                    } else {
+                        button.innerHTML = '<i class="fas fa-microphone"></i>';
+                    }
+                }
+
+                if (status) {
+                    status.textContent = message;
+                    status.classList.remove('show');
+                    if (message) {
+                        setTimeout(() => status.classList.add('show'), 100);
+                    }
+                }
+            }
+
+            showError(message) {
+                alert(message);
+            }
+        }
+
+        // Initialize voice system
+        const voiceSystem = new VoiceToTextSystem();
+
+        // Toggle function for buttons
+        function toggleVoiceInput(fieldId) {
+            voiceSystem.startListening(fieldId);
+        }
+
+        // ==================== FORM FUNCTIONS ====================
         document.addEventListener('DOMContentLoaded', function () {
-            // Check if user is authenticated
-            const token = localStorage.getItem('token');
-            const user = localStorage.getItem('user');
-
-            if (!token || !user) {
-                alert('Authentication required. Please login first.');
-                if (window.parent !== window) {
-                    window.parent.postMessage({ type: 'AUTH_REQUIRED' }, '*');
-                } else {
-                    window.location.href = '../index.html';
-                }
-                return;
-            }
-
-            // Set officer name from logged in user
-            try {
-                const userData = JSON.parse(user);
-                document.getElementById('ioName').value = userData.fullName || 'Investigation Officer';
-            } catch (e) {
-                console.error('Error parsing user data:', e);
-            }
-
-            // Listen for authentication token from parent
-            window.addEventListener('message', function (event) {
-                if (event.data.type === 'AUTH_TOKEN' && event.data.token) {
-                    localStorage.setItem('token', event.data.token);
-                }
-            });
-
-            // Notify parent that form is loaded
-            if (window.parent !== window) {
-                window.parent.postMessage({ type: 'FORM_LOADED', formType: 'IIF-3' }, '*');
-            }
-
             // Set current date
             const now = new Date();
             document.getElementById('generationDate').textContent = now.toLocaleString();
@@ -1056,7 +1374,6 @@
             generatePreview();
         });
 
-        // ==================== FORM FUNCTIONS ====================
         function generatePreview() {
             // Get form values
             const district = document.getElementById('district').value || 'Not specified';
@@ -1095,16 +1412,20 @@
             const custodyPlace = document.getElementById('custodyPlace').value || 'Not specified';
             const intimationRelationship = document.getElementById('intimationRelationship').value || 'Not specified';
             const intimationName = document.getElementById('intimationName').value || 'Not specified';
+            const arrestNarrative = document.getElementById('arrestNarrative').value || 'Not specified';
             const fingerprintStatus = document.getElementById('fingerprintStatus').value || 'Not specified';
+            const fingerprintDetails = document.getElementById('fingerprintDetails').value || 'Not specified';
             const livingStatus = document.getElementById('livingStatus').value || 'Not specified';
             const education = document.getElementById('education').value || 'Not specified';
             const socioOccupation = document.getElementById('socioOccupation').value || 'Not specified';
             const otherFeatures = document.getElementById('otherFeatures').value || 'Not specified';
+            const criminalHistory = document.getElementById('criminalHistory').value || 'Not specified';
             const ioName = document.getElementById('ioName').value || 'Not specified';
             const ioRank = document.getElementById('ioRank').value || 'Not specified';
             const ioNumber = document.getElementById('ioNumber').value || 'Not specified';
             const ioDate = document.getElementById('ioDate').value;
             const ioPlace = document.getElementById('ioPlace').value || 'Not specified';
+            const officerRemarks = document.getElementById('officerRemarks').value || 'Not specified';
 
             // Get arrest status
             let arrestStatus = [];
@@ -1183,11 +1504,14 @@
             document.getElementById('previewCustodyPlace').textContent = custodyPlace;
             document.getElementById('previewIntimationRelationship').textContent = intimationRelationship;
             document.getElementById('previewIntimationName').textContent = intimationName;
+            document.getElementById('previewArrestNarrative').textContent = arrestNarrative;
             document.getElementById('previewFingerprintStatus').textContent = fingerprintStatus;
+            document.getElementById('previewFingerprintDetails').textContent = fingerprintDetails;
             document.getElementById('previewLivingStatus').textContent = livingStatus;
             document.getElementById('previewEducation').textContent = education;
             document.getElementById('previewSocioOccupation').textContent = socioOccupation;
             document.getElementById('previewOtherFeatures').textContent = otherFeatures;
+            document.getElementById('previewCriminalHistory').textContent = criminalHistory;
             document.getElementById('previewIncomeGroup').textContent = incomeGroup;
             document.getElementById('previewAdditionalInfo').textContent = additionalInfo;
             document.getElementById('previewIoName').textContent = ioName;
@@ -1195,6 +1519,7 @@
             document.getElementById('previewIoNumber').textContent = ioNumber;
             document.getElementById('previewIoDate').textContent = formatDate(ioDate);
             document.getElementById('previewIoPlace').textContent = ioPlace;
+            document.getElementById('previewOfficerRemarks').textContent = officerRemarks;
 
             // Update tables
             updatePreviewTable('articlesTable', 'previewArticlesTable');
@@ -1365,156 +1690,109 @@
             }
         }
 
-        // ==================== RECORD MANAGEMENT ====================
-        async function saveToRecords() {
+        // ==================== LOCAL STORAGE FUNCTIONS ====================
+        function saveToRecords() {
             generatePreview();
+            const formData = collectFormData();
+            localStorage.setItem('iif3Form', JSON.stringify(formData));
+            alert('Form saved to records successfully!');
+        }
 
+        function loadFormLocal() {
+            const raw = localStorage.getItem('iif3Form');
+            if (!raw) {
+                alert('No saved form found.');
+                return;
+            }
             try {
-                // Generate PDF and Word files
-                const pdfData = await generatePDFBlob();
-                const wordData = await generateWordBlob();
+                const data = JSON.parse(raw);
+                // Restore all form fields
+                document.getElementById('district').value = data.district || '';
+                document.getElementById('policeStation').value = data.policeStation || '';
+                document.getElementById('year').value = data.year || '';
+                document.getElementById('firNo').value = data.firNo || '';
+                document.getElementById('firDate').value = data.firDate || '';
+                document.getElementById('accusedCode').value = data.accusedCode || '';
+                document.getElementById('arrestDate').value = data.arrestDate || '';
+                document.getElementById('arrestTime').value = data.arrestTime || '';
+                document.getElementById('gdNo').value = data.gdNo || '';
+                document.getElementById('courtName').value = data.courtName || '';
+                document.getElementById('actsSections').value = data.actsSections || '';
+                document.getElementById('accusedName').value = data.accusedName || '';
+                document.getElementById('fatherHusbandName').value = data.fatherHusbandName || '';
+                document.getElementById('firstAlias').value = data.firstAlias || '';
+                document.getElementById('secondAlias').value = data.secondAlias || '';
+                document.getElementById('otherAliases').value = data.otherAliases || '';
+                document.getElementById('nationality').value = data.nationality || '';
+                document.getElementById('passportNo').value = data.passportNo || '';
+                document.getElementById('passportIssueDate').value = data.passportIssueDate || '';
+                document.getElementById('passportIssuePlace').value = data.passportIssuePlace || '';
+                document.getElementById('religion').value = data.religion || '';
+                document.getElementById('casteTribe').value = data.casteTribe || '';
+                document.getElementById('scst').value = data.scst || '';
+                document.getElementById('occupation').value = data.occupation || '';
+                document.getElementById('permanentAddress').value = data.permanentAddress || '';
+                document.getElementById('permanentDistrict').value = data.permanentDistrict || '';
+                document.getElementById('permanentPS').value = data.permanentPS || '';
+                document.getElementById('presentAddress').value = data.presentAddress || '';
+                document.getElementById('presentDistrict').value = data.presentDistrict || '';
+                document.getElementById('presentPS').value = data.presentPS || '';
+                document.getElementById('injuriesDetails').value = data.injuriesDetails || '';
+                document.getElementById('custodyDate').value = data.custodyDate || '';
+                document.getElementById('custodyTime').value = data.custodyTime || '';
+                document.getElementById('custodyPlace').value = data.custodyPlace || '';
+                document.getElementById('intimationRelationship').value = data.intimationRelationship || '';
+                document.getElementById('intimationName').value = data.intimationName || '';
+                document.getElementById('arrestNarrative').value = data.arrestNarrative || '';
+                document.getElementById('fingerprintStatus').value = data.fingerprintStatus || '';
+                document.getElementById('fingerprintDetails').value = data.fingerprintDetails || '';
+                document.getElementById('livingStatus').value = data.livingStatus || '';
+                document.getElementById('education').value = data.education || '';
+                document.getElementById('socioOccupation').value = data.socioOccupation || '';
+                document.getElementById('otherFeatures').value = data.otherFeatures || '';
+                document.getElementById('criminalHistory').value = data.criminalHistory || '';
+                document.getElementById('ioName').value = data.ioName || '';
+                document.getElementById('ioRank').value = data.ioRank || '';
+                document.getElementById('ioNumber').value = data.ioNumber || '';
+                document.getElementById('ioDate').value = data.ioDate || '';
+                document.getElementById('ioPlace').value = data.ioPlace || '';
+                document.getElementById('officerRemarks').value = data.officerRemarks || '';
 
-                // Convert Blobs to base64 for storage
-                const pdfBase64 = await blobToBase64(pdfData);
-                const wordBase64 = await blobToBase64(wordData);
-
-                // Collect form data
-                const formData = collectFormData();
-
-                // Create record object
-                const record = {
-                    id: Date.now(),
-                    type: "IIF-3",
-                    date: new Date().toISOString().split('T')[0],
-                    policeStation: formData.policeStation,
-                    officerName: formData.ioName,
-                    accusedName: formData.accusedName,
-                    formData: formData,
-                    pdfFile: pdfBase64,
-                    wordFile: wordBase64,
-                    status: "Pending"
-                };
-
-                // Get existing records from localStorage
-                let records = JSON.parse(localStorage.getItem('iifRecords')) || [];
-
-                // Add the new record
-                records.push(record);
-
-                // Save back to localStorage
-                localStorage.setItem('iifRecords', JSON.stringify(records));
-
-                // Notify parent window (dashboard) that form was saved
-                if (window.parent !== window) {
-                    window.parent.postMessage({
-                        type: 'FORM_SAVED',
-                        formType: 'IIF-3',
-                        recordId: record.id
-                    }, '*');
+                // Restore checkboxes and radio buttons
+                if (data.arrestStatus) {
+                    document.querySelectorAll('input[name="arrestStatus"]').forEach(checkbox => {
+                        checkbox.checked = data.arrestStatus.includes(checkbox.nextElementSibling.textContent);
+                    });
                 }
 
-                alert('Form saved to records successfully!');
+                if (data.incomeGroup) {
+                    document.querySelector(`input[value="${data.incomeGroup}"]`).checked = true;
+                }
+
+                if (data.additionalInfo) {
+                    data.additionalInfo.forEach(info => {
+                        const checkbox = document.querySelector(`input[value="${info}"]`);
+                        if (checkbox) checkbox.checked = true;
+                    });
+                }
+
+                // Restore tables
+                restoreTableData('articlesTable', data.articlesTable);
+                restoreTableData('physicalFeaturesTable', data.physicalFeaturesTable);
+                restoreTableData('physicalFeaturesTable2', data.physicalFeaturesTable2);
+                restoreTableData('physicalFeaturesTable3', data.physicalFeaturesTable3);
+
+                generatePreview();
+                alert('Saved form loaded.');
             } catch (error) {
-                console.error("Error saving to records:", error);
-                alert("Error saving form to records: " + error.message);
+                alert("Error loading saved form.");
             }
         }
 
-        async function generatePDFBlob() {
-            return new Promise((resolve, reject) => {
-                const element = document.getElementById('formPreview');
-                const opt = {
-                    margin: 10,
-                    filename: 'iif-3-form.pdf',
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { scale: 2 },
-                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-                };
-
-                html2pdf().set(opt).from(element).output('blob').then(resolve).catch(reject);
-            });
-        }
-
-        async function generateWordBlob() {
-            return new Promise((resolve) => {
-                // Create HTML content for Word
-                const htmlContent = `
-                                <html xmlns:o="urn:schemas-microsoft-com:office:office"
-                                      xmlns:w="urn:schemas-microsoft-com:office:word"
-                                      xmlns="http://www.w3.org/TR/REC-html40">
-                                <head>
-                                    <meta charset="utf-8">
-                                    <title>IIF-3 Form</title>
-                                    <style>
-                                        body {
-                                            font-family: 'Times New Roman', serif;
-                                            font-size: 12pt;
-                                            line-height: 1.5;
-                                        }
-                                        h1, h2, h3, h4 {
-                                            color: #1a2a6c;
-                                        }
-                                        h1 {
-                                            font-size: 16pt;
-                                            text-align: center;
-                                        }
-                                        h2 {
-                                            font-size: 14pt;
-                                            margin-top: 12pt;
-                                            margin-bottom: 6pt;
-                                        }
-                                        table {
-                                            width: 100%;
-                                            border-collapse: collapse;
-                                            margin: 6pt 0;
-                                        }
-                                        th, td {
-                                            border: 1px solid #000;
-                                            padding: 4pt;
-                                            text-align: left;
-                                        }
-                                        th {
-                                            background-color: #f3f6fb;
-                                            font-weight: bold;
-                                        }
-                                        .field-label {
-                                            font-weight: bold;
-                                            width: 220px;
-                                            display: inline-block;
-                                        }
-                                        .signature-area {
-                                            margin-top: 30pt;
-                                            display: flex;
-                                            justify-content: space-between;
-                                        }
-                                        .signature-box {
-                                            border-top: 1px solid #000;
-                                            width: 250px;
-                                            padding-top: 5px;
-                                            text-align: center;
-                                        }
-                                    </style>
-                                </head>
-                                <body>
-                                    <h1>IIF-3 Form</h1>
-                                    <p style="text-align: center; font-style: italic;">Arrest/Court Surrender Memo</p>
-                                    ${document.getElementById('formPreview').innerHTML}
-                                </body>
-                                </html>
-                            `;
-
-                const blob = new Blob([htmlContent], { type: 'application/msword' });
-                resolve(blob);
-            });
-        }
-
-        function blobToBase64(blob) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onloadend = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(blob);
-            });
+        function deleteFormLocal() {
+            if (!confirm('Delete locally saved form?')) return;
+            localStorage.removeItem('iif3Form');
+            alert('Saved form deleted.');
         }
 
         function collectFormData() {
@@ -1586,11 +1864,14 @@
                 custodyPlace: document.getElementById('custodyPlace').value,
                 intimationRelationship: document.getElementById('intimationRelationship').value,
                 intimationName: document.getElementById('intimationName').value,
+                arrestNarrative: document.getElementById('arrestNarrative').value,
                 fingerprintStatus: document.getElementById('fingerprintStatus').value,
+                fingerprintDetails: document.getElementById('fingerprintDetails').value,
                 livingStatus: document.getElementById('livingStatus').value,
                 education: document.getElementById('education').value,
                 socioOccupation: document.getElementById('socioOccupation').value,
                 otherFeatures: document.getElementById('otherFeatures').value,
+                criminalHistory: document.getElementById('criminalHistory').value,
                 incomeGroup: incomeGroup,
                 additionalInfo: additionalInfo,
                 ioName: document.getElementById('ioName').value,
@@ -1598,6 +1879,7 @@
                 ioNumber: document.getElementById('ioNumber').value,
                 ioDate: document.getElementById('ioDate').value,
                 ioPlace: document.getElementById('ioPlace').value,
+                officerRemarks: document.getElementById('officerRemarks').value,
 
                 // Table data
                 articlesTable: getTableData('articlesTable'),
@@ -1652,103 +1934,6 @@
                     }
                 }
             }
-        }
-
-        // ==================== LOCAL STORAGE FUNCTIONS ====================
-        function loadFormLocal() {
-            const raw = localStorage.getItem('iif3Form');
-            if (!raw) {
-                alert('No saved form found.');
-                return;
-            }
-
-            try {
-                const data = JSON.parse(raw);
-
-                // Restore basic information
-                document.getElementById('district').value = data.district || '';
-                document.getElementById('policeStation').value = data.policeStation || '';
-                document.getElementById('year').value = data.year || '';
-                document.getElementById('firNo').value = data.firNo || '';
-                document.getElementById('firDate').value = data.firDate || '';
-                document.getElementById('accusedCode').value = data.accusedCode || '';
-                document.getElementById('arrestDate').value = data.arrestDate || '';
-                document.getElementById('arrestTime').value = data.arrestTime || '';
-                document.getElementById('gdNo').value = data.gdNo || '';
-                document.getElementById('courtName').value = data.courtName || '';
-                document.getElementById('actsSections').value = data.actsSections || '';
-                document.getElementById('accusedName').value = data.accusedName || '';
-                document.getElementById('fatherHusbandName').value = data.fatherHusbandName || '';
-                document.getElementById('firstAlias').value = data.firstAlias || '';
-                document.getElementById('secondAlias').value = data.secondAlias || '';
-                document.getElementById('otherAliases').value = data.otherAliases || '';
-                document.getElementById('nationality').value = data.nationality || '';
-                document.getElementById('passportNo').value = data.passportNo || '';
-                document.getElementById('passportIssueDate').value = data.passportIssueDate || '';
-                document.getElementById('passportIssuePlace').value = data.passportIssuePlace || '';
-                document.getElementById('religion').value = data.religion || '';
-                document.getElementById('casteTribe').value = data.casteTribe || '';
-                document.getElementById('scst').value = data.scst || '';
-                document.getElementById('occupation').value = data.occupation || '';
-                document.getElementById('permanentAddress').value = data.permanentAddress || '';
-                document.getElementById('permanentDistrict').value = data.permanentDistrict || '';
-                document.getElementById('permanentPS').value = data.permanentPS || '';
-                document.getElementById('presentAddress').value = data.presentAddress || '';
-                document.getElementById('presentDistrict').value = data.presentDistrict || '';
-                document.getElementById('presentPS').value = data.presentPS || '';
-                document.getElementById('injuriesDetails').value = data.injuriesDetails || '';
-                document.getElementById('custodyDate').value = data.custodyDate || '';
-                document.getElementById('custodyTime').value = data.custodyTime || '';
-                document.getElementById('custodyPlace').value = data.custodyPlace || '';
-                document.getElementById('intimationRelationship').value = data.intimationRelationship || '';
-                document.getElementById('intimationName').value = data.intimationName || '';
-                document.getElementById('fingerprintStatus').value = data.fingerprintStatus || '';
-                document.getElementById('livingStatus').value = data.livingStatus || '';
-                document.getElementById('education').value = data.education || '';
-                document.getElementById('socioOccupation').value = data.socioOccupation || '';
-                document.getElementById('otherFeatures').value = data.otherFeatures || '';
-                document.getElementById('ioName').value = data.ioName || '';
-                document.getElementById('ioRank').value = data.ioRank || '';
-                document.getElementById('ioNumber').value = data.ioNumber || '';
-                document.getElementById('ioDate').value = data.ioDate || '';
-                document.getElementById('ioPlace').value = data.ioPlace || '';
-
-                // Restore checkboxes and radio buttons
-                if (data.arrestStatus) {
-                    document.querySelectorAll('input[name="arrestStatus"]').forEach(checkbox => {
-                        checkbox.checked = data.arrestStatus.includes(checkbox.nextElementSibling.textContent);
-                    });
-                }
-
-                if (data.incomeGroup) {
-                    document.querySelector(`input[value="${data.incomeGroup}"]`).checked = true;
-                }
-
-                if (data.additionalInfo) {
-                    data.additionalInfo.forEach(info => {
-                        const checkbox = document.querySelector(`input[value="${info}"]`);
-                        if (checkbox) checkbox.checked = true;
-                    });
-                }
-
-                // Restore tables
-                restoreTableData('articlesTable', data.articlesTable);
-                restoreTableData('physicalFeaturesTable', data.physicalFeaturesTable);
-                restoreTableData('physicalFeaturesTable2', data.physicalFeaturesTable2);
-                restoreTableData('physicalFeaturesTable3', data.physicalFeaturesTable3);
-
-                generatePreview();
-                alert('Saved form loaded.');
-            } catch (error) {
-                console.error("Error loading form data:", error);
-                alert("Error loading saved form.");
-            }
-        }
-
-        function deleteFormLocal() {
-            if (!confirm('Delete locally saved form?')) return;
-            localStorage.removeItem('iif3Form');
-            alert('Saved form deleted.');
         }
 
         // ==================== UTILITY FUNCTIONS ====================
@@ -1837,6 +2022,7 @@
         window.removeRow = removeRow;
         window.addNewRow = addNewRow;
         window.toggleSection = toggleSection;
+        window.toggleVoiceInput = toggleVoiceInput;
     </script>
 </body>
 </html>
