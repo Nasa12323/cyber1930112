@@ -294,90 +294,16 @@
             margin-bottom: 10px;
         }
 
-        .two-column {
+        .row {
             display: flex;
             flex-wrap: wrap;
             gap: clamp(8px, 1.5vw, 12px);
             margin-bottom: clamp(8px, 1.5vw, 12px);
         }
 
-            .two-column .form-group {
-                flex: 1;
-                min-width: 200px;
-            }
-
-        /* VOICE-TO-TEXT STYLES */
-        .voice-input-wrapper {
-            position: relative;
-            width: 100%;
-        }
-
-        .voice-btn {
-            position: absolute;
-            right: 10px;
-            top: 10px;
-            background: #1a6c5c;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            z-index: 10;
-        }
-
-        .voice-btn:hover {
-            background: #2a7c6c;
-            transform: scale(1.1);
-        }
-
-        .voice-btn.listening {
-            background: #c62828;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { 
-                box-shadow: 0 0 0 0 rgba(198, 40, 40, 0.7); 
-            }
-            70% { 
-                box-shadow: 0 0 0 10px rgba(198, 40, 40, 0); 
-            }
-            100% { 
-                box-shadow: 0 0 0 0 rgba(198, 40, 40, 0); 
-            }
-        }
-
-        .voice-status {
-            position: absolute;
-            bottom: -25px;
-            left: 0;
-            font-size: 0.8rem;
-            color: #1a6c5c;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .voice-status.show {
-            opacity: 1;
-        }
-
-        .voice-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 5px;
-        }
-
-        .voice-command-hint {
-            font-size: 0.8rem;
-            color: #666;
-            font-style: italic;
-            margin-top: 5px;
+        .col {
+            flex: 1;
+            min-width: 200px;
         }
 
         @media (max-width: 768px) {
@@ -407,14 +333,8 @@
                 max-width: 250px;
             }
 
-            .two-column {
+            .row {
                 flex-direction: column;
-                gap: 0;
-            }
-
-            .voice-btn {
-                right: 5px;
-                top: 5px;
             }
         }
     </style>
@@ -423,651 +343,513 @@
     <div class="container">
         <header>
             <h1>CCTNS IIF-3 Form Generator</h1>
-            <p>Crime Investigation Form - Complete with Enhanced Voice-to-Text Features</p>
+            <p>Arrest/Court Surrender Memo - Complete with All Required Details</p>
         </header>
 
         <div class="content">
             <div class="form-container">
                 <h2>IIF-3 Form Details</h2>
 
-                <div class="section-title" onclick="toggleSection('basicInfo')">1. Basic Information</div>
-                <div id="basicInfo" class="section-content active">
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="district">District</label>
-                            <input type="text" id="district" placeholder="Enter district">
+                <div class="section-title" onclick="toggleSection('caseDetails')">1. Case Details</div>
+                <div id="caseDetails" class="section-content active">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="district">District</label>
+                                <input type="text" id="district" placeholder="Enter district">
+                            </div>
                         </div>
-
-                        <div class="form-group">
-                            <label for="policeStation">Police Station</label>
-                            <input type="text" id="policeStation" placeholder="Enter police station">
-                        </div>
-                    </div>
-
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="firNo">FIR No.</label>
-                            <input type="text" id="firNo" placeholder="Enter FIR number">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="firDate">Date</label>
-                            <input type="date" id="firDate">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section-title" onclick="toggleSection('actsSections')">2. Acts & Sections</div>
-                <div id="actsSections" class="section-content">
-                    <div class="table-container">
-                        <table id="actsTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Acts</th>
-                                    <th>Sections</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td><input type="text" placeholder="Enter Act"></td>
-                                    <td><input type="text" placeholder="Enter Section"></td>
-                                    <td><button onclick="removeRow(this)">Remove</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <button onclick="addNewRow('actsTable')">Add New Row</button>
-                </div>
-
-                <div class="section-title" onclick="toggleSection('placeOfOccurrence')">3. Place of Occurrence</div>
-                <div id="placeOfOccurrence" class="section-content">
-                    <div class="form-group">
-                        <label for="occurrenceAddress">Address of Occurrence</label>
-                        <div class="voice-input-wrapper">
-                            <textarea id="occurrenceAddress" placeholder="Enter complete address of occurrence location"></textarea>
-                            <button class="voice-btn" onclick="toggleVoiceInput('occurrenceAddress')">
-                                <i class="fas fa-microphone"></i>
-                            </button>
-                            <div class="voice-status" id="status-occurrenceAddress"></div>
-                        </div>
-                        <div class="voice-command-hint">
-                            Try saying: "house number", "street", "landmark", "city", "pin code"
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="policeStation">Police Station</label>
+                                <input type="text" id="policeStation" placeholder="Enter police station">
+                            </div>
                         </div>
                     </div>
 
-                    <div class="table-container">
-                        <table id="occurrenceTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Name</th>
-                                    <th>Relative Type</th>
-                                    <th>Relative Name</th>
-                                    <th>Address</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td><input type="text" placeholder="Name"></td>
-                                    <td><input type="text" placeholder="Relative Type"></td>
-                                    <td><input type="text" placeholder="Relative Name"></td>
-                                    <td><input type="text" placeholder="Address"></td>
-                                    <td><button onclick="removeRow(this)">Remove</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <button onclick="addNewRow('occurrenceTable')">Add New Row</button>
-                </div>
-
-                <div class="section-title" onclick="toggleSection('crimeType')">4. Type of Crime</div>
-                <div id="crimeType" class="section-content">
-                    <h4>I. Major Head</h4>
-                    <div class="table-container">
-                        <table id="majorHeadTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Major Head</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td><input type="text" placeholder="Major Head"></td>
-                                    <td><button onclick="removeRow(this)">Remove</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <button onclick="addNewRow('majorHeadTable')">Add New Row</button>
-
-                    <h4>II. Minor Head</h4>
-                    <div class="table-container">
-                        <table id="minorHeadTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Minor Head</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td><input type="text" placeholder="Minor Head"></td>
-                                    <td><button onclick="removeRow(this)">Remove</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <button onclick="addNewRow('minorHeadTable')">Add New Row</button>
-
-                    <h4>III. Modus Operandi</h4>
-                    <div class="table-container">
-                        <table id="modusOperandiTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Modus Operandi</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td><input type="text" placeholder="Modus Operandi"></td>
-                                    <td><button onclick="removeRow(this)">Remove</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <button onclick="addNewRow('modusOperandiTable')">Add New Row</button>
-
-                    <h4>IV. Conveyance(s) Used</h4>
-                    <div class="table-container">
-                        <table id="conveyanceTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Conveyance(s) Used</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td><input type="text" placeholder="Conveyance(s) Used"></td>
-                                    <td><button onclick="removeRow(this)">Remove</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <button onclick="addNewRow('conveyanceTable')">Add New Row</button>
-
-                    <h4>V. Character Assumed</h4>
-                    <div class="table-container">
-                        <table id="characterTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Character Assumed</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td><input type="text" placeholder="Character Assumed"></td>
-                                    <td><button onclick="removeRow(this)">Remove</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <button onclick="addNewRow('characterTable')">Add New Row</button>
-
-                    <h4>VI. Language/Dialect Used</h4>
-                    <div class="table-container">
-                        <table id="languageTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Language/Dialect Used</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td><input type="text" placeholder="Language/Dialect Used"></td>
-                                    <td><button onclick="removeRow(this)">Remove</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <button onclick="addNewRow('languageTable')">Add New Row</button>
-
-                    <h4>VII. Special Feature</h4>
-                    <div class="table-container">
-                        <table id="specialFeatureTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Special Feature</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td><input type="text" placeholder="Special Feature"></td>
-                                    <td><button onclick="removeRow(this)">Remove</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <button onclick="addNewRow('specialFeatureTable')">Add New Row</button>
-
-                    <h4>VIII. Type of Place of Occurrence</h4>
-                    <div class="table-container">
-                        <table id="placeTypeTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Type of Place of Occurrence</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td><input type="text" placeholder="Type of Place of Occurrence"></td>
-                                    <td><button onclick="removeRow(this)">Remove</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <button onclick="addNewRow('placeTypeTable')">Add New Row</button>
-
-                    <h4>IX. Type of Property Stolen</h4>
-                    <div class="table-container">
-                        <table id="propertyTypeTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Type of Property Stolen</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td><input type="text" placeholder="Type of Property Stolen"></td>
-                                    <td><button onclick="removeRow(this)">Remove</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <button onclick="addNewRow('propertyTypeTable')">Add New Row</button>
-                </div>
-
-                <div class="section-title" onclick="toggleSection('victimDetails')">5. Particulars of the Victim(s)</div>
-                <div id="victimDetails" class="section-content">
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="victimName">Name</label>
-                            <input type="text" id="victimName" placeholder="Enter victim name">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="year">Year</label>
+                                <input type="text" id="year" placeholder="Enter year">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="victimAge">Age</label>
-                            <input type="text" id="victimAge" placeholder="Enter victim age">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="firNo">FIR No. / Proceeding No.</label>
+                                <input type="text" id="firNo" placeholder="Enter FIR/Proceeding number">
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="victimInfo">Victim Details</label>
-                        <div class="voice-input-wrapper">
-                            <textarea id="victimInfo" placeholder="Enter complete victim details including name, age, address, contact information"></textarea>
-                            <button class="voice-btn" onclick="toggleVoiceInput('victimInfo')">
-                                <i class="fas fa-microphone"></i>
-                            </button>
-                            <div class="voice-status" id="status-victimInfo"></div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="firDate">Date</label>
+                                <input type="date" id="firDate">
+                            </div>
                         </div>
-                        <div class="voice-command-hint">
-                            Try saying: "victim name", "age", "gender", "contact details", "injuries sustained"
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="accusedCode">Alphanumeric code of the Accused</label>
+                                <input type="text" id="accusedCode" placeholder="e.g., A1, B1, etc.">
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="section-title" onclick="toggleSection('complainantInfo')">6. Complainant / Informant Details</div>
-                <div id="complainantInfo" class="section-content">
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="complainantName">Name</label>
-                            <input type="text" id="complainantName" placeholder="Enter name">
+                <div class="section-title" onclick="toggleSection('arrestDetails')">2. Arrest / Surrender Details</div>
+                <div id="arrestDetails" class="section-content">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="arrestDate">Date of Arrest / Surrender</label>
+                                <input type="date" id="arrestDate">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="complainantFather">Father's / Husband's Name</label>
-                            <input type="text" id="complainantFather" placeholder="Enter father's/husband's name">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="arrestTime">Time of Arrest / Surrender</label>
+                                <input type="time" id="arrestTime">
+                            </div>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="complainantAddress">Address</label>
-                        <div class="voice-input-wrapper">
-                            <textarea id="complainantAddress" placeholder="Enter complete complainant address"></textarea>
-                            <button class="voice-btn" onclick="toggleVoiceInput('complainantAddress')">
-                                <i class="fas fa-microphone"></i>
-                            </button>
-                            <div class="voice-status" id="status-complainantAddress"></div>
-                        </div>
-                        <div class="voice-command-hint">
-                            Try saying: "house number", "street name", "area", "city", "pin code"
+                        <label for="gdNo">G.D. No.</label>
+                        <input type="text" id="gdNo" placeholder="Enter G.D. number">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="courtName">Name of the Court (if surrendered)</label>
+                        <input type="text" id="courtName" placeholder="Enter court name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="actsSections">Acts and Sections</label>
+                        <input type="text" id="actsSections" placeholder="Enter acts and sections">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Arrest/Surrender Status</label>
+                        <div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="status1" name="arrestStatus">
+                                <label for="status1">Arrested and sent up</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="status2" name="arrestStatus">
+                                <label for="status2">Arrested and released on bail</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="status3" name="arrestStatus">
+                                <label for="status3">Surrendered in court and bailed out</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="status4" name="arrestStatus">
+                                <label for="status4">Surrendered in court and sent to judicial custody</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="status5" name="arrestStatus">
+                                <label for="status5">Surrendered in court and remanded to Police custody</label>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="section-title" onclick="toggleSection('accusedDetails')">7. Accused & Other Details</div>
+                <div class="section-title" onclick="toggleSection('accusedDetails')">3. Particulars of the Accused</div>
                 <div id="accusedDetails" class="section-content">
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="accusedName">Name</label>
-                            <input type="text" id="accusedName" placeholder="Enter accused name">
+                    <div class="form-group">
+                        <label for="accusedName">(i) Name</label>
+                        <input type="text" id="accusedName" placeholder="Enter accused name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fatherHusbandName">(ii) Father's / Husband's Name</label>
+                        <input type="text" id="fatherHusbandName" placeholder="Enter father's/husband's name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="firstAlias">(iii) First Alias</label>
+                        <input type="text" id="firstAlias" placeholder="Enter first alias">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="secondAlias">(iv) Second Aliases</label>
+                        <input type="text" id="secondAlias" placeholder="Enter second aliases">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="otherAliases">(v) Other Aliases</label>
+                        <input type="text" id="otherAliases" placeholder="Enter other aliases">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nationality">(vi) Nationality</label>
+                        <input type="text" id="nationality" placeholder="Enter nationality">
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="passportNo">(vii)(a) Passport No.</label>
+                                <input type="text" id="passportNo" placeholder="Enter passport number">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="accusedAge">Age</label>
-                            <input type="text" id="accusedAge" placeholder="Enter accused age">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="passportIssueDate">(b) Date of Issue</label>
+                                <input type="date" id="passportIssueDate">
+                            </div>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="accusedDetailsText">Details of Accused Persons</label>
-                        <div class="voice-input-wrapper">
-                            <textarea id="accusedDetailsText" placeholder="Enter complete accused details including names, descriptions, roles in crime"></textarea>
-                            <button class="voice-btn" onclick="toggleVoiceInput('accusedDetailsText')">
-                                <i class="fas fa-microphone"></i>
-                            </button>
-                            <div class="voice-status" id="status-accusedDetailsText"></div>
+                        <label for="passportIssuePlace">(c) Place of Issue</label>
+                        <input type="text" id="passportIssuePlace" placeholder="Enter place of issue">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="religion">(viii) Religion</label>
+                        <input type="text" id="religion" placeholder="Enter religion">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="casteTribe">(ix) Caste / Tribe</label>
+                        <input type="text" id="casteTribe" placeholder="Enter caste/tribe">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="scst">(x) SC/ST</label>
+                        <input type="text" id="scst" placeholder="Enter SC/ST status">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="occupation">(xi) Occupation</label>
+                        <input type="text" id="occupation" placeholder="Enter occupation">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="permanentAddress">(xii) Permanent address</label>
+                        <textarea id="permanentAddress" placeholder="Enter permanent address"></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="permanentDistrict">District</label>
+                                <input type="text" id="permanentDistrict" placeholder="Enter district">
+                            </div>
                         </div>
-                        <div class="voice-command-hint">
-                            Try saying: "suspect name", "age", "description", "clothing", "weapons used"
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="permanentPS">P.S.</label>
+                                <input type="text" id="permanentPS" placeholder="Enter police station">
+                            </div>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="delayDetails">Reasons for Delay in Reporting</label>
-                        <div class="voice-input-wrapper">
-                            <textarea id="delayDetails" placeholder="Enter reasons for any delay in reporting the crime"></textarea>
-                            <button class="voice-btn" onclick="toggleVoiceInput('delayDetails')">
-                                <i class="fas fa-microphone"></i>
-                            </button>
-                            <div class="voice-status" id="status-delayDetails"></div>
+                        <label for="presentAddress">(xiii) Present Address</label>
+                        <textarea id="presentAddress" placeholder="Enter present address"></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="presentDistrict">District</label>
+                                <input type="text" id="presentDistrict" placeholder="Enter district">
+                            </div>
                         </div>
-                        <div class="voice-command-hint">
-                            Try saying: "fear", "threats", "unaware", "hospitalization", "witness unavailable"
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="presentPS">P.S.</label>
+                                <input type="text" id="presentPS" placeholder="Enter police station">
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="section-title" onclick="toggleSection('motive')">8. Motive of Crime</div>
-                <div id="motive" class="section-content">
+                <div class="section-title" onclick="toggleSection('injuries')">4. Injuries and Physical Condition</div>
+                <div id="injuries" class="section-content">
                     <div class="form-group">
-                        <label for="motiveText">Motive Details</label>
-                        <div class="voice-input-wrapper">
-                            <textarea id="motiveText" placeholder="Enter detailed motive behind the crime"></textarea>
-                            <button class="voice-btn" onclick="toggleVoiceInput('motiveText')">
-                                <i class="fas fa-microphone"></i>
-                            </button>
-                            <div class="voice-status" id="status-motiveText"></div>
-                        </div>
-                        <div class="voice-command-hint">
-                            Try saying: "revenge", "financial gain", "personal dispute", "property dispute"
-                        </div>
+                        <label for="injuriesDetails">Injuries, cause of injuries and physical condition of the accused person (Indicate if medically examined)</label>
+                        <textarea id="injuriesDetails" placeholder="Enter details of injuries and physical condition"></textarea>
                     </div>
                 </div>
 
-                <div class="section-title" onclick="toggleSection('stolenProperties')">9. Details of Properties Stolen</div>
-                <div id="stolenProperties" class="section-content">
+                <div class="section-title" onclick="toggleSection('arrestProcedure')">5. Arrest Procedure and Personal Effects</div>
+                <div id="arrestProcedure" class="section-content">
                     <div class="form-group">
-                        <label for="propertyInfo">Property Particulars</label>
-                        <div class="voice-input-wrapper">
-                            <textarea id="propertyInfo" placeholder="Enter detailed description of stolen properties"></textarea>
-                            <button class="voice-btn" onclick="toggleVoiceInput('propertyInfo')">
-                                <i class="fas fa-microphone"></i>
-                            </button>
-                            <div class="voice-status" id="status-propertyInfo"></div>
+                        <label for="custodyDetails">The accused, after being informed of the grounds of arrest and his legal rights, was duly taken into custody on</label>
+                        <div class="row">
+                            <div class="col">
+                                <input type="date" id="custodyDate" placeholder="Date">
+                            </div>
+                            <div class="col">
+                                <input type="time" id="custodyTime" placeholder="Time">
+                            </div>
                         </div>
-                        <div class="voice-command-hint">
-                            Try saying: "cash amount", "jewelry description", "electronic devices", "vehicle details"
-                        </div>
+                        <input type="text" id="custodyPlace" placeholder="Place" style="margin-top: 10px;">
                     </div>
 
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="propertyValue">Estimated Value</label>
-                            <input type="text" id="propertyValue" placeholder="Enter estimated value">
+                    <div class="form-group">
+                        <label for="articlesFound">The following article(s) was/were found on physical search, conducted on the person of the accused, and were taken into possession for which a receipt was given to the accused.</label>
+                        <div class="table-container">
+                            <table id="articlesTable">
+                                <thead>
+                                    <tr>
+                                        <th>S.No.</th>
+                                        <th>Article Description</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td><input type="text" placeholder="Article description"></td>
+                                        <td><button onclick="removeRow(this)">Remove</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="form-group">
-                            <label for="propertyRecoveryStatus">Recovery Status</label>
-                            <select id="propertyRecoveryStatus">
-                                <option value="">Select Status</option>
-                                <option value="recovered">Recovered</option>
-                                <option value="partially-recovered">Partially Recovered</option>
-                                <option value="not-recovered">Not Recovered</option>
-                            </select>
-                        </div>
+                        <button onclick="addNewRow('articlesTable')">Add Article</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="intimation">Intimation given to</label>
+                        <input type="text" id="intimationRelationship" placeholder="Relationship" style="margin-bottom: 10px;">
+                        <input type="text" id="intimationName" placeholder="Name">
                     </div>
                 </div>
 
-                <div class="section-title" onclick="toggleSection('visitDetails')">10. Date and Time of Visit to the Place of Occurrence</div>
-                <div id="visitDetails" class="section-content">
+                <div class="section-title" onclick="toggleSection('physicalFeatures')">6. Physical Features and Identification</div>
+                <div id="physicalFeatures" class="section-content">
                     <div class="table-container">
-                        <table id="visitTable">
+                        <table id="physicalFeaturesTable">
                             <thead>
                                 <tr>
-                                    <th>S.No.</th>
-                                    <th>Date</th>
-                                    <th>Time</th>
-                                    <th>Officer Name</th>
-                                    <th>Action</th>
+                                    <th>*Sex</th>
+                                    <th>*Date/Year of Birth</th>
+                                    <th>*Build</th>
+                                    <th>*Height in Cms.</th>
+                                    <th>*Complexion</th>
+                                    <th>*Identification Marks</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>1</td>
-                                    <td><input type="date"></td>
-                                    <td><input type="time"></td>
-                                    <td><input type="text" placeholder="Officer Name"></td>
-                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                    <td><input type="text" placeholder="Sex"></td>
+                                    <td><input type="text" placeholder="Date/Year"></td>
+                                    <td><input type="text" placeholder="Build"></td>
+                                    <td><input type="text" placeholder="Height"></td>
+                                    <td><input type="text" placeholder="Complexion"></td>
+                                    <td><input type="text" placeholder="Identification Marks"></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <button onclick="addNewRow('visitTable')">Add New Row</button>
-                </div>
 
-                <div class="section-title" onclick="toggleSection('placeDescription')">11. Description of the Place of Occurrence</div>
-                <div id="placeDescription" class="section-content">
-                    <div class="form-group">
-                        <label for="placeDescriptionText">Detailed Description</label>
-                        <div class="voice-input-wrapper">
-                            <textarea id="placeDescriptionText" placeholder="Enter detailed description of place of occurrence"></textarea>
-                            <button class="voice-btn" onclick="toggleVoiceInput('placeDescriptionText')">
-                                <i class="fas fa-microphone"></i>
-                            </button>
-                            <div class="voice-status" id="status-placeDescriptionText"></div>
-                        </div>
-                        <div class="voice-command-hint">
-                            Try saying: "building type", "room layout", "access points", "neighborhood description"
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section-title" onclick="toggleSection('physicalEvidence')">12. Description of Physical Evidence</div>
-                <div id="physicalEvidence" class="section-content">
-                    <h4>Physical Evidence Details</h4>
-                    <div class="form-group">
-                        <label for="physicalEvidenceText">Evidence Collected</label>
-                        <div class="voice-input-wrapper">
-                            <textarea id="physicalEvidenceText" placeholder="Enter detailed description of physical evidence collected"></textarea>
-                            <button class="voice-btn" onclick="toggleVoiceInput('physicalEvidenceText')">
-                                <i class="fas fa-microphone"></i>
-                            </button>
-                            <div class="voice-status" id="status-physicalEvidenceText"></div>
-                        </div>
-                        <div class="voice-command-hint">
-                            Try saying: "fingerprints location", "weapons found", "clothing items", "footprints", "DNA samples"
-                        </div>
-                    </div>
-
-                    <h4>Witness Details</h4>
                     <div class="table-container">
-                        <table id="witnessTable">
+                        <table id="physicalFeaturesTable2">
                             <thead>
                                 <tr>
-                                    <th>S.No.</th>
-                                    <th>Witness Name</th>
-                                    <th>Address</th>
-                                    <th>Contact No.</th>
-                                    <th>Statement</th>
-                                    <th>Action</th>
+                                    <th>*Deformities/peculiarities</th>
+                                    <th>*Teeth</th>
+                                    <th>*Hair</th>
+                                    <th>*Eye</th>
+                                    <th>*Habit(s)</th>
+                                    <th>*Dress habits</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>1</td>
-                                    <td><input type="text" placeholder="Witness Name"></td>
-                                    <td><input type="text" placeholder="Address"></td>
-                                    <td><input type="text" placeholder="Contact No."></td>
-                                    <td><input type="text" placeholder="Statement Summary"></td>
-                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                    <td><input type="text"></td>
+                                    <td><input type="text"></td>
+                                    <td><input type="text"></td>
+                                    <td><input type="text"></td>
+                                    <td><input type="text"></td>
+                                    <td><input type="text"></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <button onclick="addNewRow('witnessTable')">Add New Row</button>
-                </div>
 
-                <div class="section-title" onclick="toggleSection('sketch')">13. Sketch / Map of the Place of Occurrence</div>
-                <div id="sketch" class="section-content">
-                    <div class="form-group">
-                        <label for="sketchDetails">Sketch/Map Description</label>
-                        <div class="voice-input-wrapper">
-                            <textarea id="sketchDetails" placeholder="Enter detailed description of sketch/map"></textarea>
-                            <button class="voice-btn" onclick="toggleVoiceInput('sketchDetails')">
-                                <i class="fas fa-microphone"></i>
-                            </button>
-                            <div class="voice-status" id="status-sketchDetails"></div>
-                        </div>
-                        <div class="voice-command-hint">
-                            Try saying: "north direction", "measurements", "landmarks", "entry exit points", "scale"
-                        </div>
+                    <div class="table-container">
+                        <table id="physicalFeaturesTable3">
+                            <thead>
+                                <tr>
+                                    <th>*Languages/Dialect</th>
+                                    <th colspan="5">PLACE OF</th>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <th>*Burn Mark</th>
+                                    <th>*Leucoderma</th>
+                                    <th>*Mole</th>
+                                    <th>*Scar</th>
+                                    <th>*Tattoo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="text"></td>
+                                    <td><input type="text"></td>
+                                    <td><input type="text"></td>
+                                    <td><input type="text"></td>
+                                    <td><input type="text"></td>
+                                    <td><input type="text"></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
 
-                    <div class="two-column">
+                    <div class="form-group">
+                        <label for="otherFeatures">*Other features</label>
+                        <input type="text" id="otherFeatures" placeholder="Enter other features">
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('fingerprint')">7. Fingerprint Information</div>
+                <div id="fingerprint" class="section-content">
+                    <div class="form-group">
+                        <label for="fingerprintStatus">Whether finger-print taken or not?</label>
+                        <input type="text" id="fingerprintStatus" placeholder="Enter fingerprint status">
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('socioEconomic')">8. Socio-economic Profile</div>
+                <div id="socioEconomic" class="section-content">
+                    <div class="form-group">
+                        <label for="livingStatus">(a) Living Status</label>
+                        <select id="livingStatus">
+                            <option value="">Select Living Status</option>
+                            <option value="alone">Living alone</option>
+                            <option value="family">With Family/Relation/Associate in Pucca House</option>
+                            <option value="hotel">Hotel</option>
+                            <option value="hostel">Hostel</option>
+                            <option value="kachcha">Kachcha House</option>
+                            <option value="thatched">Thatched House</option>
+                            <option value="slum">Slum</option>
+                            <option value="homeless">Homeless</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="education">(b) Educational qualification(s)</label>
+                        <input type="text" id="education" placeholder="Enter educational qualifications">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="socioOccupation">(c) Occupation</label>
+                        <input type="text" id="socioOccupation" placeholder="Enter occupation">
+                    </div>
+
+                    <div class="form-group">
+                        <label>(d) Income Group</label>
+                        <div>
+                            <div class="checkbox-group">
+                                <input type="radio" id="income1" name="incomeGroup" value="Lower Income (Below Rs. 500/P.M.)">
+                                <label for="income1">Lower Income (Below Rs. 500/P.M.)</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="radio" id="income2" name="incomeGroup" value="Lower middle Income (From Rs. 501 to Rs. 1000)">
+                                <label for="income2">Lower middle Income (From Rs. 501 to Rs. 1000)</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="radio" id="income3" name="incomeGroup" value="Middle Income (From Rs. 1001 to Rs. 2000)">
+                                <label for="income3">Middle Income (From Rs. 1001 to Rs. 2000)</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="radio" id="income4" name="incomeGroup" value="Upper Middle Income (From Rs. 2001 to 3000)">
+                                <label for="income4">Upper Middle Income (From Rs. 2001 to 3000)</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="radio" id="income5" name="incomeGroup" value="Upper Income (above Rs. 3000)">
+                                <label for="income5">Upper Income (above Rs. 3000)</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title" onclick="toggleSection('additionalInfo')">9. Additional Information</div>
+                <div id="additionalInfo" class="section-content">
+                    <div class="form-group">
+                        <label>Whether the accused person, as per the observations and known Police records:</label>
                         <div class="checkbox-group">
-                            <input type="checkbox" id="draftsmanPrepared">
-                            <label for="draftsmanPrepared">Whether the Sketch/Map prepared by draftsman?</label>
+                            <input type="checkbox" id="dangerous">
+                            <label for="dangerous">(a) Is dangerous</label>
                         </div>
                         <div class="checkbox-group">
-                            <input type="checkbox" id="sketchAttached">
-                            <label for="sketchAttached">Sketch/Map attached to file?</label>
+                            <input type="checkbox" id="escapedBail">
+                            <label for="escapedBail">(b) Previously escaped any bail</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="generallyArmed">
+                            <label for="generallyArmed">(c) Is generally armed</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="operatesWithAccomplices">
+                            <label for="operatesWithAccomplices">(d) Operates with accomplices</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="pastCriminalRecords">
+                            <label for="pastCriminalRecords">(e) Has past criminal records</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="recidivist">
+                            <label for="recidivist">(f) Is recidivist</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="likelyEscapeBail">
+                            <label for="likelyEscapeBail">(g) Is likely to escape bail</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="likelyCommitCrime">
+                            <label for="likelyCommitCrime">(h) If released on bail, is likely to commit another crime Immediately or threaten the victims / witnesses</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="wantedOtherCase">
+                            <label for="wantedOtherCase">(i) Is wanted in any other case</label>
                         </div>
                     </div>
                 </div>
 
-                <div class="section-title" onclick="toggleSection('firContents')">14. FIR Contents</div>
-                <div id="firContents" class="section-content">
-                    <div class="form-group">
-                        <label for="firText">FIR Detailed Contents</label>
-                        <div class="voice-input-wrapper">
-                            <textarea id="firText" placeholder="Enter complete FIR contents and narrative"></textarea>
-                            <button class="voice-btn" onclick="toggleVoiceInput('firText')">
-                                <i class="fas fa-microphone"></i>
-                            </button>
-                            <div class="voice-status" id="status-firText"></div>
-                        </div>
-                        <div class="voice-command-hint">
-                            Try saying: "incident description", "sequence of events", "witness statements", "evidence details"
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section-title" onclick="toggleSection('actionTaken')">15. Action Taken Details</div>
-                <div id="actionTaken" class="section-content">
-                    <div class="form-group">
-                        <label for="actionDetails">Investigation Actions</label>
-                        <div class="voice-input-wrapper">
-                            <textarea id="actionDetails" placeholder="Enter detailed actions taken during investigation"></textarea>
-                            <button class="voice-btn" onclick="toggleVoiceInput('actionDetails')">
-                                <i class="fas fa-microphone"></i>
-                            </button>
-                            <div class="voice-status" id="status-actionDetails"></div>
-                        </div>
-                        <div class="voice-command-hint">
-                            Try saying: "investigation started", "suspect detained", "evidence secured", "witness interviewed"
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section-title" onclick="toggleSection('gist')">16. Gist of Investigation</div>
-                <div id="gist" class="section-content">
-                    <div class="form-group">
-                        <label for="gistText">Investigation Summary</label>
-                        <div class="voice-input-wrapper">
-                            <textarea id="gistText" placeholder="Enter comprehensive gist of the investigation"></textarea>
-                            <button class="voice-btn" onclick="toggleVoiceInput('gistText')">
-                                <i class="fas fa-microphone"></i>
-                            </button>
-                            <div class="voice-status" id="status-gistText"></div>
-                        </div>
-                        <div class="voice-command-hint">
-                            Try saying: "summary of findings", "key evidence", "suspect identification", "case status"
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section-title" onclick="toggleSection('signature')">Signature Details</div>
+                <div class="section-title" onclick="toggleSection('signature')">10. Signature of the Investigating officer</div>
                 <div id="signature" class="section-content">
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="investigationOfficer">Signature of the Investigation Officer</label>
-                            <input type="text" id="investigationOfficer" placeholder="Enter officer name">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="ioName">Name</label>
+                                <input type="text" id="ioName" placeholder="Enter name">
+                            </div>
                         </div>
-
-                        <div class="form-group">
-                            <label for="officerName">Name</label>
-                            <input type="text" id="officerName" placeholder="Enter officer name">
-                        </div>
-                    </div>
-
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="officerRank">Rank</label>
-                            <input type="text" id="officerRank" placeholder="Enter officer rank">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="officerNo">No.</label>
-                            <input type="text" id="officerNo" placeholder="Enter officer number">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="ioRank">Rank</label>
+                                <input type="text" id="ioRank" placeholder="Enter rank">
+                            </div>
                         </div>
                     </div>
 
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="completionDate">Date</label>
-                            <input type="date" id="completionDate">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="ioNumber">Number, if any</label>
+                                <input type="text" id="ioNumber" placeholder="Enter number">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="stationName">Station Name</label>
-                            <input type="text" id="stationName" placeholder="Enter station name">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="ioDate">Date</label>
+                                <input type="date" id="ioDate">
+                            </div>
                         </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ioPlace">Place</label>
+                        <input type="text" id="ioPlace" placeholder="Enter place">
                     </div>
                 </div>
 
@@ -1086,97 +868,168 @@
                 <div id="formPreview" class="form-preview">
                     <div class="preview-header">
                         <h3>CCTNS IIF-3 Form</h3>
-                        <p>Crime Investigation Report with Enhanced Voice-to-Text</p>
+                        <p>Arrest/Court Surrender Memo - Separate Memo for each accused</p>
                     </div>
 
-                    <!-- Preview content will be generated here -->
                     <div class="preview-section">
-                        <h4>1. Basic Information</h4>
+                        <h4>1. Case Details</h4>
                         <p><strong>District:</strong> <span id="previewDistrict">Not specified</span></p>
                         <p><strong>Police Station:</strong> <span id="previewPoliceStation">Not specified</span></p>
-                        <p><strong>FIR No.:</strong> <span id="previewFirNo">Not specified</span></p>
+                        <p><strong>Year:</strong> <span id="previewYear">Not specified</span></p>
+                        <p><strong>FIR No. / Proceeding No.:</strong> <span id="previewFirNo">Not specified</span></p>
                         <p><strong>Date:</strong> <span id="previewFirDate">Not specified</span></p>
+                        <p><strong>Alphanumeric code of the Accused:</strong> <span id="previewAccusedCode">Not specified</span></p>
                     </div>
 
                     <div class="preview-section">
-                        <h4>3. Place of Occurrence</h4>
-                        <p><strong>Address:</strong> <span id="previewOccurrenceAddress">Not specified</span></p>
+                        <h4>2. Arrest / Surrender Details</h4>
+                        <p><strong>Date of Arrest / Surrender:</strong> <span id="previewArrestDate">Not specified</span></p>
+                        <p><strong>Time of Arrest / Surrender:</strong> <span id="previewArrestTime">Not specified</span></p>
+                        <p><strong>G.D. No.:</strong> <span id="previewGdNo">Not specified</span></p>
+                        <p><strong>Name of the Court (if surrendered):</strong> <span id="previewCourtName">Not specified</span></p>
+                        <p><strong>Acts and Sections:</strong> <span id="previewActsSections">Not specified</span></p>
+                        <p><strong>Arrest/Surrender Status:</strong> <span id="previewArrestStatus">Not specified</span></p>
                     </div>
 
                     <div class="preview-section">
-                        <h4>5. Particulars of the Victim(s)</h4>
-                        <p><strong>Name:</strong> <span id="previewVictimName">Not specified</span></p>
-                        <p><strong>Age:</strong> <span id="previewVictimAge">Not specified</span></p>
-                        <p><strong>Details:</strong> <span id="previewVictimInfo">Not specified</span></p>
-                    </div>
-
-                    <div class="preview-section">
-                        <h4>6. Complainant / Informant Details</h4>
-                        <p><strong>Name:</strong> <span id="previewComplainantName">Not specified</span></p>
-                        <p><strong>Father's/Husband's Name:</strong> <span id="previewComplainantFather">Not specified</span></p>
-                        <p><strong>Address:</strong> <span id="previewComplainantAddress">Not specified</span></p>
-                    </div>
-
-                    <div class="preview-section">
-                        <h4>7. Accused & Other Details</h4>
+                        <h4>3. Particulars of the Accused</h4>
                         <p><strong>Name:</strong> <span id="previewAccusedName">Not specified</span></p>
-                        <p><strong>Age:</strong> <span id="previewAccusedAge">Not specified</span></p>
-                        <p><strong>Accused Details:</strong> <span id="previewAccusedDetails">Not specified</span></p>
-                        <p><strong>Delay Reasons:</strong> <span id="previewDelayDetails">Not specified</span></p>
+                        <p><strong>Father's / Husband's Name:</strong> <span id="previewFatherHusbandName">Not specified</span></p>
+                        <p><strong>First Alias:</strong> <span id="previewFirstAlias">Not specified</span></p>
+                        <p><strong>Second Aliases:</strong> <span id="previewSecondAlias">Not specified</span></p>
+                        <p><strong>Other Aliases:</strong> <span id="previewOtherAliases">Not specified</span></p>
+                        <p><strong>Nationality:</strong> <span id="previewNationality">Not specified</span></p>
+                        <p><strong>Passport No.:</strong> <span id="previewPassportNo">Not specified</span></p>
+                        <p><strong>Date of Issue:</strong> <span id="previewPassportIssueDate">Not specified</span></p>
+                        <p><strong>Place of Issue:</strong> <span id="previewPassportIssuePlace">Not specified</span></p>
+                        <p><strong>Religion:</strong> <span id="previewReligion">Not specified</span></p>
+                        <p><strong>Caste / Tribe:</strong> <span id="previewCasteTribe">Not specified</span></p>
+                        <p><strong>SC/ST:</strong> <span id="previewScst">Not specified</span></p>
+                        <p><strong>Occupation:</strong> <span id="previewOccupation">Not specified</span></p>
+                        <p><strong>Permanent address:</strong> <span id="previewPermanentAddress">Not specified</span></p>
+                        <p><strong>Permanent District:</strong> <span id="previewPermanentDistrict">Not specified</span></p>
+                        <p><strong>Permanent P.S.:</strong> <span id="previewPermanentPS">Not specified</span></p>
+                        <p><strong>Present Address:</strong> <span id="previewPresentAddress">Not specified</span></p>
+                        <p><strong>Present District:</strong> <span id="previewPresentDistrict">Not specified</span></p>
+                        <p><strong>Present P.S.:</strong> <span id="previewPresentPS">Not specified</span></p>
                     </div>
 
                     <div class="preview-section">
-                        <h4>8. Motive of Crime</h4>
-                        <p id="previewMotiveText">Not specified</p>
+                        <h4>4. Injuries and Physical Condition</h4>
+                        <p><span id="previewInjuriesDetails">Not specified</span></p>
                     </div>
 
                     <div class="preview-section">
-                        <h4>9. Details of Properties Stolen</h4>
-                        <p><strong>Property Particulars:</strong> <span id="previewPropertyInfo">Not specified</span></p>
-                        <p><strong>Estimated Value:</strong> <span id="previewPropertyValue">Not specified</span></p>
-                        <p><strong>Recovery Status:</strong> <span id="previewPropertyRecoveryStatus">Not specified</span></p>
+                        <h4>5. Arrest Procedure and Personal Effects</h4>
+                        <p><strong>Taken into custody on:</strong> <span id="previewCustodyDateTime">Not specified</span> at <span id="previewCustodyPlace">Not specified</span></p>
+                        <p><strong>Articles found:</strong></p>
+                        <div class="table-container">
+                            <table id="previewArticlesTable">
+                                <thead>
+                                    <tr>
+                                        <th>S.No.</th>
+                                        <th>Article Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="2">No data available</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p><strong>Intimation given to:</strong> <span id="previewIntimationName">Not specified</span> (<span id="previewIntimationRelationship">Not specified</span>)</p>
                     </div>
 
                     <div class="preview-section">
-                        <h4>11. Description of the Place of Occurrence</h4>
-                        <p id="previewPlaceDescription">Not specified</p>
+                        <h4>6. Physical Features and Identification</h4>
+                        <div class="table-container">
+                            <table id="previewPhysicalFeaturesTable">
+                                <thead>
+                                    <tr>
+                                        <th>*Sex</th>
+                                        <th>*Date/Year of Birth</th>
+                                        <th>*Build</th>
+                                        <th>*Height in Cms.</th>
+                                        <th>*Complexion</th>
+                                        <th>*Identification Marks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="6">No data available</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="table-container">
+                            <table id="previewPhysicalFeaturesTable2">
+                                <thead>
+                                    <tr>
+                                        <th>*Deformities/peculiarities</th>
+                                        <th>*Teeth</th>
+                                        <th>*Hair</th>
+                                        <th>*Eye</th>
+                                        <th>*Habit(s)</th>
+                                        <th>*Dress habits</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="6">No data available</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="table-container">
+                            <table id="previewPhysicalFeaturesTable3">
+                                <thead>
+                                    <tr>
+                                        <th>*Languages/Dialect</th>
+                                        <th>*Burn Mark</th>
+                                        <th>*Leucoderma</th>
+                                        <th>*Mole</th>
+                                        <th>*Scar</th>
+                                        <th>*Tattoo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="6">No data available</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p><strong>Other features:</strong> <span id="previewOtherFeatures">Not specified</span></p>
                     </div>
 
                     <div class="preview-section">
-                        <h4>12. Description of Physical Evidence</h4>
-                        <p id="previewPhysicalEvidence">Not specified</p>
+                        <h4>7. Fingerprint Information</h4>
+                        <p><strong>Fingerprint status:</strong> <span id="previewFingerprintStatus">Not specified</span></p>
                     </div>
 
                     <div class="preview-section">
-                        <h4>13. Sketch / Map of the Place of Occurrence</h4>
-                        <p id="previewSketchDetails">Not specified</p>
-                        <p><strong>Prepared by draftsman:</strong> <span id="previewDraftsman">No</span></p>
-                        <p><strong>Sketch attached to file:</strong> <span id="previewSketchAttached">No</span></p>
+                        <h4>8. Socio-economic Profile</h4>
+                        <p><strong>Living Status:</strong> <span id="previewLivingStatus">Not specified</span></p>
+                        <p><strong>Educational qualification(s):</strong> <span id="previewEducation">Not specified</span></p>
+                        <p><strong>Occupation:</strong> <span id="previewSocioOccupation">Not specified</span></p>
+                        <p><strong>Income Group:</strong> <span id="previewIncomeGroup">Not specified</span></p>
                     </div>
 
                     <div class="preview-section">
-                        <h4>14. FIR Contents</h4>
-                        <p id="previewFirText">Not specified</p>
+                        <h4>9. Additional Information</h4>
+                        <p><span id="previewAdditionalInfo">Not specified</span></p>
                     </div>
 
                     <div class="preview-section">
-                        <h4>15. Action Taken Details</h4>
-                        <p id="previewActionDetails">Not specified</p>
-                    </div>
-
-                    <div class="preview-section">
-                        <h4>16. Gist of Investigation</h4>
-                        <p id="previewGistText">Not specified</p>
-                    </div>
-
-                    <div class="preview-section">
-                        <h4>Signature Details</h4>
-                        <p><strong>Investigation Officer:</strong> <span id="previewInvestigationOfficer">Not specified</span></p>
-                        <p><strong>Name:</strong> <span id="previewOfficerName">Not specified</span></p>
-                        <p><strong>Rank:</strong> <span id="previewOfficerRank">Not specified</span></p>
-                        <p><strong>No.:</strong> <span id="previewOfficerNo">Not specified</span></p>
-                        <p><strong>Date:</strong> <span id="previewCompletionDate">Not specified</span></p>
-                        <p><strong>Station Name:</strong> <span id="previewStationName">Not specified</span></p>
+                        <h4>10. Signature of the Investigating officer</h4>
+                        <p><strong>Name:</strong> <span id="previewIoName">Not specified</span></p>
+                        <p><strong>Rank:</strong> <span id="previewIoRank">Not specified</span></p>
+                        <p><strong>Number:</strong> <span id="previewIoNumber">Not specified</span></p>
+                        <p><strong>Date:</strong> <span id="previewIoDate">Not specified</span></p>
+                        <p><strong>Place:</strong> <span id="previewIoPlace">Not specified</span></p>
                     </div>
 
                     <div class="signature-area">
@@ -1197,170 +1050,49 @@
     </div>
 
     <script>
-        // Voice Recognition System
-        class VoiceToTextSystem {
-            constructor() {
-                this.recognition = null;
-                this.isListening = false;
-                this.currentField = null;
-                this.finalTranscript = '';
-                this.initSpeechRecognition();
-            }
-
-            initSpeechRecognition() {
-                // Check browser support
-                if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                    this.showError('Voice recognition is not supported in this browser. Please use Chrome or Edge.');
-                    return;
-                }
-
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                this.recognition = new SpeechRecognition();
-                
-                this.recognition.continuous = true;
-                this.recognition.interimResults = true;
-                this.recognition.lang = 'en-IN';
-
-                this.recognition.onstart = () => {
-                    this.isListening = true;
-                    this.updateUI('listening', 'Listening... Speak now');
-                };
-
-                this.recognition.onresult = (event) => {
-                    let interimTranscript = '';
-                    
-                    for (let i = event.resultIndex; i < event.results.length; i++) {
-                        if (event.results[i].isFinal) {
-                            this.finalTranscript += this.formatPoliceText(event.results[i][0].transcript);
-                        } else {
-                            interimTranscript += event.results[i][0].transcript;
-                        }
-                    }
-                    
-                    this.updateTextArea(this.finalTranscript + interimTranscript);
-                };
-
-                this.recognition.onerror = (event) => {
-                    console.error('Speech recognition error:', event.error);
-                    this.updateUI('error', `Error: ${event.error}`);
-                    this.stopListening();
-                };
-
-                this.recognition.onend = () => {
-                    this.stopListening();
-                };
-            }
-
-            startListening(fieldId) {
-                if (this.isListening) {
-                    this.stopListening();
-                    return;
-                }
-
-                this.currentField = fieldId;
-                this.finalTranscript = document.getElementById(fieldId).value || '';
-                
-                try {
-                    this.recognition.start();
-                    this.updateUI('listening', 'Listening... Speak now');
-                } catch (error) {
-                    this.updateUI('error', 'Cannot start voice recognition');
-                }
-            }
-
-            stopListening() {
-                this.isListening = false;
-                this.updateUI('stopped', 'Click microphone to speak');
-                if (this.recognition) {
-                    this.recognition.stop();
-                }
-            }
-
-            updateTextArea(text) {
-                if (this.currentField) {
-                    const textarea = document.getElementById(this.currentField);
-                    if (textarea) {
-                        textarea.value = text;
-                        // Auto-scroll to bottom
-                        textarea.scrollTop = textarea.scrollHeight;
-                    }
-                }
-            }
-
-            formatPoliceText(text) {
-                // Enhanced formatting for police documentation
-                let formatted = text;
-                
-                // Voice commands for punctuation
-                formatted = formatted.replace(/\bfull stop\b/gi, '.');
-                formatted = formatted.replace(/\bcomma\b/gi, ',');
-                formatted = formatted.replace(/\bquestion mark\b/gi, '?');
-                formatted = formatted.replace(/\bexclamation mark\b/gi, '!');
-                formatted = formatted.replace(/\bnew paragraph\b/gi, '\n\n');
-                formatted = formatted.replace(/\bnew line\b/gi, '\n');
-                
-                // Auto-capitalize sentences
-                formatted = formatted.replace(/(^\s*|[.!?]\s+)([a-z])/g, (match, p1, p2) => p1 + p2.toUpperCase());
-                
-                // Police-specific formatting
-                formatted = formatted.replace(/\b(\d+)\s*(?:hours?|hrs?)\b/gi, '$1 hours');
-                formatted = formatted.replace(/\b(\d+)\s*(?:minutes?|mins?)\b/gi, '$1 minutes');
-                formatted = formatted.replace(/\b(\d+)\s*(?:meters?|mtrs?)\b/gi, '$1 meters');
-                
-                // Date and time patterns
-                formatted = formatted.replace(/\b(\d{1,2})\s*(?:slash|\/)\s*(\d{1,2})\s*(?:slash|\/)\s*(\d{4})\b/gi, '$1/$2/$3');
-                formatted = formatted.replace(/\b(\d{1,2})\s*(?:colon|:)\s*(\d{2})\s*(?:am|pm)\b/gi, (match, hour, minute) => {
-                    return `${hour}:${minute} ${match.includes('pm') ? 'PM' : 'AM'}`;
-                });
-                
-                return formatted;
-            }
-
-            updateUI(state, message) {
-                if (!this.currentField) return;
-
-                const button = document.querySelector(`[onclick="toggleVoiceInput('${this.currentField}")]`);
-                const status = document.getElementById(`status-${this.currentField}`);
-
-                if (button) {
-                    button.classList.remove('listening');
-                    if (state === 'listening') {
-                        button.classList.add('listening');
-                        button.innerHTML = '<i class="fas fa-circle"></i>';
-                    } else {
-                        button.innerHTML = '<i class="fas fa-microphone"></i>';
-                    }
-                }
-
-                if (status) {
-                    status.textContent = message;
-                    status.classList.remove('show');
-                    if (message) {
-                        setTimeout(() => status.classList.add('show'), 100);
-                    }
-                }
-            }
-
-            showError(message) {
-                alert(message);
-            }
-        }
-
-        // Initialize voice system
-        const voiceSystem = new VoiceToTextSystem();
-
-        // Toggle function for buttons
-        function toggleVoiceInput(fieldId) {
-            voiceSystem.startListening(fieldId);
-        }
-
-        // ==================== FORM FUNCTIONS ====================
+        // ==================== AUTHENTICATION & SECURITY ====================
         document.addEventListener('DOMContentLoaded', function () {
+            // Check if user is authenticated
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+
+            if (!token || !user) {
+                alert('Authentication required. Please login first.');
+                if (window.parent !== window) {
+                    window.parent.postMessage({ type: 'AUTH_REQUIRED' }, '*');
+                } else {
+                    window.location.href = '../index.html';
+                }
+                return;
+            }
+
+            // Set officer name from logged in user
+            try {
+                const userData = JSON.parse(user);
+                document.getElementById('ioName').value = userData.fullName || 'Investigation Officer';
+            } catch (e) {
+                console.error('Error parsing user data:', e);
+            }
+
+            // Listen for authentication token from parent
+            window.addEventListener('message', function (event) {
+                if (event.data.type === 'AUTH_TOKEN' && event.data.token) {
+                    localStorage.setItem('token', event.data.token);
+                }
+            });
+
+            // Notify parent that form is loaded
+            if (window.parent !== window) {
+                window.parent.postMessage({ type: 'FORM_LOADED', formType: 'IIF-3' }, '*');
+            }
+
             // Set current date
             const now = new Date();
             document.getElementById('generationDate').textContent = now.toLocaleString();
             document.getElementById('firDate').valueAsDate = now;
-            document.getElementById('completionDate').valueAsDate = now;
+            document.getElementById('arrestDate').valueAsDate = now;
+            document.getElementById('custodyDate').valueAsDate = now;
+            document.getElementById('ioDate').valueAsDate = now;
 
             // Generate preview button
             document.getElementById('btnGenerate').addEventListener('click', generatePreview);
@@ -1384,87 +1116,215 @@
             generatePreview();
         });
 
+        // ==================== FORM FUNCTIONS ====================
         function generatePreview() {
-            // Get all form values
+            // Get form values
             const district = document.getElementById('district').value || 'Not specified';
             const policeStation = document.getElementById('policeStation').value || 'Not specified';
+            const year = document.getElementById('year').value || 'Not specified';
             const firNo = document.getElementById('firNo').value || 'Not specified';
             const firDate = document.getElementById('firDate').value;
-            const occurrenceAddress = document.getElementById('occurrenceAddress').value || 'Not specified';
-            const victimName = document.getElementById('victimName').value || 'Not specified';
-            const victimAge = document.getElementById('victimAge').value || 'Not specified';
-            const victimInfo = document.getElementById('victimInfo').value || 'Not specified';
-            const complainantName = document.getElementById('complainantName').value || 'Not specified';
-            const complainantFather = document.getElementById('complainantFather').value || 'Not specified';
-            const complainantAddress = document.getElementById('complainantAddress').value || 'Not specified';
+            const accusedCode = document.getElementById('accusedCode').value || 'Not specified';
+            const arrestDate = document.getElementById('arrestDate').value;
+            const arrestTime = document.getElementById('arrestTime').value;
+            const gdNo = document.getElementById('gdNo').value || 'Not specified';
+            const courtName = document.getElementById('courtName').value || 'Not specified';
+            const actsSections = document.getElementById('actsSections').value || 'Not specified';
             const accusedName = document.getElementById('accusedName').value || 'Not specified';
-            const accusedAge = document.getElementById('accusedAge').value || 'Not specified';
-            const accusedDetails = document.getElementById('accusedDetailsText').value || 'Not specified';
-            const delayDetails = document.getElementById('delayDetails').value || 'Not specified';
-            const motiveText = document.getElementById('motiveText').value || 'Not specified';
-            const propertyInfo = document.getElementById('propertyInfo').value || 'Not specified';
-            const propertyValue = document.getElementById('propertyValue').value || 'Not specified';
-            const propertyRecoveryStatus = document.getElementById('propertyRecoveryStatus').value || 'Not specified';
-            const placeDescriptionText = document.getElementById('placeDescriptionText').value || 'Not specified';
-            const physicalEvidenceText = document.getElementById('physicalEvidenceText').value || 'Not specified';
-            const sketchDetails = document.getElementById('sketchDetails').value || 'Not specified';
-            const firText = document.getElementById('firText').value || 'Not specified';
-            const actionDetails = document.getElementById('actionDetails').value || 'Not specified';
-            const gistText = document.getElementById('gistText').value || 'Not specified';
-            const draftsmanPrepared = document.getElementById('draftsmanPrepared').checked;
-            const sketchAttached = document.getElementById('sketchAttached').checked;
-            const investigationOfficer = document.getElementById('investigationOfficer').value || 'Not specified';
-            const officerName = document.getElementById('officerName').value || 'Not specified';
-            const officerRank = document.getElementById('officerRank').value || 'Not specified';
-            const officerNo = document.getElementById('officerNo').value || 'Not specified';
-            const completionDate = document.getElementById('completionDate').value;
-            const stationName = document.getElementById('stationName').value || 'Not specified';
+            const fatherHusbandName = document.getElementById('fatherHusbandName').value || 'Not specified';
+            const firstAlias = document.getElementById('firstAlias').value || 'Not specified';
+            const secondAlias = document.getElementById('secondAlias').value || 'Not specified';
+            const otherAliases = document.getElementById('otherAliases').value || 'Not specified';
+            const nationality = document.getElementById('nationality').value || 'Not specified';
+            const passportNo = document.getElementById('passportNo').value || 'Not specified';
+            const passportIssueDate = document.getElementById('passportIssueDate').value;
+            const passportIssuePlace = document.getElementById('passportIssuePlace').value || 'Not specified';
+            const religion = document.getElementById('religion').value || 'Not specified';
+            const casteTribe = document.getElementById('casteTribe').value || 'Not specified';
+            const scst = document.getElementById('scst').value || 'Not specified';
+            const occupation = document.getElementById('occupation').value || 'Not specified';
+            const permanentAddress = document.getElementById('permanentAddress').value || 'Not specified';
+            const permanentDistrict = document.getElementById('permanentDistrict').value || 'Not specified';
+            const permanentPS = document.getElementById('permanentPS').value || 'Not specified';
+            const presentAddress = document.getElementById('presentAddress').value || 'Not specified';
+            const presentDistrict = document.getElementById('presentDistrict').value || 'Not specified';
+            const presentPS = document.getElementById('presentPS').value || 'Not specified';
+            const injuriesDetails = document.getElementById('injuriesDetails').value || 'Not specified';
+            const custodyDate = document.getElementById('custodyDate').value;
+            const custodyTime = document.getElementById('custodyTime').value;
+            const custodyPlace = document.getElementById('custodyPlace').value || 'Not specified';
+            const intimationRelationship = document.getElementById('intimationRelationship').value || 'Not specified';
+            const intimationName = document.getElementById('intimationName').value || 'Not specified';
+            const fingerprintStatus = document.getElementById('fingerprintStatus').value || 'Not specified';
+            const livingStatus = document.getElementById('livingStatus').value || 'Not specified';
+            const education = document.getElementById('education').value || 'Not specified';
+            const socioOccupation = document.getElementById('socioOccupation').value || 'Not specified';
+            const otherFeatures = document.getElementById('otherFeatures').value || 'Not specified';
+            const ioName = document.getElementById('ioName').value || 'Not specified';
+            const ioRank = document.getElementById('ioRank').value || 'Not specified';
+            const ioNumber = document.getElementById('ioNumber').value || 'Not specified';
+            const ioDate = document.getElementById('ioDate').value;
+            const ioPlace = document.getElementById('ioPlace').value || 'Not specified';
 
-            // Format dates
-            const formattedFirDate = firDate ? new Date(firDate).toLocaleDateString('en-GB') : 'Not specified';
-            const formattedCompletionDate = completionDate ? new Date(completionDate).toLocaleDateString('en-GB') : 'Not specified';
+            // Get arrest status
+            let arrestStatus = [];
+            if (document.getElementById('status1').checked) arrestStatus.push("Arrested and sent up");
+            if (document.getElementById('status2').checked) arrestStatus.push("Arrested and released on bail");
+            if (document.getElementById('status3').checked) arrestStatus.push("Surrendered in court and bailed out");
+            if (document.getElementById('status4').checked) arrestStatus.push("Surrendered in court and sent to judicial custody");
+            if (document.getElementById('status5').checked) arrestStatus.push("Surrendered in court and remanded to Police custody");
 
-            // Update all preview elements
+            if (arrestStatus.length === 0) arrestStatus = "Not specified";
+            else arrestStatus = arrestStatus.join(", ");
+
+            // Get income group
+            let incomeGroup = "Not specified";
+            const incomeRadios = document.getElementsByName('incomeGroup');
+            for (const radio of incomeRadios) {
+                if (radio.checked) {
+                    incomeGroup = radio.value;
+                    break;
+                }
+            }
+
+            // Get additional info
+            let additionalInfo = [];
+            if (document.getElementById('dangerous').checked) additionalInfo.push("Is dangerous");
+            if (document.getElementById('escapedBail').checked) additionalInfo.push("Previously escaped any bail");
+            if (document.getElementById('generallyArmed').checked) additionalInfo.push("Is generally armed");
+            if (document.getElementById('operatesWithAccomplices').checked) additionalInfo.push("Operates with accomplices");
+            if (document.getElementById('pastCriminalRecords').checked) additionalInfo.push("Has past criminal records");
+            if (document.getElementById('recidivist').checked) additionalInfo.push("Is recidivist");
+            if (document.getElementById('likelyEscapeBail').checked) additionalInfo.push("Is likely to escape bail");
+            if (document.getElementById('likelyCommitCrime').checked) additionalInfo.push("If released on bail, is likely to commit another crime Immediately or threaten the victims / witnesses");
+            if (document.getElementById('wantedOtherCase').checked) additionalInfo.push("Is wanted in any other case");
+
+            if (additionalInfo.length === 0) additionalInfo = "Not specified";
+            else additionalInfo = additionalInfo.join(", ");
+
+            // Format date and time
+            const formatDate = (dateStr) => dateStr ? new Date(dateStr).toLocaleDateString('en-GB') : 'Not specified';
+            const formatTime = (timeStr) => timeStr ? new Date(`2000-01-01T${timeStr}`).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : 'Not specified';
+
+            // Update preview
             document.getElementById('previewDistrict').textContent = district;
             document.getElementById('previewPoliceStation').textContent = policeStation;
+            document.getElementById('previewYear').textContent = year;
             document.getElementById('previewFirNo').textContent = firNo;
-            document.getElementById('previewFirDate').textContent = formattedFirDate;
-            document.getElementById('previewOccurrenceAddress').textContent = occurrenceAddress;
-            document.getElementById('previewVictimName').textContent = victimName;
-            document.getElementById('previewVictimAge').textContent = victimAge;
-            document.getElementById('previewVictimInfo').textContent = victimInfo;
-            document.getElementById('previewComplainantName').textContent = complainantName;
-            document.getElementById('previewComplainantFather').textContent = complainantFather;
-            document.getElementById('previewComplainantAddress').textContent = complainantAddress;
+            document.getElementById('previewFirDate').textContent = formatDate(firDate);
+            document.getElementById('previewAccusedCode').textContent = accusedCode;
+            document.getElementById('previewArrestDate').textContent = formatDate(arrestDate);
+            document.getElementById('previewArrestTime').textContent = formatTime(arrestTime);
+            document.getElementById('previewGdNo').textContent = gdNo;
+            document.getElementById('previewCourtName').textContent = courtName;
+            document.getElementById('previewActsSections').textContent = actsSections;
+            document.getElementById('previewArrestStatus').textContent = arrestStatus;
             document.getElementById('previewAccusedName').textContent = accusedName;
-            document.getElementById('previewAccusedAge').textContent = accusedAge;
-            document.getElementById('previewAccusedDetails').textContent = accusedDetails;
-            document.getElementById('previewDelayDetails').textContent = delayDetails;
-            document.getElementById('previewMotiveText').textContent = motiveText;
-            document.getElementById('previewPropertyInfo').textContent = propertyInfo;
-            document.getElementById('previewPropertyValue').textContent = propertyValue;
-            document.getElementById('previewPropertyRecoveryStatus').textContent = propertyRecoveryStatus;
-            document.getElementById('previewPlaceDescription').textContent = placeDescriptionText;
-            document.getElementById('previewPhysicalEvidence').textContent = physicalEvidenceText;
-            document.getElementById('previewSketchDetails').textContent = sketchDetails;
-            document.getElementById('previewFirText').textContent = firText;
-            document.getElementById('previewActionDetails').textContent = actionDetails;
-            document.getElementById('previewGistText').textContent = gistText;
-            document.getElementById('previewDraftsman').textContent = draftsmanPrepared ? 'Yes' : 'No';
-            document.getElementById('previewSketchAttached').textContent = sketchAttached ? 'Yes' : 'No';
-            document.getElementById('previewInvestigationOfficer').textContent = investigationOfficer;
-            document.getElementById('previewOfficerName').textContent = officerName;
-            document.getElementById('previewOfficerRank').textContent = officerRank;
-            document.getElementById('previewOfficerNo').textContent = officerNo;
-            document.getElementById('previewCompletionDate').textContent = formattedCompletionDate;
-            document.getElementById('previewStationName').textContent = stationName;
+            document.getElementById('previewFatherHusbandName').textContent = fatherHusbandName;
+            document.getElementById('previewFirstAlias').textContent = firstAlias;
+            document.getElementById('previewSecondAlias').textContent = secondAlias;
+            document.getElementById('previewOtherAliases').textContent = otherAliases;
+            document.getElementById('previewNationality').textContent = nationality;
+            document.getElementById('previewPassportNo').textContent = passportNo;
+            document.getElementById('previewPassportIssueDate').textContent = formatDate(passportIssueDate);
+            document.getElementById('previewPassportIssuePlace').textContent = passportIssuePlace;
+            document.getElementById('previewReligion').textContent = religion;
+            document.getElementById('previewCasteTribe').textContent = casteTribe;
+            document.getElementById('previewScst').textContent = scst;
+            document.getElementById('previewOccupation').textContent = occupation;
+            document.getElementById('previewPermanentAddress').textContent = permanentAddress;
+            document.getElementById('previewPermanentDistrict').textContent = permanentDistrict;
+            document.getElementById('previewPermanentPS').textContent = permanentPS;
+            document.getElementById('previewPresentAddress').textContent = presentAddress;
+            document.getElementById('previewPresentDistrict').textContent = presentDistrict;
+            document.getElementById('previewPresentPS').textContent = presentPS;
+            document.getElementById('previewInjuriesDetails').textContent = injuriesDetails;
+            document.getElementById('previewCustodyDateTime').textContent = `${formatDate(custodyDate)} ${formatTime(custodyTime)}`;
+            document.getElementById('previewCustodyPlace').textContent = custodyPlace;
+            document.getElementById('previewIntimationRelationship').textContent = intimationRelationship;
+            document.getElementById('previewIntimationName').textContent = intimationName;
+            document.getElementById('previewFingerprintStatus').textContent = fingerprintStatus;
+            document.getElementById('previewLivingStatus').textContent = livingStatus;
+            document.getElementById('previewEducation').textContent = education;
+            document.getElementById('previewSocioOccupation').textContent = socioOccupation;
+            document.getElementById('previewOtherFeatures').textContent = otherFeatures;
+            document.getElementById('previewIncomeGroup').textContent = incomeGroup;
+            document.getElementById('previewAdditionalInfo').textContent = additionalInfo;
+            document.getElementById('previewIoName').textContent = ioName;
+            document.getElementById('previewIoRank').textContent = ioRank;
+            document.getElementById('previewIoNumber').textContent = ioNumber;
+            document.getElementById('previewIoDate').textContent = formatDate(ioDate);
+            document.getElementById('previewIoPlace').textContent = ioPlace;
+
+            // Update tables
+            updatePreviewTable('articlesTable', 'previewArticlesTable');
+            updatePreviewTable('physicalFeaturesTable', 'previewPhysicalFeaturesTable');
+            updatePreviewTable('physicalFeaturesTable2', 'previewPhysicalFeaturesTable2');
+            updatePreviewTable('physicalFeaturesTable3', 'previewPhysicalFeaturesTable3');
 
             // Update generation date
             document.getElementById('generationDate').textContent = new Date().toLocaleString();
         }
 
+        function updatePreviewTable(sourceTableId, targetTableId) {
+            const sourceTable = document.getElementById(sourceTableId);
+            const targetTable = document.getElementById(targetTableId);
+
+            // Clear existing rows
+            targetTable.querySelector('tbody').innerHTML = '';
+
+            let hasData = false;
+
+            for (let i = 0; i < sourceTable.rows.length; i++) {
+                const row = sourceTable.rows[i];
+                const newRow = document.createElement('tr');
+
+                // Check if the row has any data
+                let rowHasData = false;
+
+                for (let j = 1; j < row.cells.length - 1; j++) {
+                    const input = row.cells[j].querySelector('input');
+                    if (input && input.value) {
+                        rowHasData = true;
+                        break;
+                    }
+                }
+
+                if (rowHasData) {
+                    hasData = true;
+
+                    // Add serial number for first column if it exists
+                    if (i > 0) {
+                        const serialCell = document.createElement('td');
+                        serialCell.textContent = i;
+                        newRow.appendChild(serialCell);
+                    }
+
+                    // Add data cells
+                    for (let j = 1; j < row.cells.length - 1; j++) {
+                        const input = row.cells[j].querySelector('input');
+                        const cell = document.createElement('td');
+                        cell.textContent = input ? input.value : '';
+                        newRow.appendChild(cell);
+                    }
+
+                    targetTable.querySelector('tbody').appendChild(newRow);
+                }
+            }
+
+            if (!hasData) {
+                const newRow = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.colSpan = targetTable.rows[0].cells.length;
+                cell.textContent = 'No data available';
+                newRow.appendChild(cell);
+                targetTable.querySelector('tbody').appendChild(newRow);
+            }
+        }
+
         function exportAsPDF() {
             generatePreview();
+
             const element = document.getElementById('formPreview');
             const opt = {
                 margin: 10,
@@ -1473,46 +1333,482 @@
                 html2canvas: { scale: 2 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
+
             html2pdf().set(opt).from(element).save();
         }
 
         function exportAsWord() {
+            try {
+                generatePreview();
+
+                // Create HTML content for Word
+                const htmlContent = `
+                                <html xmlns:o="urn:schemas-microsoft-com:office:office"
+                                      xmlns:w="urn:schemas-microsoft-com:office:word"
+                                      xmlns="http://www.w3.org/TR/REC-html40">
+                                <head>
+                                    <meta charset="utf-8">
+                                    <title>IIF-3 Form</title>
+                                    <style>
+                                        body {
+                                            font-family: 'Times New Roman', serif;
+                                            font-size: 12pt;
+                                            line-height: 1.5;
+                                        }
+                                        h1, h2, h3, h4 {
+                                            color: #1a2a6c;
+                                        }
+                                        h1 {
+                                            font-size: 16pt;
+                                            text-align: center;
+                                        }
+                                        h2 {
+                                            font-size: 14pt;
+                                            margin-top: 12pt;
+                                            margin-bottom: 6pt;
+                                        }
+                                        table {
+                                            width: 100%;
+                                            border-collapse: collapse;
+                                            margin: 6pt 0;
+                                        }
+                                        th, td {
+                                            border: 1px solid #000;
+                                            padding: 4pt;
+                                            text-align: left;
+                                        }
+                                        th {
+                                            background-color: #f3f6fb;
+                                            font-weight: bold;
+                                        }
+                                        .field-label {
+                                            font-weight: bold;
+                                            width: 220px;
+                                            display: inline-block;
+                                        }
+                                        .signature-area {
+                                            margin-top: 30pt;
+                                            display: flex;
+                                            justify-content: space-between;
+                                        }
+                                        .signature-box {
+                                            border-top: 1px solid #000;
+                                            width: 250px;
+                                            padding-top: 5px;
+                                            text-align: center;
+                                        }
+                                    </style>
+                                </head>
+                                <body>
+                                    <h1>IIF-3 Form</h1>
+                                    <p style="text-align: center; font-style: italic;">Arrest/Court Surrender Memo</p>
+                                    ${document.getElementById('formPreview').innerHTML}
+                                </body>
+                                </html>
+                            `;
+
+                // Create download link
+                const blob = new Blob([htmlContent], { type: 'application/msword' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `IIF3_Form_${document.getElementById('firNo').value || 'report'}.doc`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+
+                // Clean up
+                setTimeout(() => URL.revokeObjectURL(url), 100);
+            } catch (error) {
+                console.error("Error generating Word document:", error);
+                alert("Error generating Word document: " + error.message);
+            }
+        }
+
+        // ==================== RECORD MANAGEMENT ====================
+        async function saveToRecords() {
             generatePreview();
-            const htmlContent = `
-                <html xmlns:o="urn:schemas-microsoft-com:office:office"
-                      xmlns:w="urn:schemas-microsoft-com:office:word"
-                      xmlns="http://www.w3.org/TR/REC-html40">
-                <head>
-                    <meta charset="utf-8">
-                    <title>IIF-3 Form</title>
-                    <style>
-                        body { font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.5; }
-                        h1, h2, h3, h4 { color: #1a2a6c; }
-                        h1 { font-size: 16pt; text-align: center; }
-                        h2 { font-size: 14pt; margin-top: 12pt; margin-bottom: 6pt; }
-                        table { width: 100%; border-collapse: collapse; margin: 6pt 0; }
-                        th, td { border: 1px solid #000; padding: 4pt; text-align: left; }
-                        th { background-color: #f3f6fb; font-weight: bold; }
-                        .signature-area { margin-top: 30pt; display: flex; justify-content: space-between; }
-                        .signature-box { border-top: 1px solid #000; width: 250px; padding-top: 5px; text-align: center; }
-                    </style>
-                </head>
-                <body>
-                    <h1>IIF-3 Form</h1>
-                    <p style="text-align: center; font-style: italic;">Crime Investigation Report</p>
-                    ${document.getElementById('formPreview').innerHTML}
-                </body>
-                </html>
-            `;
-            const blob = new Blob([htmlContent], { type: 'application/msword' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `IIF3_Form_${document.getElementById('firNo').value || 'report'}.doc`;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            setTimeout(() => URL.revokeObjectURL(url), 100);
+
+            try {
+                // Generate PDF and Word files
+                const pdfData = await generatePDFBlob();
+                const wordData = await generateWordBlob();
+
+                // Convert Blobs to base64 for storage
+                const pdfBase64 = await blobToBase64(pdfData);
+                const wordBase64 = await blobToBase64(wordData);
+
+                // Collect form data
+                const formData = collectFormData();
+
+                // Create record object
+                const record = {
+                    id: Date.now(),
+                    type: "IIF-3",
+                    date: new Date().toISOString().split('T')[0],
+                    policeStation: formData.policeStation,
+                    officerName: formData.ioName,
+                    accusedName: formData.accusedName,
+                    formData: formData,
+                    pdfFile: pdfBase64,
+                    wordFile: wordBase64,
+                    status: "Pending"
+                };
+
+                // Get existing records from localStorage
+                let records = JSON.parse(localStorage.getItem('iifRecords')) || [];
+
+                // Add the new record
+                records.push(record);
+
+                // Save back to localStorage
+                localStorage.setItem('iifRecords', JSON.stringify(records));
+
+                // Notify parent window (dashboard) that form was saved
+                if (window.parent !== window) {
+                    window.parent.postMessage({
+                        type: 'FORM_SAVED',
+                        formType: 'IIF-3',
+                        recordId: record.id
+                    }, '*');
+                }
+
+                alert('Form saved to records successfully!');
+            } catch (error) {
+                console.error("Error saving to records:", error);
+                alert("Error saving form to records: " + error.message);
+            }
+        }
+
+        async function generatePDFBlob() {
+            return new Promise((resolve, reject) => {
+                const element = document.getElementById('formPreview');
+                const opt = {
+                    margin: 10,
+                    filename: 'iif-3-form.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                html2pdf().set(opt).from(element).output('blob').then(resolve).catch(reject);
+            });
+        }
+
+        async function generateWordBlob() {
+            return new Promise((resolve) => {
+                // Create HTML content for Word
+                const htmlContent = `
+                                <html xmlns:o="urn:schemas-microsoft-com:office:office"
+                                      xmlns:w="urn:schemas-microsoft-com:office:word"
+                                      xmlns="http://www.w3.org/TR/REC-html40">
+                                <head>
+                                    <meta charset="utf-8">
+                                    <title>IIF-3 Form</title>
+                                    <style>
+                                        body {
+                                            font-family: 'Times New Roman', serif;
+                                            font-size: 12pt;
+                                            line-height: 1.5;
+                                        }
+                                        h1, h2, h3, h4 {
+                                            color: #1a2a6c;
+                                        }
+                                        h1 {
+                                            font-size: 16pt;
+                                            text-align: center;
+                                        }
+                                        h2 {
+                                            font-size: 14pt;
+                                            margin-top: 12pt;
+                                            margin-bottom: 6pt;
+                                        }
+                                        table {
+                                            width: 100%;
+                                            border-collapse: collapse;
+                                            margin: 6pt 0;
+                                        }
+                                        th, td {
+                                            border: 1px solid #000;
+                                            padding: 4pt;
+                                            text-align: left;
+                                        }
+                                        th {
+                                            background-color: #f3f6fb;
+                                            font-weight: bold;
+                                        }
+                                        .field-label {
+                                            font-weight: bold;
+                                            width: 220px;
+                                            display: inline-block;
+                                        }
+                                        .signature-area {
+                                            margin-top: 30pt;
+                                            display: flex;
+                                            justify-content: space-between;
+                                        }
+                                        .signature-box {
+                                            border-top: 1px solid #000;
+                                            width: 250px;
+                                            padding-top: 5px;
+                                            text-align: center;
+                                        }
+                                    </style>
+                                </head>
+                                <body>
+                                    <h1>IIF-3 Form</h1>
+                                    <p style="text-align: center; font-style: italic;">Arrest/Court Surrender Memo</p>
+                                    ${document.getElementById('formPreview').innerHTML}
+                                </body>
+                                </html>
+                            `;
+
+                const blob = new Blob([htmlContent], { type: 'application/msword' });
+                resolve(blob);
+            });
+        }
+
+        function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        function collectFormData() {
+            // Get arrest status
+            let arrestStatus = [];
+            if (document.getElementById('status1').checked) arrestStatus.push("Arrested and sent up");
+            if (document.getElementById('status2').checked) arrestStatus.push("Arrested and released on bail");
+            if (document.getElementById('status3').checked) arrestStatus.push("Surrendered in court and bailed out");
+            if (document.getElementById('status4').checked) arrestStatus.push("Surrendered in court and sent to judicial custody");
+            if (document.getElementById('status5').checked) arrestStatus.push("Surrendered in court and remanded to Police custody");
+
+            // Get income group
+            let incomeGroup = "";
+            const incomeRadios = document.getElementsByName('incomeGroup');
+            for (const radio of incomeRadios) {
+                if (radio.checked) {
+                    incomeGroup = radio.value;
+                    break;
+                }
+            }
+
+            // Get additional info
+            let additionalInfo = [];
+            if (document.getElementById('dangerous').checked) additionalInfo.push("Is dangerous");
+            if (document.getElementById('escapedBail').checked) additionalInfo.push("Previously escaped any bail");
+            if (document.getElementById('generallyArmed').checked) additionalInfo.push("Is generally armed");
+            if (document.getElementById('operatesWithAccomplices').checked) additionalInfo.push("Operates with accomplices");
+            if (document.getElementById('pastCriminalRecords').checked) additionalInfo.push("Has past criminal records");
+            if (document.getElementById('recidivist').checked) additionalInfo.push("Is recidivist");
+            if (document.getElementById('likelyEscapeBail').checked) additionalInfo.push("Is likely to escape bail");
+            if (document.getElementById('likelyCommitCrime').checked) additionalInfo.push("If released on bail, is likely to commit another crime Immediately or threaten the victims / witnesses");
+            if (document.getElementById('wantedOtherCase').checked) additionalInfo.push("Is wanted in any other case");
+
+            const data = {
+                district: document.getElementById('district').value,
+                policeStation: document.getElementById('policeStation').value,
+                year: document.getElementById('year').value,
+                firNo: document.getElementById('firNo').value,
+                firDate: document.getElementById('firDate').value,
+                accusedCode: document.getElementById('accusedCode').value,
+                arrestDate: document.getElementById('arrestDate').value,
+                arrestTime: document.getElementById('arrestTime').value,
+                gdNo: document.getElementById('gdNo').value,
+                courtName: document.getElementById('courtName').value,
+                actsSections: document.getElementById('actsSections').value,
+                arrestStatus: arrestStatus,
+                accusedName: document.getElementById('accusedName').value,
+                fatherHusbandName: document.getElementById('fatherHusbandName').value,
+                firstAlias: document.getElementById('firstAlias').value,
+                secondAlias: document.getElementById('secondAlias').value,
+                otherAliases: document.getElementById('otherAliases').value,
+                nationality: document.getElementById('nationality').value,
+                passportNo: document.getElementById('passportNo').value,
+                passportIssueDate: document.getElementById('passportIssueDate').value,
+                passportIssuePlace: document.getElementById('passportIssuePlace').value,
+                religion: document.getElementById('religion').value,
+                casteTribe: document.getElementById('casteTribe').value,
+                scst: document.getElementById('scst').value,
+                occupation: document.getElementById('occupation').value,
+                permanentAddress: document.getElementById('permanentAddress').value,
+                permanentDistrict: document.getElementById('permanentDistrict').value,
+                permanentPS: document.getElementById('permanentPS').value,
+                presentAddress: document.getElementById('presentAddress').value,
+                presentDistrict: document.getElementById('presentDistrict').value,
+                presentPS: document.getElementById('presentPS').value,
+                injuriesDetails: document.getElementById('injuriesDetails').value,
+                custodyDate: document.getElementById('custodyDate').value,
+                custodyTime: document.getElementById('custodyTime').value,
+                custodyPlace: document.getElementById('custodyPlace').value,
+                intimationRelationship: document.getElementById('intimationRelationship').value,
+                intimationName: document.getElementById('intimationName').value,
+                fingerprintStatus: document.getElementById('fingerprintStatus').value,
+                livingStatus: document.getElementById('livingStatus').value,
+                education: document.getElementById('education').value,
+                socioOccupation: document.getElementById('socioOccupation').value,
+                otherFeatures: document.getElementById('otherFeatures').value,
+                incomeGroup: incomeGroup,
+                additionalInfo: additionalInfo,
+                ioName: document.getElementById('ioName').value,
+                ioRank: document.getElementById('ioRank').value,
+                ioNumber: document.getElementById('ioNumber').value,
+                ioDate: document.getElementById('ioDate').value,
+                ioPlace: document.getElementById('ioPlace').value,
+
+                // Table data
+                articlesTable: getTableData('articlesTable'),
+                physicalFeaturesTable: getTableData('physicalFeaturesTable'),
+                physicalFeaturesTable2: getTableData('physicalFeaturesTable2'),
+                physicalFeaturesTable3: getTableData('physicalFeaturesTable3')
+            };
+
+            return data;
+        }
+
+        function getTableData(tableId) {
+            const table = document.getElementById(tableId);
+            const data = [];
+
+            for (let i = 0; i < table.rows.length; i++) {
+                const row = table.rows[i];
+                const rowData = {};
+
+                for (let j = 1; j < row.cells.length - 1; j++) {
+                    const input = row.cells[j].querySelector('input');
+                    if (input) {
+                        rowData[`col${j}`] = input.value;
+                    }
+                }
+
+                data.push(rowData);
+            }
+
+            return data;
+        }
+
+        function restoreTableData(tableId, tableData) {
+            const table = document.getElementById(tableId);
+
+            // Clear existing rows (except header)
+            while (table.rows.length > 1) {
+                table.deleteRow(1);
+            }
+
+            // Add rows with data
+            if (tableData && tableData.length > 0) {
+                for (let i = 0; i < tableData.length; i++) {
+                    addNewRow(tableId);
+                    const row = table.rows[table.rows.length - 1];
+
+                    for (let j = 1; j < row.cells.length - 1; j++) {
+                        const input = row.cells[j].querySelector('input');
+                        if (input && tableData[i][`col${j}`]) {
+                            input.value = tableData[i][`col${j}`];
+                        }
+                    }
+                }
+            }
+        }
+
+        // ==================== LOCAL STORAGE FUNCTIONS ====================
+        function loadFormLocal() {
+            const raw = localStorage.getItem('iif3Form');
+            if (!raw) {
+                alert('No saved form found.');
+                return;
+            }
+
+            try {
+                const data = JSON.parse(raw);
+
+                // Restore basic information
+                document.getElementById('district').value = data.district || '';
+                document.getElementById('policeStation').value = data.policeStation || '';
+                document.getElementById('year').value = data.year || '';
+                document.getElementById('firNo').value = data.firNo || '';
+                document.getElementById('firDate').value = data.firDate || '';
+                document.getElementById('accusedCode').value = data.accusedCode || '';
+                document.getElementById('arrestDate').value = data.arrestDate || '';
+                document.getElementById('arrestTime').value = data.arrestTime || '';
+                document.getElementById('gdNo').value = data.gdNo || '';
+                document.getElementById('courtName').value = data.courtName || '';
+                document.getElementById('actsSections').value = data.actsSections || '';
+                document.getElementById('accusedName').value = data.accusedName || '';
+                document.getElementById('fatherHusbandName').value = data.fatherHusbandName || '';
+                document.getElementById('firstAlias').value = data.firstAlias || '';
+                document.getElementById('secondAlias').value = data.secondAlias || '';
+                document.getElementById('otherAliases').value = data.otherAliases || '';
+                document.getElementById('nationality').value = data.nationality || '';
+                document.getElementById('passportNo').value = data.passportNo || '';
+                document.getElementById('passportIssueDate').value = data.passportIssueDate || '';
+                document.getElementById('passportIssuePlace').value = data.passportIssuePlace || '';
+                document.getElementById('religion').value = data.religion || '';
+                document.getElementById('casteTribe').value = data.casteTribe || '';
+                document.getElementById('scst').value = data.scst || '';
+                document.getElementById('occupation').value = data.occupation || '';
+                document.getElementById('permanentAddress').value = data.permanentAddress || '';
+                document.getElementById('permanentDistrict').value = data.permanentDistrict || '';
+                document.getElementById('permanentPS').value = data.permanentPS || '';
+                document.getElementById('presentAddress').value = data.presentAddress || '';
+                document.getElementById('presentDistrict').value = data.presentDistrict || '';
+                document.getElementById('presentPS').value = data.presentPS || '';
+                document.getElementById('injuriesDetails').value = data.injuriesDetails || '';
+                document.getElementById('custodyDate').value = data.custodyDate || '';
+                document.getElementById('custodyTime').value = data.custodyTime || '';
+                document.getElementById('custodyPlace').value = data.custodyPlace || '';
+                document.getElementById('intimationRelationship').value = data.intimationRelationship || '';
+                document.getElementById('intimationName').value = data.intimationName || '';
+                document.getElementById('fingerprintStatus').value = data.fingerprintStatus || '';
+                document.getElementById('livingStatus').value = data.livingStatus || '';
+                document.getElementById('education').value = data.education || '';
+                document.getElementById('socioOccupation').value = data.socioOccupation || '';
+                document.getElementById('otherFeatures').value = data.otherFeatures || '';
+                document.getElementById('ioName').value = data.ioName || '';
+                document.getElementById('ioRank').value = data.ioRank || '';
+                document.getElementById('ioNumber').value = data.ioNumber || '';
+                document.getElementById('ioDate').value = data.ioDate || '';
+                document.getElementById('ioPlace').value = data.ioPlace || '';
+
+                // Restore checkboxes and radio buttons
+                if (data.arrestStatus) {
+                    document.querySelectorAll('input[name="arrestStatus"]').forEach(checkbox => {
+                        checkbox.checked = data.arrestStatus.includes(checkbox.nextElementSibling.textContent);
+                    });
+                }
+
+                if (data.incomeGroup) {
+                    document.querySelector(`input[value="${data.incomeGroup}"]`).checked = true;
+                }
+
+                if (data.additionalInfo) {
+                    data.additionalInfo.forEach(info => {
+                        const checkbox = document.querySelector(`input[value="${info}"]`);
+                        if (checkbox) checkbox.checked = true;
+                    });
+                }
+
+                // Restore tables
+                restoreTableData('articlesTable', data.articlesTable);
+                restoreTableData('physicalFeaturesTable', data.physicalFeaturesTable);
+                restoreTableData('physicalFeaturesTable2', data.physicalFeaturesTable2);
+                restoreTableData('physicalFeaturesTable3', data.physicalFeaturesTable3);
+
+                generatePreview();
+                alert('Saved form loaded.');
+            } catch (error) {
+                console.error("Error loading form data:", error);
+                alert("Error loading saved form.");
+            }
+        }
+
+        function deleteFormLocal() {
+            if (!confirm('Delete locally saved form?')) return;
+            localStorage.removeItem('iif3Form');
+            alert('Saved form deleted.');
         }
 
         // ==================== UTILITY FUNCTIONS ====================
@@ -1525,170 +1821,82 @@
             const table = document.getElementById(tableId);
             const rowCount = table.rows.length;
             const row = table.insertRow(-1);
-            const serialCell = row.insertCell(0);
-            serialCell.innerHTML = rowCount;
 
-            if (tableId === 'actsTable') {
+            // Add serial number cell if it's the articles table
+            if (tableId === 'articlesTable') {
+                const serialCell = row.insertCell(0);
+                serialCell.innerHTML = rowCount;
+            }
+
+            // Add data cells based on table type
+            if (tableId === 'articlesTable') {
                 const cell1 = row.insertCell(1);
                 const cell2 = row.insertCell(2);
-                const cell3 = row.insertCell(3);
-                cell1.innerHTML = '<input type="text" placeholder="Enter Act">';
-                cell2.innerHTML = '<input type="text" placeholder="Enter Section">';
-                cell3.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
-            } else if (tableId === 'occurrenceTable') {
-                const cell1 = row.insertCell(1);
-                const cell2 = row.insertCell(2);
-                const cell3 = row.insertCell(3);
-                const cell4 = row.insertCell(4);
-                const cell5 = row.insertCell(5);
-                cell1.innerHTML = '<input type="text" placeholder="Name">';
-                cell2.innerHTML = '<input type="text" placeholder="Relative Type">';
-                cell3.innerHTML = '<input type="text" placeholder="Relative Name">';
-                cell4.innerHTML = '<input type="text" placeholder="Address">';
-                cell5.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
-            } else if (tableId === 'visitTable') {
-                const cell1 = row.insertCell(1);
-                const cell2 = row.insertCell(2);
-                const cell3 = row.insertCell(3);
-                const cell4 = row.insertCell(4);
-                cell1.innerHTML = '<input type="date">';
-                cell2.innerHTML = '<input type="time">';
-                cell3.innerHTML = '<input type="text" placeholder="Officer Name">';
-                cell4.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
-            } else if (tableId === 'witnessTable') {
-                const cell1 = row.insertCell(1);
-                const cell2 = row.insertCell(2);
-                const cell3 = row.insertCell(3);
-                const cell4 = row.insertCell(4);
-                const cell5 = row.insertCell(5);
-                cell1.innerHTML = '<input type="text" placeholder="Witness Name">';
-                cell2.innerHTML = '<input type="text" placeholder="Address">';
-                cell3.innerHTML = '<input type="text" placeholder="Contact No.">';
-                cell4.innerHTML = '<input type="text" placeholder="Statement Summary">';
-                cell5.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
-            } else {
-                const cell1 = row.insertCell(1);
-                const cell2 = row.insertCell(2);
-                cell1.innerHTML = '<input type="text">';
+
+                cell1.innerHTML = '<input type="text" placeholder="Article description">';
                 cell2.innerHTML = '<button onclick="removeRow(this)">Remove</button>';
+            } else if (tableId === 'physicalFeaturesTable') {
+                const cell0 = row.insertCell(0);
+                const cell1 = row.insertCell(1);
+                const cell2 = row.insertCell(2);
+                const cell3 = row.insertCell(3);
+                const cell4 = row.insertCell(4);
+                const cell5 = row.insertCell(5);
+
+                cell0.innerHTML = '<input type="text" placeholder="Sex">';
+                cell1.innerHTML = '<input type="text" placeholder="Date/Year">';
+                cell2.innerHTML = '<input type="text" placeholder="Build">';
+                cell3.innerHTML = '<input type="text" placeholder="Height">';
+                cell4.innerHTML = '<input type="text" placeholder="Complexion">';
+                cell5.innerHTML = '<input type="text" placeholder="Identification Marks">';
+            } else if (tableId === 'physicalFeaturesTable2') {
+                const cell0 = row.insertCell(0);
+                const cell1 = row.insertCell(1);
+                const cell2 = row.insertCell(2);
+                const cell3 = row.insertCell(3);
+                const cell4 = row.insertCell(4);
+                const cell5 = row.insertCell(5);
+
+                cell0.innerHTML = '<input type="text" placeholder="Deformities/peculiarities">';
+                cell1.innerHTML = '<input type="text" placeholder="Teeth">';
+                cell2.innerHTML = '<input type="text" placeholder="Hair">';
+                cell3.innerHTML = '<input type="text" placeholder="Eye">';
+                cell4.innerHTML = '<input type="text" placeholder="Habit(s)">';
+                cell5.innerHTML = '<input type="text" placeholder="Dress habits">';
+            } else if (tableId === 'physicalFeaturesTable3') {
+                const cell0 = row.insertCell(0);
+                const cell1 = row.insertCell(1);
+                const cell2 = row.insertCell(2);
+                const cell3 = row.insertCell(3);
+                const cell4 = row.insertCell(4);
+                const cell5 = row.insertCell(5);
+
+                cell0.innerHTML = '<input type="text" placeholder="Languages/Dialect">';
+                cell1.innerHTML = '<input type="text" placeholder="Burn Mark">';
+                cell2.innerHTML = '<input type="text" placeholder="Leucoderma">';
+                cell3.innerHTML = '<input type="text" placeholder="Mole">';
+                cell4.innerHTML = '<input type="text" placeholder="Scar">';
+                cell5.innerHTML = '<input type="text" placeholder="Tattoo">';
             }
         }
 
         function removeRow(button) {
             const row = button.parentNode.parentNode;
             row.parentNode.removeChild(row);
+
+            // Update row numbers for articles table
             const table = row.parentNode.parentNode;
-            for (let i = 1; i < table.rows.length; i++) {
-                table.rows[i].cells[0].innerHTML = i;
+            if (table.id === 'articlesTable') {
+                for (let i = 1; i < table.rows.length; i++) {
+                    table.rows[i].cells[0].innerHTML = i;
+                }
             }
         }
 
-        // Local storage functions
-        function saveToRecords() {
-            generatePreview();
-            const formData = collectFormData();
-            localStorage.setItem('iif3Form', JSON.stringify(formData));
-            alert('Form saved to records successfully!');
-        }
-
-        function loadFormLocal() {
-            const raw = localStorage.getItem('iif3Form');
-            if (!raw) {
-                alert('No saved form found.');
-                return;
-            }
-            try {
-                const data = JSON.parse(raw);
-                // Restore all form fields
-                document.getElementById('district').value = data.district || '';
-                document.getElementById('policeStation').value = data.policeStation || '';
-                document.getElementById('firNo').value = data.firNo || '';
-                document.getElementById('firDate').value = data.firDate || '';
-                document.getElementById('occurrenceAddress').value = data.occurrenceAddress || '';
-                document.getElementById('victimName').value = data.victimName || '';
-                document.getElementById('victimAge').value = data.victimAge || '';
-                document.getElementById('victimInfo').value = data.victimInfo || '';
-                document.getElementById('complainantName').value = data.complainantName || '';
-                document.getElementById('complainantFather').value = data.complainantFather || '';
-                document.getElementById('complainantAddress').value = data.complainantAddress || '';
-                document.getElementById('accusedName').value = data.accusedName || '';
-                document.getElementById('accusedAge').value = data.accusedAge || '';
-                document.getElementById('accusedDetailsText').value = data.accusedDetails || '';
-                document.getElementById('delayDetails').value = data.delayDetails || '';
-                document.getElementById('motiveText').value = data.motiveText || '';
-                document.getElementById('propertyInfo').value = data.propertyInfo || '';
-                document.getElementById('propertyValue').value = data.propertyValue || '';
-                document.getElementById('propertyRecoveryStatus').value = data.propertyRecoveryStatus || '';
-                document.getElementById('placeDescriptionText').value = data.placeDescriptionText || '';
-                document.getElementById('physicalEvidenceText').value = data.physicalEvidenceText || '';
-                document.getElementById('sketchDetails').value = data.sketchDetails || '';
-                document.getElementById('firText').value = data.firText || '';
-                document.getElementById('actionDetails').value = data.actionDetails || '';
-                document.getElementById('gistText').value = data.gistText || '';
-                document.getElementById('draftsmanPrepared').checked = data.draftsmanPrepared || false;
-                document.getElementById('sketchAttached').checked = data.sketchAttached || false;
-                document.getElementById('investigationOfficer').value = data.investigationOfficer || '';
-                document.getElementById('officerName').value = data.officerName || '';
-                document.getElementById('officerRank').value = data.officerRank || '';
-                document.getElementById('officerNo').value = data.officerNo || '';
-                document.getElementById('completionDate').value = data.completionDate || '';
-                document.getElementById('stationName').value = data.stationName || '';
-                generatePreview();
-                alert('Saved form loaded.');
-            } catch (error) {
-                alert("Error loading saved form.");
-            }
-        }
-
-        function deleteFormLocal() {
-            if (!confirm('Delete locally saved form?')) return;
-            localStorage.removeItem('iif3Form');
-            alert('Saved form deleted.');
-        }
-
-        function collectFormData() {
-            return {
-                district: document.getElementById('district').value,
-                policeStation: document.getElementById('policeStation').value,
-                firNo: document.getElementById('firNo').value,
-                firDate: document.getElementById('firDate').value,
-                occurrenceAddress: document.getElementById('occurrenceAddress').value,
-                victimName: document.getElementById('victimName').value,
-                victimAge: document.getElementById('victimAge').value,
-                victimInfo: document.getElementById('victimInfo').value,
-                complainantName: document.getElementById('complainantName').value,
-                complainantFather: document.getElementById('complainantFather').value,
-                complainantAddress: document.getElementById('complainantAddress').value,
-                accusedName: document.getElementById('accusedName').value,
-                accusedAge: document.getElementById('accusedAge').value,
-                accusedDetails: document.getElementById('accusedDetailsText').value,
-                delayDetails: document.getElementById('delayDetails').value,
-                motiveText: document.getElementById('motiveText').value,
-                propertyInfo: document.getElementById('propertyInfo').value,
-                propertyValue: document.getElementById('propertyValue').value,
-                propertyRecoveryStatus: document.getElementById('propertyRecoveryStatus').value,
-                placeDescriptionText: document.getElementById('placeDescriptionText').value,
-                physicalEvidenceText: document.getElementById('physicalEvidenceText').value,
-                sketchDetails: document.getElementById('sketchDetails').value,
-                firText: document.getElementById('firText').value,
-                actionDetails: document.getElementById('actionDetails').value,
-                gistText: document.getElementById('gistText').value,
-                draftsmanPrepared: document.getElementById('draftsmanPrepared').checked,
-                sketchAttached: document.getElementById('sketchAttached').checked,
-                investigationOfficer: document.getElementById('investigationOfficer').value,
-                officerName: document.getElementById('officerName').value,
-                officerRank: document.getElementById('officerRank').value,
-                officerNo: document.getElementById('officerNo').value,
-                completionDate: document.getElementById('completionDate').value,
-                stationName: document.getElementById('stationName').value
-            };
-        }
-
-        // Make functions global
+        // Make functions global for onclick attributes
         window.removeRow = removeRow;
         window.addNewRow = addNewRow;
         window.toggleSection = toggleSection;
-        window.toggleVoiceInput = toggleVoiceInput;
     </script>
 </body>
 </html>
