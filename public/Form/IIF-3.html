@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CCTNS IIF-2 Form Generator</title>
+    <title>CCTNS IIF-3 Form Generator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -23,7 +23,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            width: 100%;
             margin: 0 auto;
             background: white;
             border-radius: 10px;
@@ -34,35 +34,34 @@
         header {
             background: #1a2a6c;
             color: white;
-            padding: 20px;
+            padding: clamp(15px, 3vw, 25px);
             text-align: center;
             border-bottom: 5px solid #fdbb2d;
         }
 
             header h1 {
                 margin-bottom: 10px;
-                font-size: 28px;
+                font-size: clamp(22px, 4vw, 32px);
             }
 
             header p {
-                font-size: 16px;
+                font-size: clamp(14px, 2vw, 18px);
                 opacity: 0.9;
             }
 
         .content {
             display: flex;
             flex-wrap: wrap;
-            padding: 20px;
+            padding: clamp(15px, 3vw, 25px);
+            gap: clamp(15px, 3vw, 25px);
         }
 
         .form-container {
             flex: 1;
             min-width: 300px;
-            padding: 20px;
+            padding: clamp(15px, 3vw, 25px);
             background: #f9f9f9;
             border-radius: 8px;
-            margin-right: 20px;
-            margin-bottom: 20px;
             max-height: 80vh;
             overflow-y: auto;
         }
@@ -70,24 +69,24 @@
         .preview-container {
             flex: 1;
             min-width: 300px;
-            padding: 20px;
+            padding: clamp(15px, 3vw, 25px);
             background: white;
             border: 1px solid #ddd;
             border-radius: 8px;
-            margin-bottom: 20px;
             max-height: 80vh;
             overflow-y: auto;
         }
 
         h2 {
             color: #1a2a6c;
-            margin-bottom: 20px;
+            margin-bottom: clamp(15px, 3vw, 25px);
             padding-bottom: 10px;
             border-bottom: 2px solid #fdbb2d;
+            font-size: clamp(18px, 3vw, 24px);
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: clamp(10px, 2vw, 15px);
         }
 
         label {
@@ -95,14 +94,15 @@
             margin-bottom: 5px;
             font-weight: 600;
             color: #444;
+            font-size: clamp(14px, 2vw, 16px);
         }
 
         input, select, textarea {
             width: 100%;
-            padding: 10px;
+            padding: clamp(8px, 1.5vw, 12px);
             border: 1px solid #ddd;
             border-radius: 4px;
-            font-size: 16px;
+            font-size: clamp(14px, 2vw, 16px);
         }
 
         textarea {
@@ -114,13 +114,14 @@
             background: #1a2a6c;
             color: white;
             border: none;
-            padding: 12px 20px;
+            padding: clamp(10px, 2vw, 15px);
             border-radius: 4px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: clamp(14px, 2vw, 16px);
             font-weight: 600;
             margin-top: 10px;
             transition: background 0.3s;
+            width: 100%;
         }
 
             button:hover {
@@ -161,10 +162,9 @@
 
         .action-buttons {
             display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: clamp(8px, 1.5vw, 12px);
+            margin-top: clamp(15px, 3vw, 25px);
         }
 
             .action-buttons button {
@@ -174,42 +174,49 @@
 
         .form-preview {
             background: white;
-            padding: 20px;
+            padding: clamp(15px, 3vw, 25px);
             border: 1px solid #ccc;
             border-radius: 5px;
-            font-size: 14px;
+            font-size: clamp(12px, 2vw, 14px);
             line-height: 1.5;
             font-family: "Times New Roman", serif;
         }
 
         .preview-header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: clamp(15px, 3vw, 25px);
             padding-bottom: 10px;
             border-bottom: 2px solid #1a2a6c;
         }
 
             .preview-header h3 {
                 color: #1a2a6c;
-                font-size: 22px;
+                font-size: clamp(18px, 3vw, 24px);
             }
 
         .preview-section {
-            margin-bottom: 20px;
+            margin-bottom: clamp(15px, 3vw, 25px);
         }
 
             .preview-section h4 {
                 background: #f0f0f0;
-                padding: 8px;
+                padding: clamp(6px, 1.5vw, 10px);
                 margin-bottom: 10px;
                 color: #1a2a6c;
                 border-left: 4px solid #fdbb2d;
+                font-size: clamp(14px, 2vw, 18px);
             }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin-bottom: 15px;
+        }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 15px;
+            min-width: 500px;
         }
 
         table, th, td {
@@ -217,7 +224,7 @@
         }
 
         th, td {
-            padding: 10px;
+            padding: clamp(6px, 1.5vw, 10px);
             text-align: left;
         }
 
@@ -227,24 +234,25 @@
 
         .footer {
             text-align: center;
-            padding: 20px;
+            padding: clamp(15px, 3vw, 25px);
             background: #1a2a6c;
             color: white;
-            margin-top: 20px;
+            margin-top: clamp(15px, 3vw, 25px);
         }
 
         .section-title {
             background: #1a2a6c;
             color: white;
-            padding: 10px;
-            margin: 20px 0 10px 0;
+            padding: clamp(8px, 1.5vw, 12px);
+            margin: clamp(15px, 3vw, 25px) 0 10px 0;
             border-radius: 4px;
             cursor: pointer;
+            font-size: clamp(14px, 2vw, 16px);
         }
 
         .section-content {
             display: none;
-            padding: 10px;
+            padding: clamp(8px, 1.5vw, 12px);
             border: 1px solid #ddd;
             border-radius: 4px;
             margin-bottom: 15px;
@@ -275,6 +283,7 @@
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
+            gap: 15px;
         }
 
         .signature-box {
@@ -287,11 +296,14 @@
 
         .two-column {
             display: flex;
-            gap: 15px;
+            flex-wrap: wrap;
+            gap: clamp(8px, 1.5vw, 12px);
+            margin-bottom: clamp(8px, 1.5vw, 12px);
         }
 
             .two-column .form-group {
                 flex: 1;
+                min-width: 200px;
             }
 
         /* VOICE-TO-TEXT STYLES */
@@ -410,13 +422,13 @@
 <body>
     <div class="container">
         <header>
-            <h1>CCTNS IIF-2 Form Generator</h1>
+            <h1>CCTNS IIF-3 Form Generator</h1>
             <p>Crime Investigation Form - Complete with Enhanced Voice-to-Text Features</p>
         </header>
 
         <div class="content">
             <div class="form-container">
-                <h2>IIF-2 Form Details</h2>
+                <h2>IIF-3 Form Details</h2>
 
                 <div class="section-title" onclick="toggleSection('basicInfo')">1. Basic Information</div>
                 <div id="basicInfo" class="section-content active">
@@ -447,24 +459,26 @@
 
                 <div class="section-title" onclick="toggleSection('actsSections')">2. Acts & Sections</div>
                 <div id="actsSections" class="section-content">
-                    <table id="actsTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Acts</th>
-                                <th>Sections</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Enter Act"></td>
-                                <td><input type="text" placeholder="Enter Section"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="actsTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Acts</th>
+                                    <th>Sections</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" placeholder="Enter Act"></td>
+                                    <td><input type="text" placeholder="Enter Section"></td>
+                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button onclick="addNewRow('actsTable')">Add New Row</button>
                 </div>
 
@@ -484,202 +498,222 @@
                         </div>
                     </div>
 
-                    <table id="occurrenceTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Name</th>
-                                <th>Relative Type</th>
-                                <th>Relative Name</th>
-                                <th>Address</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Name"></td>
-                                <td><input type="text" placeholder="Relative Type"></td>
-                                <td><input type="text" placeholder="Relative Name"></td>
-                                <td><input type="text" placeholder="Address"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="occurrenceTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Name</th>
+                                    <th>Relative Type</th>
+                                    <th>Relative Name</th>
+                                    <th>Address</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" placeholder="Name"></td>
+                                    <td><input type="text" placeholder="Relative Type"></td>
+                                    <td><input type="text" placeholder="Relative Name"></td>
+                                    <td><input type="text" placeholder="Address"></td>
+                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button onclick="addNewRow('occurrenceTable')">Add New Row</button>
                 </div>
 
                 <div class="section-title" onclick="toggleSection('crimeType')">4. Type of Crime</div>
                 <div id="crimeType" class="section-content">
                     <h4>I. Major Head</h4>
-                    <table id="majorHeadTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Major Head</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Major Head"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="majorHeadTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Major Head</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" placeholder="Major Head"></td>
+                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button onclick="addNewRow('majorHeadTable')">Add New Row</button>
 
                     <h4>II. Minor Head</h4>
-                    <table id="minorHeadTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Minor Head</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Minor Head"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="minorHeadTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Minor Head</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" placeholder="Minor Head"></td>
+                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button onclick="addNewRow('minorHeadTable')">Add New Row</button>
 
                     <h4>III. Modus Operandi</h4>
-                    <table id="modusOperandiTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Modus Operandi</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Modus Operandi"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="modusOperandiTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Modus Operandi</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" placeholder="Modus Operandi"></td>
+                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button onclick="addNewRow('modusOperandiTable')">Add New Row</button>
 
                     <h4>IV. Conveyance(s) Used</h4>
-                    <table id="conveyanceTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Conveyance(s) Used</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Conveyance(s) Used"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="conveyanceTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Conveyance(s) Used</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" placeholder="Conveyance(s) Used"></td>
+                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button onclick="addNewRow('conveyanceTable')">Add New Row</button>
 
                     <h4>V. Character Assumed</h4>
-                    <table id="characterTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Character Assumed</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Character Assumed"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="characterTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Character Assumed</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" placeholder="Character Assumed"></td>
+                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button onclick="addNewRow('characterTable')">Add New Row</button>
 
                     <h4>VI. Language/Dialect Used</h4>
-                    <table id="languageTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Language/Dialect Used</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Language/Dialect Used"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="languageTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Language/Dialect Used</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" placeholder="Language/Dialect Used"></td>
+                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button onclick="addNewRow('languageTable')">Add New Row</button>
 
                     <h4>VII. Special Feature</h4>
-                    <table id="specialFeatureTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Special Feature</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Special Feature"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="specialFeatureTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Special Feature</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" placeholder="Special Feature"></td>
+                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button onclick="addNewRow('specialFeatureTable')">Add New Row</button>
 
                     <h4>VIII. Type of Place of Occurrence</h4>
-                    <table id="placeTypeTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Type of Place of Occurrence</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Type of Place of Occurrence"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="placeTypeTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Type of Place of Occurrence</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" placeholder="Type of Place of Occurrence"></td>
+                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button onclick="addNewRow('placeTypeTable')">Add New Row</button>
 
                     <h4>IX. Type of Property Stolen</h4>
-                    <table id="propertyTypeTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Type of Property Stolen</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Type of Property Stolen"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="propertyTypeTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Type of Property Stolen</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" placeholder="Type of Property Stolen"></td>
+                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button onclick="addNewRow('propertyTypeTable')">Add New Row</button>
                 </div>
 
@@ -833,26 +867,28 @@
 
                 <div class="section-title" onclick="toggleSection('visitDetails')">10. Date and Time of Visit to the Place of Occurrence</div>
                 <div id="visitDetails" class="section-content">
-                    <table id="visitTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Officer Name</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="date"></td>
-                                <td><input type="time"></td>
-                                <td><input type="text" placeholder="Officer Name"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="visitTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Officer Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="date"></td>
+                                    <td><input type="time"></td>
+                                    <td><input type="text" placeholder="Officer Name"></td>
+                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button onclick="addNewRow('visitTable')">Add New Row</button>
                 </div>
 
@@ -891,28 +927,30 @@
                     </div>
 
                     <h4>Witness Details</h4>
-                    <table id="witnessTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Witness Name</th>
-                                <th>Address</th>
-                                <th>Contact No.</th>
-                                <th>Statement</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Witness Name"></td>
-                                <td><input type="text" placeholder="Address"></td>
-                                <td><input type="text" placeholder="Contact No."></td>
-                                <td><input type="text" placeholder="Statement Summary"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="witnessTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Witness Name</th>
+                                    <th>Address</th>
+                                    <th>Contact No.</th>
+                                    <th>Statement</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" placeholder="Witness Name"></td>
+                                    <td><input type="text" placeholder="Address"></td>
+                                    <td><input type="text" placeholder="Contact No."></td>
+                                    <td><input type="text" placeholder="Statement Summary"></td>
+                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button onclick="addNewRow('witnessTable')">Add New Row</button>
                 </div>
 
@@ -1044,10 +1082,10 @@
             </div>
 
             <div class="preview-container">
-                <h2>IIF-2 Form Preview</h2>
+                <h2>IIF-3 Form Preview</h2>
                 <div id="formPreview" class="form-preview">
                     <div class="preview-header">
-                        <h3>CCTNS IIF-2 Form</h3>
+                        <h3>CCTNS IIF-3 Form</h3>
                         <p>Crime Investigation Report with Enhanced Voice-to-Text</p>
                     </div>
 
@@ -1430,7 +1468,7 @@
             const element = document.getElementById('formPreview');
             const opt = {
                 margin: 10,
-                filename: 'iif-2-form.pdf',
+                filename: 'iif-3-form.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -1446,7 +1484,7 @@
                       xmlns="http://www.w3.org/TR/REC-html40">
                 <head>
                     <meta charset="utf-8">
-                    <title>IIF-2 Form</title>
+                    <title>IIF-3 Form</title>
                     <style>
                         body { font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.5; }
                         h1, h2, h3, h4 { color: #1a2a6c; }
@@ -1460,7 +1498,7 @@
                     </style>
                 </head>
                 <body>
-                    <h1>IIF-2 Form</h1>
+                    <h1>IIF-3 Form</h1>
                     <p style="text-align: center; font-style: italic;">Crime Investigation Report</p>
                     ${document.getElementById('formPreview').innerHTML}
                 </body>
@@ -1470,7 +1508,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `IIF2_Form_${document.getElementById('firNo').value || 'report'}.doc`;
+            a.download = `IIF3_Form_${document.getElementById('firNo').value || 'report'}.doc`;
             document.body.appendChild(a);
             a.click();
             a.remove();
@@ -1549,12 +1587,12 @@
         function saveToRecords() {
             generatePreview();
             const formData = collectFormData();
-            localStorage.setItem('iif2Form', JSON.stringify(formData));
+            localStorage.setItem('iif3Form', JSON.stringify(formData));
             alert('Form saved to records successfully!');
         }
 
         function loadFormLocal() {
-            const raw = localStorage.getItem('iif2Form');
+            const raw = localStorage.getItem('iif3Form');
             if (!raw) {
                 alert('No saved form found.');
                 return;
@@ -1604,7 +1642,7 @@
 
         function deleteFormLocal() {
             if (!confirm('Delete locally saved form?')) return;
-            localStorage.removeItem('iif2Form');
+            localStorage.removeItem('iif3Form');
             alert('Saved form deleted.');
         }
 
