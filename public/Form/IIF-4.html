@@ -23,7 +23,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            width: 100%;
             margin: 0 auto;
             background: white;
             border-radius: 10px;
@@ -34,35 +34,34 @@
         header {
             background: #1a2a6c;
             color: white;
-            padding: 20px;
+            padding: clamp(15px, 3vw, 25px);
             text-align: center;
             border-bottom: 5px solid #fdbb2d;
         }
 
             header h1 {
                 margin-bottom: 10px;
-                font-size: 28px;
+                font-size: clamp(22px, 4vw, 32px);
             }
 
             header p {
-                font-size: 16px;
+                font-size: clamp(14px, 2vw, 18px);
                 opacity: 0.9;
             }
 
         .content {
             display: flex;
             flex-wrap: wrap;
-            padding: 20px;
+            padding: clamp(15px, 3vw, 25px);
+            gap: clamp(15px, 3vw, 25px);
         }
 
         .form-container {
             flex: 1;
             min-width: 300px;
-            padding: 20px;
+            padding: clamp(15px, 3vw, 25px);
             background: #f9f9f9;
             border-radius: 8px;
-            margin-right: 20px;
-            margin-bottom: 20px;
             max-height: 80vh;
             overflow-y: auto;
         }
@@ -70,24 +69,24 @@
         .preview-container {
             flex: 1;
             min-width: 300px;
-            padding: 20px;
+            padding: clamp(15px, 3vw, 25px);
             background: white;
             border: 1px solid #ddd;
             border-radius: 8px;
-            margin-bottom: 20px;
             max-height: 80vh;
             overflow-y: auto;
         }
 
         h2 {
             color: #1a2a6c;
-            margin-bottom: 20px;
+            margin-bottom: clamp(15px, 3vw, 25px);
             padding-bottom: 10px;
             border-bottom: 2px solid #fdbb2d;
+            font-size: clamp(18px, 3vw, 24px);
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: clamp(10px, 2vw, 15px);
         }
 
         label {
@@ -95,14 +94,15 @@
             margin-bottom: 5px;
             font-weight: 600;
             color: #444;
+            font-size: clamp(14px, 2vw, 16px);
         }
 
         input, select, textarea {
             width: 100%;
-            padding: 10px;
+            padding: clamp(8px, 1.5vw, 12px);
             border: 1px solid #ddd;
             border-radius: 4px;
-            font-size: 16px;
+            font-size: clamp(14px, 2vw, 16px);
         }
 
         textarea {
@@ -114,13 +114,14 @@
             background: #1a2a6c;
             color: white;
             border: none;
-            padding: 12px 20px;
+            padding: clamp(10px, 2vw, 15px);
             border-radius: 4px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: clamp(14px, 2vw, 16px);
             font-weight: 600;
             margin-top: 10px;
             transition: background 0.3s;
+            width: 100%;
         }
 
             button:hover {
@@ -161,10 +162,9 @@
 
         .action-buttons {
             display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: clamp(8px, 1.5vw, 12px);
+            margin-top: clamp(15px, 3vw, 25px);
         }
 
             .action-buttons button {
@@ -174,42 +174,49 @@
 
         .form-preview {
             background: white;
-            padding: 20px;
+            padding: clamp(15px, 3vw, 25px);
             border: 1px solid #ccc;
             border-radius: 5px;
-            font-size: 14px;
+            font-size: clamp(12px, 2vw, 14px);
             line-height: 1.5;
             font-family: "Times New Roman", serif;
         }
 
         .preview-header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: clamp(15px, 3vw, 25px);
             padding-bottom: 10px;
             border-bottom: 2px solid #1a2a6c;
         }
 
             .preview-header h3 {
                 color: #1a2a6c;
-                font-size: 22px;
+                font-size: clamp(18px, 3vw, 24px);
             }
 
         .preview-section {
-            margin-bottom: 20px;
+            margin-bottom: clamp(15px, 3vw, 25px);
         }
 
             .preview-section h4 {
                 background: #f0f0f0;
-                padding: 8px;
+                padding: clamp(6px, 1.5vw, 10px);
                 margin-bottom: 10px;
                 color: #1a2a6c;
                 border-left: 4px solid #fdbb2d;
+                font-size: clamp(14px, 2vw, 18px);
             }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin-bottom: 15px;
+        }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 15px;
+            min-width: 500px;
         }
 
         table, th, td {
@@ -217,7 +224,7 @@
         }
 
         th, td {
-            padding: 10px;
+            padding: clamp(6px, 1.5vw, 10px);
             text-align: left;
         }
 
@@ -227,24 +234,25 @@
 
         .footer {
             text-align: center;
-            padding: 20px;
+            padding: clamp(15px, 3vw, 25px);
             background: #1a2a6c;
             color: white;
-            margin-top: 20px;
+            margin-top: clamp(15px, 3vw, 25px);
         }
 
         .section-title {
             background: #1a2a6c;
             color: white;
-            padding: 10px;
-            margin: 20px 0 10px 0;
+            padding: clamp(8px, 1.5vw, 12px);
+            margin: clamp(15px, 3vw, 25px) 0 10px 0;
             border-radius: 4px;
             cursor: pointer;
+            font-size: clamp(14px, 2vw, 16px);
         }
 
         .section-content {
             display: none;
-            padding: 10px;
+            padding: clamp(8px, 1.5vw, 12px);
             border: 1px solid #ddd;
             border-radius: 4px;
             margin-bottom: 15px;
@@ -275,6 +283,7 @@
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
+            gap: 15px;
         }
 
         .signature-box {
@@ -285,14 +294,17 @@
             margin-bottom: 10px;
         }
 
-        .two-column {
+        .row {
             display: flex;
-            gap: 15px;
+            flex-wrap: wrap;
+            gap: clamp(8px, 1.5vw, 12px);
+            margin-bottom: clamp(8px, 1.5vw, 12px);
         }
 
-            .two-column .form-group {
-                flex: 1;
-            }
+        .col {
+            flex: 1;
+            min-width: 200px;
+        }
 
         /* VOICE-TO-TEXT STYLES */
         .voice-input-wrapper {
@@ -401,9 +413,8 @@
                 max-width: 250px;
             }
 
-            .two-column {
+            .row {
                 flex-direction: column;
-                gap: 0;
             }
 
             .voice-btn {
@@ -426,85 +437,101 @@
 
                 <div class="section-title" onclick="toggleSection('basicInfo')">1. Basic Information</div>
                 <div id="basicInfo" class="section-content active">
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="district" class="required">District</label>
-                            <input type="text" id="district" placeholder="Enter district">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="district" class="required">District</label>
+                                <input type="text" id="district" placeholder="Enter district">
+                            </div>
                         </div>
-
-                        <div class="form-group">
-                            <label for="policeStation" class="required">Police Station</label>
-                            <input type="text" id="policeStation" placeholder="Enter police station">
-                        </div>
-                    </div>
-
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="year" class="required">Year</label>
-                            <input type="text" id="year" placeholder="Enter year">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="firNo" class="required">FIR/GD No.</label>
-                            <input type="text" id="firNo" placeholder="Enter FIR/GD number">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="policeStation" class="required">Police Station</label>
+                                <input type="text" id="policeStation" placeholder="Enter police station">
+                            </div>
                         </div>
                     </div>
 
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="firDate" class="required">Date</label>
-                            <input type="date" id="firDate">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="year" class="required">Year</label>
+                                <input type="text" id="year" placeholder="Enter year">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="firNo" class="required">FIR/GD No.</label>
+                                <input type="text" id="firNo" placeholder="Enter FIR/GD number">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="firDate" class="required">Date</label>
+                                <input type="date" id="firDate">
+                            </div>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="caseType" class="required">Case Type</label>
-                            <select id="caseType">
-                                <option value="">Select Case Type</option>
-                                <option value="Theft">Theft</option>
-                                <option value="Robbery">Robbery</option>
-                                <option value="Burglary">Burglary</option>
-                                <option value="Other">Other</option>
-                            </select>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="caseType" class="required">Case Type</label>
+                                <select id="caseType">
+                                    <option value="">Select Case Type</option>
+                                    <option value="Theft">Theft</option>
+                                    <option value="Robbery">Robbery</option>
+                                    <option value="Burglary">Burglary</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="section-title" onclick="toggleSection('actsSections')">2. Acts & Sections</div>
                 <div id="actsSections" class="section-content">
-                    <table id="actsTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Acts</th>
-                                <th>Sections</th>
-                                <th>Description</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Enter Act"></td>
-                                <td><input type="text" placeholder="Enter Section"></td>
-                                <td><input type="text" placeholder="Description"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="actsTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Acts</th>
+                                    <th>Sections</th>
+                                    <th>Description</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" placeholder="Enter Act"></td>
+                                    <td><input type="text" placeholder="Enter Section"></td>
+                                    <td><input type="text" placeholder="Description"></td>
+                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button onclick="addNewRow('actsTable')">Add New Row</button>
                 </div>
 
                 <div class="section-title" onclick="toggleSection('propertySeized')">3. Property Seized/Recovered</div>
                 <div id="propertySeized" class="section-content">
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="seizureDate" class="required">Date</label>
-                            <input type="date" id="seizureDate">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="seizureDate" class="required">Date</label>
+                                <input type="date" id="seizureDate">
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="seizureTime" class="required">Time</label>
-                            <input type="time" id="seizureTime">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="seizureTime" class="required">Time</label>
+                                <input type="time" id="seizureTime">
+                            </div>
                         </div>
                     </div>
 
@@ -530,92 +557,108 @@
 
                 <div class="section-title" onclick="toggleSection('natureProperty')">4. Nature of Property Seized</div>
                 <div id="natureProperty" class="section-content">
-                    <table id="naturePropertyTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Nature of property seized</th>
-                                <th>Property Category</th>
-                                <th>Quantity</th>
-                                <th>Condition</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Nature of property"></td>
-                                <td><input type="text" placeholder="Property Category"></td>
-                                <td><input type="text" placeholder="Quantity"></td>
-                                <td><input type="text" placeholder="Condition"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="naturePropertyTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Nature of property seized</th>
+                                    <th>Property Category</th>
+                                    <th>Quantity</th>
+                                    <th>Condition</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" placeholder="Nature of property"></td>
+                                    <td><input type="text" placeholder="Property Category"></td>
+                                    <td><input type="text" placeholder="Quantity"></td>
+                                    <td><input type="text" placeholder="Condition"></td>
+                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button onclick="addNewRow('naturePropertyTable')">Add New Row</button>
                 </div>
 
                 <div class="section-title" onclick="toggleSection('personRecovered')">5. Person from whom recovered</div>
                 <div id="personRecovered" class="section-content">
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="personName" class="required">Name</label>
-                            <input type="text" id="personName" placeholder="Enter name">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="personName" class="required">Name</label>
+                                <input type="text" id="personName" placeholder="Enter name">
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="husbandName" class="required">Husband's Name</label>
-                            <input type="text" id="husbandName" placeholder="Enter husband's name">
-                        </div>
-                    </div>
-
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="personAge" class="required">Age</label>
-                            <input type="number" id="personAge" placeholder="Enter age">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="personOccupation" class="required">Occupation</label>
-                            <input type="text" id="personOccupation" placeholder="Enter occupation">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="husbandName" class="required">Husband's Name</label>
+                                <input type="text" id="husbandName" placeholder="Enter husband's name">
+                            </div>
                         </div>
                     </div>
 
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="personContact" class="required">Contact Number</label>
-                            <input type="text" id="personContact" placeholder="Enter contact number">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="personAge" class="required">Age</label>
+                                <input type="number" id="personAge" placeholder="Enter age">
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="personID" class="required">ID Proof Details</label>
-                            <input type="text" id="personID" placeholder="Enter ID proof details">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="personOccupation" class="required">Occupation</label>
+                                <input type="text" id="personOccupation" placeholder="Enter occupation">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="personContact" class="required">Contact Number</label>
+                                <input type="text" id="personContact" placeholder="Enter contact number">
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="personID" class="required">ID Proof Details</label>
+                                <input type="text" id="personID" placeholder="Enter ID proof details">
+                            </div>
                         </div>
                     </div>
 
                     <h4>Address</h4>
-                    <table id="addressTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Address Type</th>
-                                <th>Address</th>
-                                <th>District</th>
-                                <th>Pincode</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Address Type"></td>
-                                <td><input type="text" placeholder="Address"></td>
-                                <td><input type="text" placeholder="District"></td>
-                                <td><input type="text" placeholder="Pincode"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="addressTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Address Type</th>
+                                    <th>Address</th>
+                                    <th>District</th>
+                                    <th>Pincode</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" placeholder="Address Type"></td>
+                                    <td><input type="text" placeholder="Address"></td>
+                                    <td><input type="text" placeholder="District"></td>
+                                    <td><input type="text" placeholder="Pincode"></td>
+                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button onclick="addNewRow('addressTable')">Add New Row</button>
 
                     <div class="form-group">
@@ -630,194 +673,220 @@
 
                 <div class="section-title" onclick="toggleSection('propertiesRecovered')">Details of Properties Recovered</div>
                 <div id="propertiesRecovered" class="section-content">
-                    <table id="propertiesTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Property Category</th>
-                                <th>Property Belongs to</th>
-                                <th>Value (In Rs/-)</th>
-                                <th>Recovery Status</th>
-                                <th>Storage Location</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Property Category"></td>
-                                <td><input type="text" placeholder="Property Belongs to"></td>
-                                <td><input type="number" placeholder="Value"></td>
-                                <td>
-                                    <select>
-                                        <option value="">Select Status</option>
-                                        <option value="Recovered">Recovered</option>
-                                        <option value="Partially Recovered">Partially Recovered</option>
-                                        <option value="Not Recovered">Not Recovered</option>
-                                    </select>
-                                </td>
-                                <td><input type="text" placeholder="Storage Location"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="propertiesTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Property Category</th>
+                                    <th>Property Belongs to</th>
+                                    <th>Value (In Rs/-)</th>
+                                    <th>Recovery Status</th>
+                                    <th>Storage Location</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" placeholder="Property Category"></td>
+                                    <td><input type="text" placeholder="Property Belongs to"></td>
+                                    <td><input type="number" placeholder="Value"></td>
+                                    <td>
+                                        <select>
+                                            <option value="">Select Status</option>
+                                            <option value="Recovered">Recovered</option>
+                                            <option value="Partially Recovered">Partially Recovered</option>
+                                            <option value="Not Recovered">Not Recovered</option>
+                                        </select>
+                                    </td>
+                                    <td><input type="text" placeholder="Storage Location"></td>
+                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button onclick="addNewRow('propertiesTable')">Add New Row</button>
                 </div>
 
                 <div class="section-title" onclick="toggleSection('witnesses')">6. Witnesses</div>
                 <div id="witnesses" class="section-content">
                     <h4>Witness 1</h4>
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="witness1Name" class="required">Name</label>
-                            <input type="text" id="witness1Name" placeholder="Enter name">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="witness1Name" class="required">Name</label>
+                                <input type="text" id="witness1Name" placeholder="Enter name">
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="witness1Father" class="required">Father Name</label>
-                            <input type="text" id="witness1Father" placeholder="Enter father's name">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="witness1Father" class="required">Father Name</label>
+                                <input type="text" id="witness1Father" placeholder="Enter father's name">
+                            </div>
                         </div>
                     </div>
 
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="witness1Age" class="required">Age</label>
-                            <input type="number" id="witness1Age" placeholder="Enter age">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="witness1Age" class="required">Age</label>
+                                <input type="number" id="witness1Age" placeholder="Enter age">
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="witness1Contact" class="required">Contact Number</label>
-                            <input type="text" id="witness1Contact" placeholder="Enter contact number">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="witness1Contact" class="required">Contact Number</label>
+                                <input type="text" id="witness1Contact" placeholder="Enter contact number">
+                            </div>
                         </div>
                     </div>
 
                     <h4>Witness 1 Address</h4>
-                    <table id="witness1AddressTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Address Type</th>
-                                <th>Address</th>
-                                <th>District</th>
-                                <th>Pincode</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Address Type"></td>
-                                <td><input type="text" placeholder="Address"></td>
-                                <td><input type="text" placeholder="District"></td>
-                                <td><input type="text" placeholder="Pincode"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="witness1AddressTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Address Type</th>
+                                    <th>Address</th>
+                                    <th>District</th>
+                                    <th>Pincode</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" placeholder="Address Type"></td>
+                                    <td><input type="text" placeholder="Address"></td>
+                                    <td><input type="text" placeholder="District"></td>
+                                    <td><input type="text" placeholder="Pincode"></td>
+                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button onclick="addNewRow('witness1AddressTable')">Add New Row</button>
 
                     <h4>Witness 2</h4>
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="witness2Name" class="required">Name</label>
-                            <input type="text" id="witness2Name" placeholder="Enter name">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="witness2Name" class="required">Name</label>
+                                <input type="text" id="witness2Name" placeholder="Enter name">
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="witness2Father" class="required">Father Name</label>
-                            <input type="text" id="witness2Father" placeholder="Enter father's name">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="witness2Father" class="required">Father Name</label>
+                                <input type="text" id="witness2Father" placeholder="Enter father's name">
+                            </div>
                         </div>
                     </div>
 
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="witness2Age" class="required">Age</label>
-                            <input type="number" id="witness2Age" placeholder="Enter age">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="witness2Age" class="required">Age</label>
+                                <input type="number" id="witness2Age" placeholder="Enter age">
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="witness2Contact" class="required">Contact Number</label>
-                            <input type="text" id="witness2Contact" placeholder="Enter contact number">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="witness2Contact" class="required">Contact Number</label>
+                                <input type="text" id="witness2Contact" placeholder="Enter contact number">
+                            </div>
                         </div>
                     </div>
 
                     <h4>Witness 2 Address</h4>
-                    <table id="witness2AddressTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Address Type</th>
-                                <th>Address</th>
-                                <th>District</th>
-                                <th>Pincode</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Address Type"></td>
-                                <td><input type="text" placeholder="Address"></td>
-                                <td><input type="text" placeholder="District"></td>
-                                <td><input type="text" placeholder="Pincode"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="witness2AddressTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Address Type</th>
+                                    <th>Address</th>
+                                    <th>District</th>
+                                    <th>Pincode</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" placeholder="Address Type"></td>
+                                    <td><input type="text" placeholder="Address"></td>
+                                    <td><input type="text" placeholder="District"></td>
+                                    <td><input type="text" placeholder="Pincode"></td>
+                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button onclick="addNewRow('witness2AddressTable')">Add New Row</button>
                 </div>
 
                 <div class="section-title" onclick="toggleSection('perishableProperty')">7. Action taken/recommended for disposal of Perishable Property</div>
                 <div id="perishableProperty" class="section-content">
-                    <table id="perishableTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Property Category</th>
-                                <th>Property Description</th>
-                                <th>Action Taken</th>
-                                <th>Disposal Date</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Property Category"></td>
-                                <td><input type="text" placeholder="Property Description"></td>
-                                <td><input type="text" placeholder="Action Taken"></td>
-                                <td><input type="date"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="perishableTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Property Category</th>
+                                    <th>Property Description</th>
+                                    <th>Action Taken</th>
+                                    <th>Disposal Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" placeholder="Property Category"></td>
+                                    <td><input type="text" placeholder="Property Description"></td>
+                                    <td><input type="text" placeholder="Action Taken"></td>
+                                    <td><input type="date"></td>
+                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button onclick="addNewRow('perishableTable')">Add New Row</button>
                 </div>
 
                 <div class="section-title" onclick="toggleSection('valuableProperty')">8. Action taken/recommended for keeping of Valuable Property</div>
                 <div id="valuableProperty" class="section-content">
-                    <table id="valuableTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Property Category</th>
-                                <th>Property Description</th>
-                                <th>Action Taken</th>
-                                <th>Storage Location</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Property Category"></td>
-                                <td><input type="text" placeholder="Property Description"></td>
-                                <td><input type="text" placeholder="Action Taken"></td>
-                                <td><input type="text" placeholder="Storage Location"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="valuableTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Property Category</th>
+                                    <th>Property Description</th>
+                                    <th>Action Taken</th>
+                                    <th>Storage Location</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" placeholder="Property Category"></td>
+                                    <td><input type="text" placeholder="Property Description"></td>
+                                    <td><input type="text" placeholder="Action Taken"></td>
+                                    <td><input type="text" placeholder="Storage Location"></td>
+                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button onclick="addNewRow('valuableTable')">Add New Row</button>
                 </div>
 
@@ -879,28 +948,30 @@
                         <label for="packingSealingCheck">The following properties were packed and/or sealed and the signature of the above said witnesses obtained thereon or on the body of the property.</label>
                     </div>
 
-                    <table id="packingTable">
-                        <thead>
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Property</th>
-                                <th>Packing Method</th>
-                                <th>Seal Details</th>
-                                <th>Signature Location</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" placeholder="Property"></td>
-                                <td><input type="text" placeholder="Packing Method"></td>
-                                <td><input type="text" placeholder="Seal Details"></td>
-                                <td><input type="text" placeholder="Signature Location"></td>
-                                <td><button onclick="removeRow(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="packingTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Property</th>
+                                    <th>Packing Method</th>
+                                    <th>Seal Details</th>
+                                    <th>Signature Location</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" placeholder="Property"></td>
+                                    <td><input type="text" placeholder="Packing Method"></td>
+                                    <td><input type="text" placeholder="Seal Details"></td>
+                                    <td><input type="text" placeholder="Signature Location"></td>
+                                    <td><button onclick="removeRow(this)">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button onclick="addNewRow('packingTable')">Add New Row</button>
 
                     <div class="form-group">
@@ -926,65 +997,85 @@
                     </div>
 
                     <h4>Witness 1</h4>
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="witness1Signature" class="required">Signature</label>
-                            <input type="text" id="witness1Signature" placeholder="Enter witness 1 signature">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="witness1Signature" class="required">Signature</label>
+                                <input type="text" id="witness1Signature" placeholder="Enter witness 1 signature">
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="witness1NameFinal" class="required">Name</label>
-                            <input type="text" id="witness1NameFinal" placeholder="Enter witness 1 name">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="witness1NameFinal" class="required">Name</label>
+                                <input type="text" id="witness1NameFinal" placeholder="Enter witness 1 name">
+                            </div>
                         </div>
                     </div>
 
                     <h4>Witness 2</h4>
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="witness2Signature" class="required">Signature</label>
-                            <input type="text" id="witness2Signature" placeholder="Enter witness 2 signature">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="witness2Signature" class="required">Signature</label>
+                                <input type="text" id="witness2Signature" placeholder="Enter witness 2 signature">
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="witness2NameFinal" class="required">Name</label>
-                            <input type="text" id="witness2NameFinal" placeholder="Enter witness 2 name">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="witness2NameFinal" class="required">Name</label>
+                                <input type="text" id="witness2NameFinal" placeholder="Enter witness 2 name">
+                            </div>
                         </div>
                     </div>
 
                     <h4>Investigating Officer</h4>
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="ioSignature" class="required">Signature of Investigating officer</label>
-                            <input type="text" id="ioSignature" placeholder="Enter IO signature">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="ioSignature" class="required">Signature of Investigating officer</label>
+                                <input type="text" id="ioSignature" placeholder="Enter IO signature">
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="ioName" class="required">Name</label>
-                            <input type="text" id="ioName" placeholder="Enter IO name">
-                        </div>
-                    </div>
-
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="ioRank" class="required">Rank</label>
-                            <input type="text" id="ioRank" placeholder="Enter IO rank">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="ioNo" class="required">No.</label>
-                            <input type="text" id="ioNo" placeholder="Enter IO number">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="ioName" class="required">Name</label>
+                                <input type="text" id="ioName" placeholder="Enter IO name">
+                            </div>
                         </div>
                     </div>
 
-                    <div class="two-column">
-                        <div class="form-group">
-                            <label for="ioPlace" class="required">Place</label>
-                            <input type="text" id="ioPlace" placeholder="Enter place">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="ioRank" class="required">Rank</label>
+                                <input type="text" id="ioRank" placeholder="Enter IO rank">
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="ioDate" class="required">Date</label>
-                            <input type="date" id="ioDate">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="ioNo" class="required">No.</label>
+                                <input type="text" id="ioNo" placeholder="Enter IO number">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="ioPlace" class="required">Place</label>
+                                <input type="text" id="ioPlace" placeholder="Enter place">
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="ioDate" class="required">Date</label>
+                                <input type="date" id="ioDate">
+                            </div>
                         </div>
                     </div>
 
@@ -1024,21 +1115,23 @@
 
                     <div class="preview-section">
                         <h4>2. Acts & Sections</h4>
-                        <table id="previewActsTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Acts</th>
-                                    <th>Sections</th>
-                                    <th>Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="4">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-container">
+                            <table id="previewActsTable">
+                                <thead>
+                                    <tr>
+                                        <th>S.No.</th>
+                                        <th>Acts</th>
+                                        <th>Sections</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="4">No data available</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="preview-section">
@@ -1051,22 +1144,24 @@
 
                     <div class="preview-section">
                         <h4>4. Nature of Property Seized</h4>
-                        <table id="previewNaturePropertyTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Nature of property seized</th>
-                                    <th>Property Category</th>
-                                    <th>Quantity</th>
-                                    <th>Condition</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="5">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-container">
+                            <table id="previewNaturePropertyTable">
+                                <thead>
+                                    <tr>
+                                        <th>S.No.</th>
+                                        <th>Nature of property seized</th>
+                                        <th>Property Category</th>
+                                        <th>Quantity</th>
+                                        <th>Condition</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="5">No data available</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="preview-section">
@@ -1079,45 +1174,49 @@
                         <p><strong>ID Proof Details:</strong> <span id="previewPersonID">Not specified</span></p>
 
                         <h4>Address</h4>
-                        <table id="previewAddressTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Address Type</th>
-                                    <th>Address</th>
-                                    <th>District</th>
-                                    <th>Pincode</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="5">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-container">
+                            <table id="previewAddressTable">
+                                <thead>
+                                    <tr>
+                                        <th>S.No.</th>
+                                        <th>Address Type</th>
+                                        <th>Address</th>
+                                        <th>District</th>
+                                        <th>Pincode</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="5">No data available</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
                         <p><strong>Professional receiver of stolen property:</strong> <span id="previewProfessionalReceiver">Not specified</span></p>
                     </div>
 
                     <div class="preview-section">
                         <h4>Details of Properties Recovered</h4>
-                        <table id="previewPropertiesTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Property Category</th>
-                                    <th>Property Belongs to</th>
-                                    <th>Value (In Rs/-)</th>
-                                    <th>Recovery Status</th>
-                                    <th>Storage Location</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="6">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-container">
+                            <table id="previewPropertiesTable">
+                                <thead>
+                                    <tr>
+                                        <th>S.No.</th>
+                                        <th>Property Category</th>
+                                        <th>Property Belongs to</th>
+                                        <th>Value (In Rs/-)</th>
+                                        <th>Recovery Status</th>
+                                        <th>Storage Location</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="6">No data available</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="preview-section">
@@ -1130,22 +1229,24 @@
                         <p><strong>Contact Number:</strong> <span id="previewWitness1Contact">Not specified</span></p>
 
                         <h4>Witness 1 Address</h4>
-                        <table id="previewWitness1AddressTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Address Type</th>
-                                    <th>Address</th>
-                                    <th>District</th>
-                                    <th>Pincode</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="5">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-container">
+                            <table id="previewWitness1AddressTable">
+                                <thead>
+                                    <tr>
+                                        <th>S.No.</th>
+                                        <th>Address Type</th>
+                                        <th>Address</th>
+                                        <th>District</th>
+                                        <th>Pincode</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="5">No data available</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
                         <h4>Witness 2</h4>
                         <p><strong>Name:</strong> <span id="previewWitness2Name">Not specified</span></p>
@@ -1154,62 +1255,68 @@
                         <p><strong>Contact Number:</strong> <span id="previewWitness2Contact">Not specified</span></p>
 
                         <h4>Witness 2 Address</h4>
-                        <table id="previewWitness2AddressTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Address Type</th>
-                                    <th>Address</th>
-                                    <th>District</th>
-                                    <th>Pincode</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="5">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-container">
+                            <table id="previewWitness2AddressTable">
+                                <thead>
+                                    <tr>
+                                        <th>S.No.</th>
+                                        <th>Address Type</th>
+                                        <th>Address</th>
+                                        <th>District</th>
+                                        <th>Pincode</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="5">No data available</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="preview-section">
                         <h4>7. Action taken/recommended for disposal of Perishable Property</h4>
-                        <table id="previewPerishableTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Property Category</th>
-                                    <th>Property Description</th>
-                                    <th>Action Taken</th>
-                                    <th>Disposal Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="5">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-container">
+                            <table id="previewPerishableTable">
+                                <thead>
+                                    <tr>
+                                        <th>S.No.</th>
+                                        <th>Property Category</th>
+                                        <th>Property Description</th>
+                                        <th>Action Taken</th>
+                                        <th>Disposal Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="5">No data available</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="preview-section">
                         <h4>8. Action taken/recommended for keeping of Valuable Property</h4>
-                        <table id="previewValuableTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Property Category</th>
-                                    <th>Property Description</th>
-                                    <th>Action Taken</th>
-                                    <th>Storage Location</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="5">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-container">
+                            <table id="previewValuableTable">
+                                <thead>
+                                    <tr>
+                                        <th>S.No.</th>
+                                        <th>Property Category</th>
+                                        <th>Property Description</th>
+                                        <th>Action Taken</th>
+                                        <th>Storage Location</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="5">No data available</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="preview-section">
@@ -1232,22 +1339,24 @@
                         <h4>12. Packing and Sealing Details</h4>
                         <p id="previewPackingSealing">Not specified</p>
 
-                        <table id="previewPackingTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No.</th>
-                                    <th>Property</th>
-                                    <th>Packing Method</th>
-                                    <th>Seal Details</th>
-                                    <th>Signature Location</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="5">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-container">
+                            <table id="previewPackingTable">
+                                <thead>
+                                    <tr>
+                                        <th>S.No.</th>
+                                        <th>Property</th>
+                                        <th>Packing Method</th>
+                                        <th>Seal Details</th>
+                                        <th>Signature Location</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="5">No data available</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
                         <p><strong>Specimen of the seal:</strong> <span id="previewSealSpecimen">Not specified</span></p>
                     </div>
