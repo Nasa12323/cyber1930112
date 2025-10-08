@@ -6,6 +6,8 @@ const fs = require("fs");
 const path = require("path");
 const Docxtemplater = require("docxtemplater");
 const PizZip = require("pizzip");
+const speakeasy = require("speakeasy");
+const QRCode = require("qrcode");
 
 const app = express();
 app.use(cors());
@@ -37,7 +39,7 @@ async function initializeDatabase() {
         const [testResult] = await promisePool.query("SELECT 1 + 1 AS result");
         console.log("✅ Database connection test passed:", testResult[0].result);
         
-        // Create users table with approval system
+        // Create users table with 2FA support
         await promisePool.query(`
             CREATE TABLE IF NOT EXISTS users (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -49,28 +51,13 @@ async function initializeDatabase() {
                 police_station VARCHAR(255) NOT NULL,
                 designation VARCHAR(255) NOT NULL,
                 role ENUM('station_officer', 'dsp', 'sp', 'investigating_officer') DEFAULT 'station_officer',
-                status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
-                approved_by INT NULL,
-                approved_at TIMESTAMP NULL,
+                two_factor_secret VARCHAR(255),
+                two_factor_enabled BOOLEAN DEFAULT FALSE,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             )
         `);
         console.log("✅ Users table created/verified");
-
-        // Create admin users table (for DSP/SP who can approve)
-        await promisePool.query(`
-            CREATE TABLE IF NOT EXISTS admin_users (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                official_id VARCHAR(100) UNIQUE NOT NULL,
-                full_name VARCHAR(255) NOT NULL,
-                email VARCHAR(255) UNIQUE NOT NULL,
-                password_hash VARCHAR(255) NOT NULL,
-                role ENUM('dsp', 'sp') NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        `);
-        console.log("✅ Admin users table created/verified");
 
         // Create charge_sheets table
         await promisePool.query(`
@@ -85,23 +72,6 @@ async function initializeDatabase() {
             )
         `);
         console.log("✅ Charge sheets table created/verified");
-
-        // Create default admin users if they don't exist
-        const [adminCount] = await promisePool.query("SELECT COUNT(*) as count FROM admin_users");
-        if (adminCount[0].count === 0) {
-            const adminPassword = await bcrypt.hash("admin123", 10);
-            await promisePool.query(
-                "INSERT INTO admin_users (official_id, full_name, email, password_hash, role) VALUES (?, ?, ?, ?, ?)",
-                ["DSP001", "Deputy Superintendent", "dsp@puducherry.police.in", adminPassword, "dsp"]
-            );
-            
-            const spPassword = await bcrypt.hash("admin123", 10);
-            await promisePool.query(
-                "INSERT INTO admin_users (official_id, full_name, email, password_hash, role) VALUES (?, ?, ?, ?, ?)",
-                ["SP001", "Superintendent", "sp@puducherry.police.in", spPassword, "sp"]
-            );
-            console.log("✅ Default admin users created (DSP001/SP001 - password: admin123)");
-        }
 
         console.log("🎉 Database initialization completed successfully!");
         
@@ -132,17 +102,7 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
-const requireAdmin = (req, res, next) => {
-    if (!req.user || !['dsp', 'sp'].includes(req.user.role)) {
-        return res.status(403).json({ 
-            success: false, 
-            message: "Access denied. Admin privileges required." 
-        });
-    }
-    next();
-};
-
-// ========== REGISTRATION ENDPOINT (Requires Approval) ==========
+// ========== REGISTRATION ENDPOINT (Direct registration - No approval needed) ==========
 app.post("/api/auth/register", async (req, res) => {
     console.log("=== REGISTRATION REQUEST ===");
     console.log("Request body:", req.body);
@@ -183,18 +143,30 @@ app.post("/api/auth/register", async (req, res) => {
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 12);
 
-        // Insert user with pending status
+        // Generate 2FA secret
+        const twoFactorSecret = speakeasy.generateSecret({
+            name: `Puducherry Police (${official_id})`,
+            issuer: "Puducherry Police Department"
+        });
+
+        // Insert user with 2FA secret
         const [result] = await promisePool.query(
-            `INSERT INTO users (official_id, full_name, email, phone, password_hash, police_station, designation, role, status) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')`,
-            [official_id, full_name, email, phone, hashedPassword, police_station, designation, role || 'station_officer']
+            `INSERT INTO users (official_id, full_name, email, phone, password_hash, police_station, designation, role, two_factor_secret) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [official_id, full_name, email, phone, hashedPassword, police_station, designation, role || 'station_officer', twoFactorSecret.base32]
         );
 
-        console.log("✅ User registered successfully - Pending approval:", email);
+        console.log("✅ User registered successfully:", email);
+
+        // Generate QR code for 2FA setup
+        const qrCodeUrl = await QRCode.toDataURL(twoFactorSecret.otpauth_url);
 
         res.json({
             success: true,
-            message: "Registration submitted successfully! Your account is pending approval from higher authorities. You will be notified via email once approved."
+            message: "Registration successful! Please setup 2FA using the QR code.",
+            qrCode: qrCodeUrl,
+            secret: twoFactorSecret.base32, // For manual entry
+            user_id: result.insertId
         });
 
     } catch (err) {
@@ -206,9 +178,71 @@ app.post("/api/auth/register", async (req, res) => {
     }
 });
 
-// ========== LOGIN ENDPOINT (Only for approved users) ==========
+// ========== VERIFY 2FA SETUP ==========
+app.post("/api/auth/verify-2fa-setup", async (req, res) => {
+    try {
+        const { user_id, token } = req.body;
+
+        if (!user_id || !token) {
+            return res.status(400).json({
+                success: false,
+                message: "User ID and token are required"
+            });
+        }
+
+        // Get user's 2FA secret
+        const [users] = await promisePool.query(
+            "SELECT two_factor_secret FROM users WHERE id = ?",
+            [user_id]
+        );
+
+        if (users.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        const twoFactorSecret = users[0].two_factor_secret;
+
+        // Verify the token
+        const verified = speakeasy.totp.verify({
+            secret: twoFactorSecret,
+            encoding: 'base32',
+            token: token,
+            window: 1 // Allow 1 step (30 seconds) before/after
+        });
+
+        if (verified) {
+            // Enable 2FA for user
+            await promisePool.query(
+                "UPDATE users SET two_factor_enabled = TRUE WHERE id = ?",
+                [user_id]
+            );
+
+            res.json({
+                success: true,
+                message: "2FA setup successfully! You can now login with your authenticator app."
+            });
+        } else {
+            res.status(400).json({
+                success: false,
+                message: "Invalid verification code. Please try again."
+            });
+        }
+
+    } catch (error) {
+        console.error("❌ 2FA setup verification error:", error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
+    }
+});
+
+// ========== LOGIN ENDPOINT (Step 1: Verify Password) ==========
 app.post("/api/auth/login", async (req, res) => {
-    console.log("=== LOGIN ATTEMPT ===");
+    console.log("=== LOGIN ATTEMPT (Step 1) ===");
 
     try {
         const { official_id, password } = req.body;
@@ -222,36 +256,20 @@ app.post("/api/auth/login", async (req, res) => {
 
         console.log("Searching for user with Official ID:", official_id);
 
-        // First check in admin users
-        const [adminResults] = await promisePool.query(
-            "SELECT * FROM admin_users WHERE official_id = ?", 
+        // Check user
+        const [userResults] = await promisePool.query(
+            "SELECT * FROM users WHERE official_id = ?", 
             [official_id]
         );
 
-        let user = null;
-        let isAdmin = false;
-
-        if (adminResults.length > 0) {
-            user = adminResults[0];
-            isAdmin = true;
-            console.log("👮 Admin user found:", user.official_id);
-        } else {
-            // Check in regular users (only approved ones)
-            const [userResults] = await promisePool.query(
-                "SELECT * FROM users WHERE official_id = ? AND status = 'approved'", 
-                [official_id]
-            );
-
-            if (userResults.length === 0) {
-                return res.status(401).json({ 
-                    success: false, 
-                    message: "Invalid credentials or account pending approval" 
-                });
-            }
-
-            user = userResults[0];
-            console.log("✅ Approved user found:", user.official_id);
+        if (userResults.length === 0) {
+            return res.status(401).json({ 
+                success: false, 
+                message: "Invalid Official ID or password" 
+            });
         }
+
+        const user = userResults[0];
 
         // Verify password
         const match = await bcrypt.compare(password, user.password_hash);
@@ -262,38 +280,35 @@ app.post("/api/auth/login", async (req, res) => {
             });
         }
 
-        // Generate JWT token
-        const tokenPayload = {
-            id: user.id,
-            official_id: user.official_id,
-            email: user.email,
-            name: user.full_name,
-            role: user.role,
-            isAdmin: isAdmin
-        };
+        console.log("✅ Password correct, 2FA required for:", user.official_id);
 
-        if (!isAdmin) {
-            tokenPayload.police_station = user.police_station;
-            tokenPayload.designation = user.designation;
+        // Check if 2FA is enabled
+        if (!user.two_factor_enabled) {
+            return res.status(400).json({
+                success: false,
+                message: "Please complete 2FA setup first. Visit the setup page."
+            });
         }
 
-        const token = jwt.sign(tokenPayload, SECRET, { expiresIn: "24h" });
-
-        console.log("✅ Login successful for:", user.official_id);
+        // Generate temporary token for 2FA verification
+        const tempToken = jwt.sign(
+            { 
+                id: user.id,
+                step: '2fa_required'
+            }, 
+            SECRET, 
+            { expiresIn: '5m' } // 5 minutes expiry
+        );
 
         res.json({
             success: true,
-            message: "Login successful!",
-            token: token,
+            message: "Please enter your 2FA code from authenticator app",
+            requires2FA: true,
+            tempToken: tempToken,
             user: {
                 id: user.id,
                 official_id: user.official_id,
-                full_name: user.full_name,
-                email: user.email,
-                role: user.role,
-                police_station: user.police_station,
-                designation: user.designation,
-                isAdmin: isAdmin
+                full_name: user.full_name
             }
         });
 
@@ -306,67 +321,100 @@ app.post("/api/auth/login", async (req, res) => {
     }
 });
 
-// ========== ADMIN ENDPOINTS ==========
-
-// Get pending approvals
-app.get("/api/admin/pending-approvals", authenticateToken, requireAdmin, async (req, res) => {
+// ========== VERIFY 2FA LOGIN (Step 2: Verify 2FA Code) ==========
+app.post("/api/auth/verify-2fa-login", async (req, res) => {
     try {
-        const [pendingUsers] = await promisePool.query(
-            `SELECT id, official_id, full_name, email, phone, police_station, designation, role, created_at 
-             FROM users WHERE status = 'pending' ORDER BY created_at DESC`
-        );
+        const { tempToken, twoFACode } = req.body;
 
-        res.json({
-            success: true,
-            data: pendingUsers
-        });
-
-    } catch (error) {
-        console.error("❌ Pending approvals error:", error);
-        res.status(500).json({
-            success: false,
-            message: "Internal server error"
-        });
-    }
-});
-
-// Approve/Reject user
-app.post("/api/admin/approve-user", authenticateToken, requireAdmin, async (req, res) => {
-    try {
-        const { user_id, action, remarks } = req.body;
-
-        if (!user_id || !action) {
+        if (!tempToken || !twoFACode) {
             return res.status(400).json({
                 success: false,
-                message: "User ID and action are required"
+                message: "Temporary token and 2FA code are required"
             });
         }
 
-        const status = action === 'approve' ? 'approved' : 'rejected';
-        
-        await promisePool.query(
-            'UPDATE users SET status = ?, approved_by = ?, approved_at = NOW() WHERE id = ?',
-            [status, req.user.id, user_id]
-        );
-
-        // Get user email for notification (in real implementation, send email)
-        const [users] = await promisePool.query(
-            "SELECT email, full_name FROM users WHERE id = ?",
-            [user_id]
-        );
-
-        if (users.length > 0) {
-            console.log(`📧 Notification: User ${users[0].email} has been ${status}`);
-            // Here you would integrate with your email service
+        // Verify temporary token
+        let decoded;
+        try {
+            decoded = jwt.verify(tempToken, SECRET);
+        } catch (error) {
+            return res.status(401).json({
+                success: false,
+                message: "Session expired. Please login again."
+            });
         }
+
+        if (decoded.step !== '2fa_required') {
+            return res.status(401).json({
+                success: false,
+                message: "Invalid token"
+            });
+        }
+
+        // Get user's 2FA secret
+        const [users] = await promisePool.query(
+            "SELECT two_factor_secret, official_id, full_name, email, role, police_station, designation FROM users WHERE id = ?",
+            [decoded.id]
+        );
+
+        if (users.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        const user = users[0];
+
+        // Verify 2FA code
+        const verified = speakeasy.totp.verify({
+            secret: user.two_factor_secret,
+            encoding: 'base32',
+            token: twoFACode,
+            window: 1 // Allow 1 step (30 seconds) before/after
+        });
+
+        if (!verified) {
+            return res.status(401).json({
+                success: false,
+                message: "Invalid 2FA code. Please try again."
+            });
+        }
+
+        // Generate final JWT token
+        const finalToken = jwt.sign(
+            { 
+                id: user.id,
+                official_id: user.official_id,
+                email: user.email,
+                name: user.full_name,
+                role: user.role,
+                police_station: user.police_station,
+                designation: user.designation
+            },
+            SECRET,
+            { expiresIn: "24h" }
+        );
+
+        console.log("✅ 2FA verified, login successful for:", user.official_id);
 
         res.json({
             success: true,
-            message: `User ${status} successfully`
+            message: "Login successful!",
+            token: finalToken,
+            user: {
+                id: user.id,
+                official_id: user.official_id,
+                full_name: user.full_name,
+                email: user.email,
+                role: user.role,
+                police_station: user.police_station,
+                designation: user.designation
+            }
         });
 
     } catch (error) {
-        console.error("❌ Approve user error:", error);
+        console.error("❌ 2FA login verification error:", error);
         res.status(500).json({
             success: false,
             message: "Internal server error"
@@ -395,30 +443,16 @@ app.get("/api/auth/verify", authenticateToken, async (req, res) => {
 // Get user profile
 app.get("/api/auth/profile", authenticateToken, async (req, res) => {
     try {
-        if (req.user.isAdmin) {
-            const [admins] = await promisePool.query(
-                "SELECT official_id, full_name, email, role FROM admin_users WHERE id = ?",
-                [req.user.id]
-            );
-            
-            if (admins.length > 0) {
-                return res.json({
-                    success: true,
-                    user: { ...admins[0], isAdmin: true }
-                });
-            }
-        } else {
-            const [users] = await promisePool.query(
-                "SELECT official_id, full_name, email, phone, police_station, designation, role, status FROM users WHERE id = ?",
-                [req.user.id]
-            );
-            
-            if (users.length > 0) {
-                return res.json({
-                    success: true,
-                    user: users[0]
-                });
-            }
+        const [users] = await promisePool.query(
+            "SELECT official_id, full_name, email, phone, police_station, designation, role, two_factor_enabled FROM users WHERE id = ?",
+            [req.user.id]
+        );
+        
+        if (users.length > 0) {
+            return res.json({
+                success: true,
+                user: users[0]
+            });
         }
 
         res.status(404).json({
@@ -474,27 +508,27 @@ app.post("/api/records", (req, res) => {
     }
 });
 
-// ========== ROOT ROUTE ==========
+// ========== SERVE STATIC PAGES ==========
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Serve admin dashboard
-app.get("/admin-dashboard.html", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "admin-dashboard.html"));
+app.get("/setup-2fa.html", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "setup-2fa.html"));
 });
 
-// Serve user dashboard
 app.get("/dashboard.html", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "dashboard.html"));
+});
+
+app.get("/verify-2fa.html", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "verify-2fa.html"));
 });
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`✅ Server running on port ${PORT}`);
     console.log(`📍 Local: http://localhost:${PORT}`);
-    console.log(`🔐 TCS CodeVita-style authentication system ready!`);
-    console.log(`👮 Default Admin Credentials:`);
-    console.log(`   - DSP: Official ID: DSP001, Password: admin123`);
-    console.log(`   - SP: Official ID: SP001, Password: admin123`);
+    console.log(`🔐 2FA Authentication System Ready!`);
+    console.log(`📱 Users need to scan QR code with Google Authenticator/Microsoft Authenticator`);
 });
