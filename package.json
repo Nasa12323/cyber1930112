@@ -5,11 +5,12 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "install-deps": "npm install"
   },
   "dependencies": {
-    "express": "^5.1.0",
-    "bcrypt": "^6.0.0",
+    "express": "^4.21.2",
+    "bcrypt": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "cors": "^2.8.5",
     "docxtemplater": "^3.66.3",
@@ -17,7 +18,7 @@
     "mysql2": "^3.15.0",
     "speakeasy": "^2.0.0",
     "qrcode": "^1.5.3",
-    "dotenv": "^17.2.3",
+    "dotenv": "^16.3.1",
     "body-parser": "^2.2.0",
     "nodemailer": "^7.0.6",
     "pdfkit": "^0.17.2"
