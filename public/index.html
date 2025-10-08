@@ -16,6 +16,7 @@
             --white: #ffffff;
             --error-red: #d32f2f;
             --success-green: #388e3c;
+            --warning-orange: #f57c00;
         }
 
         * {
@@ -60,8 +61,6 @@
         .logo {
             height: 200px;
             width: auto;
-            /* Remove filter if your logo is already white */
-            /* filter: brightness(0) invert(1); */
         }
 
         .header-text {
@@ -221,7 +220,7 @@
             color: var(--dark-gray);
         }
 
-        input {
+        input, select {
             width: 100%;
             padding: 0.75rem 1rem;
             border: 1px solid var(--medium-gray);
@@ -230,7 +229,7 @@
             transition: border 0.3s ease;
         }
 
-            input:focus {
+            input:focus, select:focus {
                 outline: none;
                 border-color: var(--primary-blue);
                 box-shadow: 0 0 0 2px rgba(26, 35, 126, 0.2);
@@ -247,6 +246,7 @@
             font-weight: 500;
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
         }
 
             .submit-btn:hover {
@@ -257,6 +257,31 @@
             .submit-btn:active {
                 transform: translateY(0);
             }
+
+            .submit-btn.loading {
+                pointer-events: none;
+                opacity: 0.8;
+            }
+
+            .submit-btn .spinner {
+                display: none;
+                width: 20px;
+                height: 20px;
+                border: 2px solid transparent;
+                border-top: 2px solid var(--white);
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin-right: 8px;
+            }
+
+            .submit-btn.loading .spinner {
+                display: inline-block;
+            }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
         .msg {
             margin-top: 1rem;
@@ -276,6 +301,153 @@
                 background-color: rgba(56, 142, 60, 0.1);
                 color: var(--success-green);
                 border: 1px solid rgba(56, 142, 60, 0.3);
+            }
+
+            .msg.warning {
+                background-color: rgba(245, 124, 0, 0.1);
+                color: var(--warning-orange);
+                border: 1px solid rgba(245, 124, 0, 0.3);
+            }
+
+        /* Google OAuth Styles */
+        .google-auth-section {
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        .google-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            color: #757575;
+            border: 1px solid #dadce0;
+            border-radius: 6px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            width: 100%;
+            margin: 1rem 0;
+        }
+
+        .google-btn:hover {
+            background: #f8f9fa;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .google-btn img {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 2rem 0;
+            color: #5f6368;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid #dadce0;
+        }
+
+        .divider span {
+            padding: 0 1rem;
+            font-size: 14px;
+        }
+
+        /* Password strength meter */
+        .password-strength {
+            height: 4px;
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .strength-0 { width: 0%; background: var(--error-red); }
+        .strength-1 { width: 25%; background: var(--error-red); }
+        .strength-2 { width: 50%; background: var(--warning-orange); }
+        .strength-3 { width: 75%; background: var(--accent-gold); }
+        .strength-4 { width: 100%; background: var(--success-green); }
+
+        .password-requirements {
+            font-size: 0.8rem;
+            color: var(--dark-gray);
+            margin-top: 0.5rem;
+        }
+
+        .password-match {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Form options */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+        }
+
+            .remember-me input {
+                width: auto;
+                margin-right: 0.5rem;
+            }
+
+        .forgot-password {
+            color: var(--primary-blue);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+            .forgot-password:hover {
+                color: var(--dark-blue);
+                text-decoration: underline;
+            }
+
+        /* Role selection */
+        .role-selection {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .role-option {
+            padding: 0.75rem;
+            border: 1px solid var(--medium-gray);
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .role-option:hover {
+                border-color: var(--primary-blue);
+                background-color: rgba(26, 35, 126, 0.05);
+            }
+
+            .role-option.selected {
+                border-color: var(--primary-blue);
+                background-color: rgba(26, 35, 126, 0.1);
+                font-weight: 500;
+            }
+
+            .role-option input {
+                display: none;
             }
 
         footer {
@@ -304,6 +476,23 @@
 
             .footer-links a:hover {
                 opacity: 1;
+            }
+
+        /* Security badge */
+        .security-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 1.5rem;
+            padding: 0.75rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+            .security-badge i {
+                margin-right: 0.5rem;
+                font-size: 1.2rem;
             }
 
         @media (max-width: 768px) {
@@ -340,13 +529,16 @@
             .footer-links a {
                 margin: 0 0.75rem;
             }
+
+            .role-selection {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <header class="gov-header">
         <div class="logo-container">
-            <!-- Replace with your actual logo -->
             <img src="puducherry-police-logo.png" alt="Puducherry Police Logo" class="logo">
         </div>
         <div class="header-text">
@@ -363,12 +555,16 @@
                 <p>Access case details, generate reports, and maintain accurate records with our streamlined system.</p>
 
                 <ul class="features-list">
-                    <li>Secure authentication and data encryption</li>
+                    <li>Secure Google & Email Authentication</li>
                     <li>Digital charge sheet creation and management</li>
                     <li>Real-time case status tracking</li>
                     <li>Automated reporting and analytics</li>
                     <li>Mobile-responsive design</li>
                 </ul>
+
+                <div class="security-badge">
+                    <i>🔒</i> <span>End-to-end encrypted & secure</span>
+                </div>
             </section>
 
             <section class="auth-section">
@@ -380,6 +576,19 @@
                 <!-- Login Form -->
                 <form id="loginForm" class="form active">
                     <h2>Officer Login</h2>
+                    
+                    <!-- Google OAuth Section -->
+                    <div class="google-auth-section">
+                        <a href="/api/auth/google" class="google-btn">
+                            <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo">
+                            Sign in with Google
+                        </a>
+                        
+                        <div class="divider">
+                            <span>OR</span>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label for="loginEmail">Official Email</label>
                         <input type="email" id="loginEmail" name="email" required placeholder="your.email@police.gov.in">
@@ -388,34 +597,106 @@
                         <label for="loginPassword">Password</label>
                         <input type="password" id="loginPassword" name="password" required placeholder="Enter your password">
                     </div>
-                    <button type="submit" class="submit-btn">Login to System</button>
+                    
+                    <div class="form-options">
+                        <div class="remember-me">
+                            <input type="checkbox" id="rememberMe">
+                            <label for="rememberMe">Remember me</label>
+                        </div>
+                        <a href="#" class="forgot-password" onclick="showForgotPassword()">Forgot Password?</a>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="loginBtn">
+                        <span class="spinner"></span>
+                        Login to System
+                    </button>
                     <p id="loginMsg" class="msg"></p>
                 </form>
 
                 <!-- Register Form -->
                 <form id="registerForm" class="form">
                     <h2>New Officer Registration</h2>
+                    
                     <div class="form-group">
-                        <label for="registerName">Full Name</label>
-                        <input type="text" id="registerName" name="name" required placeholder="Enter your full name">
+                        <label for="officialId">Official Police ID *</label>
+                        <input type="text" id="officialId" name="official_id" required placeholder="Enter your official police ID">
                     </div>
+                    
                     <div class="form-group">
-                        <label for="registerEmail">Official Email</label>
+                        <label for="registerName">Full Name *</label>
+                        <input type="text" id="registerName" name="fullName" required placeholder="Enter your full name as per records">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerEmail">Official Email *</label>
                         <input type="email" id="registerEmail" name="email" required placeholder="your.email@police.gov.in">
                     </div>
+                    
                     <div class="form-group">
-                        <label for="registerPhone">Phone Number</label>
-                        <input type="text" id="registerPhone" name="phone" required placeholder="Enter your contact number">
+                        <label for="policeStation">Police Station *</label>
+                        <select id="policeStation" name="police_station" required>
+                            <option value="">Select Police Station</option>
+                            <option value="Headquarters">Headquarters</option>
+                            <option value="Lawspet">Lawspet</option>
+                            <option value="Ariyankuppam">Ariyankuppam</option>
+                            <option value="Mettupalayam">Mettupalayam</option>
+                            <option value="Murungapakkam">Murungapakkam</option>
+                            <option value="Villianur">Villianur</option>
+                            <option value="Mangalam">Mangalam</option>
+                        </select>
                     </div>
+                    
                     <div class="form-group">
-                        <label for="registerPassword">Password</label>
-                        <input type="password" id="registerPassword" name="password" required placeholder="Create a strong password">
+                        <label for="designation">Designation *</label>
+                        <input type="text" id="designation" name="designation" required placeholder="Your current designation">
                     </div>
+                    
                     <div class="form-group">
-                        <label for="registerConfirmPassword">Confirm Password</label>
-                        <input type="password" id="registerConfirmPassword" name="confirmPassword" required placeholder="Re-enter your password">
+                        <label>Role *</label>
+                        <div class="role-selection">
+                            <div class="role-option" onclick="selectRole(this, 'station_officer')">
+                                <input type="radio" name="role" value="station_officer" required>
+                                Station Officer
+                            </div>
+                            <div class="role-option" onclick="selectRole(this, 'investigating_officer')">
+                                <input type="radio" name="role" value="investigating_officer">
+                                Investigating Officer
+                            </div>
+                        </div>
+                        <small style="color: #666; font-size: 0.8rem;">DSP and SP roles are assigned by system administrators</small>
                     </div>
-                    <button type="submit" class="submit-btn">Register Account</button>
+                    
+                    <div class="form-group">
+                        <label for="registerPhone">Phone Number *</label>
+                        <input type="tel" id="registerPhone" name="phone" required placeholder="Your official contact number">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerPassword">Password *</label>
+                        <input type="password" id="registerPassword" name="password" required placeholder="Create a strong password" onkeyup="checkPasswordStrength()">
+                        <div class="password-strength" id="passwordStrength"></div>
+                        <div class="password-requirements" id="passwordRequirements">
+                            Password must contain: 8+ characters, uppercase, lowercase, number, special character
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Confirm Password *</label>
+                        <input type="password" id="registerConfirmPassword" name="confirmPassword" required placeholder="Re-enter your password" onkeyup="checkPasswordMatch()">
+                        <div class="password-match" id="passwordMatch"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label style="font-weight: normal; font-size: 0.9rem;">
+                            <input type="checkbox" required>
+                            I declare that the information provided is true and correct
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="registerBtn">
+                        <span class="spinner"></span>
+                        Submit for Approval
+                    </button>
                     <p id="registerMsg" class="msg"></p>
                 </form>
             </section>
@@ -425,7 +706,7 @@
     <footer>
         <div class="footer-content">
             <div class="copyright">
-                &copy; 2023 Puducherry Police Department. All rights reserved.
+                &copy; 2024 Puducherry Police Department. All rights reserved.
             </div>
             <div class="footer-links">
                 <a href="#">Privacy Policy</a>
@@ -436,6 +717,12 @@
     </footer>
 
     <script>
+        // Check authentication status on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            handleRedirect();
+        });
+
         function showTab(tabName) {
             // Hide all forms
             document.querySelectorAll('.form').forEach(form => {
@@ -456,11 +743,96 @@
             document.getElementById('registerMsg').textContent = '';
         }
 
-        // Login form handler
+        function selectRole(element, role) {
+            // Remove selected class from all role options
+            document.querySelectorAll('.role-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+
+            // Add selected class to clicked option
+            element.classList.add('selected');
+
+            // Set the radio button as checked
+            const radio = element.querySelector('input[type="radio"]');
+            radio.checked = true;
+        }
+
+        function checkPasswordStrength() {
+            const password = document.getElementById('registerPassword').value;
+            const strengthBar = document.getElementById('passwordStrength');
+            const requirements = document.getElementById('passwordRequirements');
+
+            let strength = 0;
+            const requirementsMet = [];
+            
+            // Check length
+            if (password.length >= 8) {
+                strength++;
+                requirementsMet.push('8+ characters');
+            }
+            
+            // Check uppercase
+            if (/[A-Z]/.test(password)) {
+                strength++;
+                requirementsMet.push('uppercase');
+            }
+            
+            // Check lowercase
+            if (/[a-z]/.test(password)) {
+                strength++;
+                requirementsMet.push('lowercase');
+            }
+            
+            // Check numbers
+            if (/[0-9]/.test(password)) {
+                strength++;
+                requirementsMet.push('number');
+            }
+            
+            // Check special characters
+            if (/[^A-Za-z0-9]/.test(password)) {
+                strength++;
+                requirementsMet.push('special character');
+            }
+
+            // Update strength bar
+            strengthBar.className = 'password-strength strength-' + strength;
+            
+            // Update requirements text
+            if (password.length > 0) {
+                requirements.textContent = 'Requirements met: ' + (requirementsMet.length > 0 ? requirementsMet.join(', ') : 'none');
+                requirements.style.color = requirementsMet.length >= 4 ? 'var(--success-green)' : 'var(--error-red)';
+            } else {
+                requirements.textContent = 'Password must contain: 8+ characters, uppercase, lowercase, number, special character';
+                requirements.style.color = 'var(--dark-gray)';
+            }
+        }
+
+        function checkPasswordMatch() {
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            const matchElement = document.getElementById('passwordMatch');
+
+            if (confirmPassword === '') {
+                matchElement.textContent = '';
+            } else if (password === confirmPassword) {
+                matchElement.textContent = '✓ Passwords match';
+                matchElement.style.color = 'var(--success-green)';
+            } else {
+                matchElement.textContent = '✗ Passwords do not match';
+                matchElement.style.color = 'var(--error-red)';
+            }
+        }
+
+        function showForgotPassword() {
+            alert('Please contact system administrator for password reset.');
+        }
+
+        // Enhanced login form handler
         document.getElementById('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             const msgElement = document.getElementById('loginMsg');
-            const submitBtn = this.querySelector('.submit-btn');
+            const submitBtn = document.getElementById('loginBtn');
 
             const formData = {
                 email: document.getElementById('loginEmail').value,
@@ -469,10 +841,10 @@
 
             msgElement.textContent = "Authenticating...";
             msgElement.className = 'msg';
+            submitBtn.classList.add('loading');
             submitBtn.disabled = true;
 
             try {
-                // FIXED: Changed from '/api/login' to '/api/auth/login'
                 const response = await fetch('/api/auth/login', {
                     method: 'POST',
                     headers: {
@@ -486,11 +858,18 @@
                 if (result.success) {
                     msgElement.textContent = "Login successful! Redirecting...";
                     msgElement.className = 'msg success';
+                    
                     // Store token and user data
                     localStorage.setItem('token', result.token);
                     localStorage.setItem('user', JSON.stringify(result.user));
+                    
+                    // Remember me functionality
+                    if (document.getElementById('rememberMe').checked) {
+                        localStorage.setItem('remembered_email', formData.email);
+                    }
+                    
                     setTimeout(() => {
-                        window.location.href = '/dashboard.html'; // Redirect to dashboard
+                        window.location.href = '/dashboard.html';
                     }, 1000);
                 } else {
                     msgElement.textContent = result.message;
@@ -501,36 +880,59 @@
                 msgElement.className = 'msg error';
                 console.error('Login error:', error);
             } finally {
+                submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;
             }
         });
-        // Registration form handler
+
+        // Enhanced registration form handler
         document.getElementById('registerForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             const msgElement = document.getElementById('registerMsg');
-            const submitBtn = this.querySelector('.submit-btn');
+            const submitBtn = document.getElementById('registerBtn');
             const password = document.getElementById('registerPassword').value;
             const confirmPassword = document.getElementById('registerConfirmPassword').value;
 
+            // Validate password match
             if (password !== confirmPassword) {
                 msgElement.textContent = "Passwords do not match!";
                 msgElement.className = 'msg error';
                 return;
             }
 
+            // Validate password strength
+            const strength = document.getElementById('passwordStrength').className;
+            if (!strength.includes('strength-4') && !strength.includes('strength-3')) {
+                msgElement.textContent = "Please use a stronger password!";
+                msgElement.className = 'msg error';
+                return;
+            }
+
+            // Get selected role
+            const selectedRole = document.querySelector('input[name="role"]:checked');
+            if (!selectedRole) {
+                msgElement.textContent = "Please select your role!";
+                msgElement.className = 'msg error';
+                return;
+            }
+
             const formData = {
-                fullName: document.getElementById('registerName').value, // Changed from 'name' to 'fullName'
+                official_id: document.getElementById('officialId').value,
+                fullName: document.getElementById('registerName').value,
                 email: document.getElementById('registerEmail').value,
+                police_station: document.getElementById('policeStation').value,
+                designation: document.getElementById('designation').value,
+                role: selectedRole.value,
                 phone: document.getElementById('registerPhone').value,
                 password: password
             };
 
             msgElement.textContent = "Processing registration...";
             msgElement.className = 'msg';
+            submitBtn.classList.add('loading');
             submitBtn.disabled = true;
 
             try {
-                // FIXED: Changed from '/api/register' to '/api/auth/register'
                 const response = await fetch('/api/auth/register', {
                     method: 'POST',
                     headers: {
@@ -542,12 +944,22 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    msgElement.textContent = result.message || "Registration successful!";
+                    msgElement.textContent = result.message || "Registration submitted for approval! You will be notified once approved.";
                     msgElement.className = 'msg success';
                     this.reset();
+                    
+                    // Reset UI elements
+                    document.getElementById('passwordStrength').className = 'password-strength strength-0';
+                    document.getElementById('passwordRequirements').textContent = 'Password must contain: 8+ characters, uppercase, lowercase, number, special character';
+                    document.getElementById('passwordRequirements').style.color = 'var(--dark-gray)';
+                    document.getElementById('passwordMatch').textContent = '';
+                    document.querySelectorAll('.role-option').forEach(option => {
+                        option.classList.remove('selected');
+                    });
+                    
                     setTimeout(() => {
                         showTab('login');
-                    }, 2000);
+                    }, 3000);
                 } else {
                     msgElement.textContent = result.message || "Registration failed";
                     msgElement.className = 'msg error';
@@ -557,9 +969,75 @@
                 msgElement.className = 'msg error';
                 console.error('Registration error:', error);
             } finally {
+                submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;
             }
         });
+
+        // Utility functions
+        async function checkAuthStatus() {
+            const token = localStorage.getItem('token');
+            
+            if (token) {
+                try {
+                    const response = await fetch('/api/auth/verify', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.valid) {
+                        window.location.href = '/dashboard.html';
+                    } else {
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('user');
+                    }
+                } catch (error) {
+                    console.error('Auth check failed:', error);
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                }
+            }
+
+            // Check for remembered email
+            const rememberedEmail = localStorage.getItem('remembered_email');
+            if (rememberedEmail) {
+                document.getElementById('loginEmail').value = rememberedEmail;
+                document.getElementById('rememberMe').checked = true;
+            }
+        }
+
+        function handleRedirect() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const error = urlParams.get('error');
+            
+            if (token) {
+                // Store token from Google OAuth redirect
+                localStorage.setItem('token', token);
+                window.location.href = '/dashboard.html';
+            }
+            
+            if (error) {
+                const msgElement = document.getElementById('loginMsg');
+                switch(error) {
+                    case 'pending_approval':
+                        msgElement.textContent = 'Your account is pending approval. Please contact administrator.';
+                        msgElement.className = 'msg warning';
+                        break;
+                    case 'auth_failed':
+                        msgElement.textContent = 'Authentication failed. Please try again.';
+                        msgElement.className = 'msg error';
+                        break;
+                    case 'no_code':
+                        msgElement.textContent = 'Authentication cancelled. Please try again.';
+                        msgElement.className = 'msg warning';
+                        break;
+                }
+            }
+        }
     </script>
 </body>
 </html>
