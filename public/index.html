@@ -309,115 +309,6 @@
                 border: 1px solid rgba(245, 124, 0, 0.3);
             }
 
-        /* Google OAuth Styles */
-        .google-auth-section {
-            text-align: center;
-            padding: 1rem 0;
-        }
-
-        .google-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: white;
-            color: #757575;
-            border: 1px solid #dadce0;
-            border-radius: 6px;
-            padding: 12px 24px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.3s, box-shadow 0.3s;
-            text-decoration: none;
-            width: 100%;
-            margin: 1rem 0;
-        }
-
-        .google-btn:hover {
-            background: #f8f9fa;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .google-btn img {
-            width: 20px;
-            height: 20px;
-            margin-right: 12px;
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 2rem 0;
-            color: #5f6368;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: "";
-            flex: 1;
-            border-bottom: 1px solid #dadce0;
-        }
-
-        .divider span {
-            padding: 0 1rem;
-            font-size: 14px;
-        }
-
-        /* Password strength meter */
-        .password-strength {
-            height: 4px;
-            border-radius: 2px;
-            margin-top: 0.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .strength-0 { width: 0%; background: var(--error-red); }
-        .strength-1 { width: 25%; background: var(--error-red); }
-        .strength-2 { width: 50%; background: var(--warning-orange); }
-        .strength-3 { width: 75%; background: var(--accent-gold); }
-        .strength-4 { width: 100%; background: var(--success-green); }
-
-        .password-requirements {
-            font-size: 0.8rem;
-            color: var(--dark-gray);
-            margin-top: 0.5rem;
-        }
-
-        .password-match {
-            font-size: 0.8rem;
-            margin-top: 0.5rem;
-        }
-
-        /* Form options */
-        .form-options {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
-        }
-
-        .remember-me {
-            display: flex;
-            align-items: center;
-        }
-
-            .remember-me input {
-                width: auto;
-                margin-right: 0.5rem;
-            }
-
-        .forgot-password {
-            color: var(--primary-blue);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-            .forgot-password:hover {
-                color: var(--dark-blue);
-                text-decoration: underline;
-            }
-
         /* Role selection */
         .role-selection {
             display: grid;
@@ -493,7 +384,17 @@
             .security-badge i {
                 margin-right: 0.5rem;
                 font-size: 1.2rem;
-            }
+        }
+
+        .twofa-note {
+            background: #e8f5e8;
+            border: 1px solid #c8e6c9;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+            color: #2e7d32;
+        }
 
         @media (max-width: 768px) {
             .auth-container {
@@ -555,7 +456,7 @@
                 <p>Access case details, generate reports, and maintain accurate records with our streamlined system.</p>
 
                 <ul class="features-list">
-                    <li>Secure Google & Email Authentication</li>
+                    <li>Two-Factor Authentication (2FA) Security</li>
                     <li>Digital charge sheet creation and management</li>
                     <li>Real-time case status tracking</li>
                     <li>Automated reporting and analytics</li>
@@ -563,7 +464,12 @@
                 </ul>
 
                 <div class="security-badge">
-                    <i>🔒</i> <span>End-to-end encrypted & secure</span>
+                    <i>🔒</i> <span>2FA Protected Access</span>
+                </div>
+
+                <div class="twofa-note">
+                    <strong>📱 2FA Setup Required:</strong><br>
+                    After registration, you'll need to scan a QR code with Google Authenticator or Microsoft Authenticator app.
                 </div>
             </section>
 
@@ -577,33 +483,14 @@
                 <form id="loginForm" class="form active">
                     <h2>Officer Login</h2>
                     
-                    <!-- Google OAuth Section -->
-                    <div class="google-auth-section">
-                        <a href="/api/auth/google" class="google-btn">
-                            <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo">
-                            Sign in with Google
-                        </a>
-                        
-                        <div class="divider">
-                            <span>OR</span>
-                        </div>
-                    </div>
-
                     <div class="form-group">
-                        <label for="loginEmail">Official Email</label>
-                        <input type="email" id="loginEmail" name="email" required placeholder="your.email@police.gov.in">
-                    </div>
-                    <div class="form-group">
-                        <label for="loginPassword">Password</label>
-                        <input type="password" id="loginPassword" name="password" required placeholder="Enter your password">
+                        <label for="loginOfficialId">Official ID *</label>
+                        <input type="text" id="loginOfficialId" name="official_id" required placeholder="Enter your official police ID">
                     </div>
                     
-                    <div class="form-options">
-                        <div class="remember-me">
-                            <input type="checkbox" id="rememberMe">
-                            <label for="rememberMe">Remember me</label>
-                        </div>
-                        <a href="#" class="forgot-password" onclick="showForgotPassword()">Forgot Password?</a>
+                    <div class="form-group">
+                        <label for="loginPassword">Password *</label>
+                        <input type="password" id="loginPassword" name="password" required placeholder="Enter your password">
                     </div>
                     
                     <button type="submit" class="submit-btn" id="loginBtn">
@@ -616,20 +503,29 @@
                 <!-- Register Form -->
                 <form id="registerForm" class="form">
                     <h2>New Officer Registration</h2>
+                    <p style="color: #666; margin-bottom: 1rem; font-size: 0.9rem;">
+                        After registration, you'll need to setup Two-Factor Authentication (2FA) using a QR code.
+                    </p>
                     
                     <div class="form-group">
                         <label for="officialId">Official Police ID *</label>
-                        <input type="text" id="officialId" name="official_id" required placeholder="Enter your official police ID">
+                        <input type="text" id="officialId" name="official_id" required placeholder="Enter your unique official ID">
+                        <small style="color: #666; font-size: 0.8rem;">This will be your username for login</small>
                     </div>
                     
                     <div class="form-group">
                         <label for="registerName">Full Name *</label>
-                        <input type="text" id="registerName" name="fullName" required placeholder="Enter your full name as per records">
+                        <input type="text" id="registerName" name="full_name" required placeholder="Enter your full name as per records">
                     </div>
                     
                     <div class="form-group">
                         <label for="registerEmail">Official Email *</label>
                         <input type="email" id="registerEmail" name="email" required placeholder="your.email@police.gov.in">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerPhone">Phone Number *</label>
+                        <input type="tel" id="registerPhone" name="phone" required placeholder="Your official contact number">
                     </div>
                     
                     <div class="form-group">
@@ -663,27 +559,16 @@
                                 Investigating Officer
                             </div>
                         </div>
-                        <small style="color: #666; font-size: 0.8rem;">DSP and SP roles are assigned by system administrators</small>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="registerPhone">Phone Number *</label>
-                        <input type="tel" id="registerPhone" name="phone" required placeholder="Your official contact number">
                     </div>
                     
                     <div class="form-group">
                         <label for="registerPassword">Password *</label>
-                        <input type="password" id="registerPassword" name="password" required placeholder="Create a strong password" onkeyup="checkPasswordStrength()">
-                        <div class="password-strength" id="passwordStrength"></div>
-                        <div class="password-requirements" id="passwordRequirements">
-                            Password must contain: 8+ characters, uppercase, lowercase, number, special character
-                        </div>
+                        <input type="password" id="registerPassword" name="password" required placeholder="Create a strong password">
                     </div>
                     
                     <div class="form-group">
                         <label for="registerConfirmPassword">Confirm Password *</label>
-                        <input type="password" id="registerConfirmPassword" name="confirmPassword" required placeholder="Re-enter your password" onkeyup="checkPasswordMatch()">
-                        <div class="password-match" id="passwordMatch"></div>
+                        <input type="password" id="registerConfirmPassword" name="confirmPassword" required placeholder="Re-enter your password">
                     </div>
                     
                     <div class="form-group">
@@ -695,7 +580,7 @@
                     
                     <button type="submit" class="submit-btn" id="registerBtn">
                         <span class="spinner"></span>
-                        Submit for Approval
+                        Register & Setup 2FA
                     </button>
                     <p id="registerMsg" class="msg"></p>
                 </form>
@@ -720,7 +605,6 @@
         // Check authentication status on page load
         document.addEventListener('DOMContentLoaded', function() {
             checkAuthStatus();
-            handleRedirect();
         });
 
         function showTab(tabName) {
@@ -757,85 +641,14 @@
             radio.checked = true;
         }
 
-        function checkPasswordStrength() {
-            const password = document.getElementById('registerPassword').value;
-            const strengthBar = document.getElementById('passwordStrength');
-            const requirements = document.getElementById('passwordRequirements');
-
-            let strength = 0;
-            const requirementsMet = [];
-            
-            // Check length
-            if (password.length >= 8) {
-                strength++;
-                requirementsMet.push('8+ characters');
-            }
-            
-            // Check uppercase
-            if (/[A-Z]/.test(password)) {
-                strength++;
-                requirementsMet.push('uppercase');
-            }
-            
-            // Check lowercase
-            if (/[a-z]/.test(password)) {
-                strength++;
-                requirementsMet.push('lowercase');
-            }
-            
-            // Check numbers
-            if (/[0-9]/.test(password)) {
-                strength++;
-                requirementsMet.push('number');
-            }
-            
-            // Check special characters
-            if (/[^A-Za-z0-9]/.test(password)) {
-                strength++;
-                requirementsMet.push('special character');
-            }
-
-            // Update strength bar
-            strengthBar.className = 'password-strength strength-' + strength;
-            
-            // Update requirements text
-            if (password.length > 0) {
-                requirements.textContent = 'Requirements met: ' + (requirementsMet.length > 0 ? requirementsMet.join(', ') : 'none');
-                requirements.style.color = requirementsMet.length >= 4 ? 'var(--success-green)' : 'var(--error-red)';
-            } else {
-                requirements.textContent = 'Password must contain: 8+ characters, uppercase, lowercase, number, special character';
-                requirements.style.color = 'var(--dark-gray)';
-            }
-        }
-
-        function checkPasswordMatch() {
-            const password = document.getElementById('registerPassword').value;
-            const confirmPassword = document.getElementById('registerConfirmPassword').value;
-            const matchElement = document.getElementById('passwordMatch');
-
-            if (confirmPassword === '') {
-                matchElement.textContent = '';
-            } else if (password === confirmPassword) {
-                matchElement.textContent = '✓ Passwords match';
-                matchElement.style.color = 'var(--success-green)';
-            } else {
-                matchElement.textContent = '✗ Passwords do not match';
-                matchElement.style.color = 'var(--error-red)';
-            }
-        }
-
-        function showForgotPassword() {
-            alert('Please contact system administrator for password reset.');
-        }
-
-        // Enhanced login form handler
+        // Login form handler - Two-step process
         document.getElementById('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             const msgElement = document.getElementById('loginMsg');
             const submitBtn = document.getElementById('loginBtn');
 
             const formData = {
-                email: document.getElementById('loginEmail').value,
+                official_id: document.getElementById('loginOfficialId').value,
                 password: document.getElementById('loginPassword').value
             };
 
@@ -856,21 +669,15 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    msgElement.textContent = "Login successful! Redirecting...";
-                    msgElement.className = 'msg success';
-                    
-                    // Store token and user data
-                    localStorage.setItem('token', result.token);
-                    localStorage.setItem('user', JSON.stringify(result.user));
-                    
-                    // Remember me functionality
-                    if (document.getElementById('rememberMe').checked) {
-                        localStorage.setItem('remembered_email', formData.email);
+                    if (result.requires2FA) {
+                        // Store temp token and redirect to 2FA verification
+                        localStorage.setItem('tempToken', result.tempToken);
+                        localStorage.setItem('pendingUser', JSON.stringify(result.user));
+                        window.location.href = '/verify-2fa.html';
+                    } else {
+                        msgElement.textContent = result.message;
+                        msgElement.className = result.success ? 'msg success' : 'msg error';
                     }
-                    
-                    setTimeout(() => {
-                        window.location.href = '/dashboard.html';
-                    }, 1000);
                 } else {
                     msgElement.textContent = result.message;
                     msgElement.className = 'msg error';
@@ -885,7 +692,7 @@
             }
         });
 
-        // Enhanced registration form handler
+        // Registration form handler
         document.getElementById('registerForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             const msgElement = document.getElementById('registerMsg');
@@ -900,34 +707,18 @@
                 return;
             }
 
-            // Validate password strength
-            const strength = document.getElementById('passwordStrength').className;
-            if (!strength.includes('strength-4') && !strength.includes('strength-3')) {
-                msgElement.textContent = "Please use a stronger password!";
-                msgElement.className = 'msg error';
-                return;
-            }
-
-            // Get selected role
-            const selectedRole = document.querySelector('input[name="role"]:checked');
-            if (!selectedRole) {
-                msgElement.textContent = "Please select your role!";
-                msgElement.className = 'msg error';
-                return;
-            }
-
             const formData = {
                 official_id: document.getElementById('officialId').value,
-                fullName: document.getElementById('registerName').value,
+                full_name: document.getElementById('registerName').value,
                 email: document.getElementById('registerEmail').value,
+                phone: document.getElementById('registerPhone').value,
                 police_station: document.getElementById('policeStation').value,
                 designation: document.getElementById('designation').value,
-                role: selectedRole.value,
-                phone: document.getElementById('registerPhone').value,
+                role: document.querySelector('input[name="role"]:checked').value,
                 password: password
             };
 
-            msgElement.textContent = "Processing registration...";
+            msgElement.textContent = "Creating account and generating 2FA...";
             msgElement.className = 'msg';
             submitBtn.classList.add('loading');
             submitBtn.disabled = true;
@@ -944,24 +735,15 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    msgElement.textContent = result.message || "Registration submitted for approval! You will be notified once approved.";
-                    msgElement.className = 'msg success';
-                    this.reset();
-                    
-                    // Reset UI elements
-                    document.getElementById('passwordStrength').className = 'password-strength strength-0';
-                    document.getElementById('passwordRequirements').textContent = 'Password must contain: 8+ characters, uppercase, lowercase, number, special character';
-                    document.getElementById('passwordRequirements').style.color = 'var(--dark-gray)';
-                    document.getElementById('passwordMatch').textContent = '';
-                    document.querySelectorAll('.role-option').forEach(option => {
-                        option.classList.remove('selected');
-                    });
-                    
-                    setTimeout(() => {
-                        showTab('login');
-                    }, 3000);
+                    // Store registration data and redirect to 2FA setup
+                    localStorage.setItem('registrationData', JSON.stringify({
+                        user_id: result.user_id,
+                        qrCode: result.qrCode,
+                        secret: result.secret
+                    }));
+                    window.location.href = '/setup-2fa.html';
                 } else {
-                    msgElement.textContent = result.message || "Registration failed";
+                    msgElement.textContent = result.message;
                     msgElement.className = 'msg error';
                 }
             } catch (error) {
@@ -998,43 +780,6 @@
                     console.error('Auth check failed:', error);
                     localStorage.removeItem('token');
                     localStorage.removeItem('user');
-                }
-            }
-
-            // Check for remembered email
-            const rememberedEmail = localStorage.getItem('remembered_email');
-            if (rememberedEmail) {
-                document.getElementById('loginEmail').value = rememberedEmail;
-                document.getElementById('rememberMe').checked = true;
-            }
-        }
-
-        function handleRedirect() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const token = urlParams.get('token');
-            const error = urlParams.get('error');
-            
-            if (token) {
-                // Store token from Google OAuth redirect
-                localStorage.setItem('token', token);
-                window.location.href = '/dashboard.html';
-            }
-            
-            if (error) {
-                const msgElement = document.getElementById('loginMsg');
-                switch(error) {
-                    case 'pending_approval':
-                        msgElement.textContent = 'Your account is pending approval. Please contact administrator.';
-                        msgElement.className = 'msg warning';
-                        break;
-                    case 'auth_failed':
-                        msgElement.textContent = 'Authentication failed. Please try again.';
-                        msgElement.className = 'msg error';
-                        break;
-                    case 'no_code':
-                        msgElement.textContent = 'Authentication cancelled. Please try again.';
-                        msgElement.className = 'msg warning';
-                        break;
                 }
             }
         }
