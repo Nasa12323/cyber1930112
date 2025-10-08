@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify 2FA - PUDUCHERRY POLICE</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 1rem 0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            text-align: center;
+            letter-spacing: 8px;
+            font-size: 20px;
+        }
+        button {
+            background: #1a237e;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        .user-info {
+            background: #e8f5e8;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Verify Identity</h1>
+        <p>Enter the 6-digit code from your authenticator app</p>
+        
+        <div id="userInfo" class="user-info">
+            <!-- User info will be inserted here -->
+        </div>
+
+        <input type="text" id="twoFACode" placeholder="000000" maxlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+        <button onclick="verify2FALogin()">Verify & Login</button>
+        
+        <p id="message" style="margin-top: 1rem;"></p>
+        
+        <div style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+            <a href="/" style="color: #1a237e;">← Back to Login</a>
+        </div>
+    </div>
+
+    <script>
+        // Get pending login data
+        const tempToken = localStorage.getItem('tempToken');
+        const pendingUser = JSON.parse(localStorage.getItem('pendingUser'));
+        
+        if (!tempToken || !pendingUser) {
+            window.location.href = '/';
+        }
+
+        // Display user info
+        document.getElementById('userInfo').innerHTML = 
+            `<strong>${pendingUser.full_name}</strong><br>
+             Official ID: ${pendingUser.official_id}`;
+
+        async function verify2FALogin() {
+            const code = document.getElementById('twoFACode').value;
+            const messageElement = document.getElementById('message');
+
+            if (!code || code.length !== 6) {
+                messageElement.textContent = 'Please enter a valid 6-digit code';
+                messageElement.style.color = 'red';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/auth/verify-2fa-login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        tempToken: tempToken,
+                        twoFACode: code
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    messageElement.textContent = 'Login successful! Redirecting...';
+                    messageElement.style.color = 'green';
+                    
+                    // Store final token and user data
+                    localStorage.setItem('token', result.token);
+                    localStorage.setItem('user', JSON.stringify(result.user));
+                    
+                    // Clear temporary data
+                    localStorage.removeItem('tempToken');
+                    localStorage.removeItem('pendingUser');
+                    
+                    setTimeout(() => {
+                        window.location.href = '/dashboard.html';
+                    }, 1000);
+                } else {
+                    messageElement.textContent = result.message;
+                    messageElement.style.color = 'red';
+                }
+            } catch (error) {
+                messageElement.textContent = 'Network error. Please try again.';
+                messageElement.style.color = 'red';
+            }
+        }
+
+        // Auto-submit when 6 digits are entered
+        document.getElementById('twoFACode').addEventListener('input', function() {
+            if (this.value.length === 6) {
+                verify2FALogin();
+            }
+        });
+    </script>
+</body>
+</html>
