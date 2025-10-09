@@ -12,7 +12,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-const SECRET = "supersecretkey";
+// Use environment variable for JWT secret
+const SECRET = process.env.JWT_SECRET || "supersecretkey";
 const promisePool = require("./config/database");
 
 const recordsFile = path.join(__dirname, "records.json");
@@ -349,9 +350,4 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`✅ Server running on port ${PORT}`);
-});) now update the things my env datas are (GOOGLE_CLIENT_ID=216380899073-i1m2lub87mkqm8vs92p4legd3tu7btig.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=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
-JWT_SECRET=generate_a_random_secret_string_here
-NODE_ENV=production
-BASE_URL=https://cyber1930112-production.up.railway.app
-)
+});
